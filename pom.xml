@@ -3,15 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pt.tecnico</groupId>
-    <artifactId>phonebook</artifactId> <!-- FIXME -->
+    <artifactId>mydrive</artifactId> <!-- FIXME -->
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Phonebook</name>
+    <name>MyDrive</name>
 
     <organization>
       <name>Engenharia de Software, IST 2016</name>
-      <url>https://fenix.tecnico.ulisboa.pt/disciplinas/ESof96451113/2015-2016/2-semestre</url> <!-- Alameda -->
+      <url>https://fenix.tecnico.ulisboa.pt/disciplinas/ESof141113/2015-2016/2-semestre</url> <!-- Alameda -->
       <!-- ESof141113 Tagus -->
     </organization>
 
@@ -29,6 +29,21 @@
 	</roles>
 	<properties>
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist176534</picUrl> <!-- FIXME -->
+        </properties>
+      </developer>
+      <developer> 
+        <id>ist74005</id> 
+	<name>R3Moura</name> 
+	<email>ricardo.de.moura@ist.utl.pt</email> 
+	<organization>es16 g28tg</organization> 
+	<roles>
+	  <role>Developer</role>
+	  <role>Architect</role>
+	  <role>Tester</role>
+	  <role>Integrator</role>
+	</roles>
+	<properties>
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist174005</picUrl> <!-- FIXME -->
         </properties>
       </developer>
     </developers>
