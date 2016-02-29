@@ -23,7 +23,7 @@ class Text extends File {
 }
 
 class Directory extends File {
-  Interger size;
+  Integer size;
 }
 
 class Link extends Text {
@@ -54,7 +54,7 @@ relation MyDriveContainsUsers {
 }
 
 relation MyDriveContainFiles {
-	Mydrive playsRole mydrive {
+	MyDrive playsRole mydrive {
 		multiplicity 1;
 	}
 	File playsRole files {
@@ -63,7 +63,7 @@ relation MyDriveContainFiles {
 }
 
 relation UsersContainFiles {
-	User playsRole owner {
+	User playsRole creator {
 		multiplicity 1;
 	}
 	File playsRole files {
@@ -76,7 +76,7 @@ relation DirectoryContainFiles {
 		multiplicity 1;
 	}
 	File playsRole files {
-		multiplicity *;
+		multiplicity 0..*;
 	}
 }
 
