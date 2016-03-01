@@ -26,11 +26,11 @@ class Dir extends File {
   Integer size;
 }
 
-class Link extends Text {
+class Link extends PlainFile {
   String path;
 }
 
-class App extends Text {
+class App extends PlainFile {
   String method;
 }
 
