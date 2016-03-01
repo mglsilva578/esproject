@@ -14,7 +14,7 @@ class SuperUser extends User{}
 class File {
   Integer id;
   String name;
-  Date last_;
+  Date last_modification;
   String permissions;
 }
 
