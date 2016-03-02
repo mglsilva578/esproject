@@ -1,0 +1,29 @@
+class Utilizador {
+	String username;
+	String password;
+	String nome;
+	String mascara;
+}
+
+class SuperUtilizador extends Utilizador;
+
+class Ficheiro {
+	int id;
+	String nome;
+	String permissoes;
+}
+
+class FicheiroTexto extends Ficheiro {
+	String conteudo;
+}
+
+class Diretorio extends Ficheiro;
+
+class Root extends Diretorio;
+
+class Link extends FicheiroTexto {
+	String path;	
+}
+
+
+class App extends FicheiroTexto;
