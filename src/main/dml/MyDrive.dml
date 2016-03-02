@@ -19,7 +19,7 @@ class File {
 }
 
 class PlainFile extends File {
-  String text;
+  String content;
 }
 
 class Dir extends File {
