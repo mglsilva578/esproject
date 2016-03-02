@@ -1,0 +1,39 @@
+package pt.tecnico.myDrive.domain;
+
+class MyDrive;
+
+class Utilizador {
+	String username;
+	String password;
+	String nome;
+	String mascara;
+}
+
+class SuperUtilizador extends Utilizador;
+
+class Ficheiro {
+	int id;
+	String nome;
+	String permissoes;
+}
+
+class FicheiroTexto extends Ficheiro {
+	String conteudo;
+}
+
+class Diretorio extends Ficheiro;
+
+class Root extends Diretorio;
+
+class Link extends FicheiroTexto {
+	String path;	
+}
+
+
+class App extends FicheiroTexto;
+
+relation DomainRootHasMyDriveApplication {
+  .pt.ist.fenixframework.DomainRoot playsRole root {multiplicity 0..1;}
+  MyDrive playsRole mydrive {multiplicity 0..1;}
+}
+
