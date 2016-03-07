@@ -32,6 +32,21 @@
 			</properties>
 		</developer>
 		<developer>
+			<id>ist68230</id>
+			<name>mglsilva578</name>
+			<email>mglsilva578@gmail.com</email>
+			<organization>es16 g28tg</organization>
+			<roles>
+				<role>Developer</role>
+				<role>Architect</role>
+				<role>Tester</role>
+				<role>Integrator</role>
+			</roles>
+			<properties>
+				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist168230</picUrl> <!-- FIXME -->
+			</properties>
+		</developer>
+		<developer>
 			<id>ist74005</id>
 			<name>R3Moura</name>
 			<email>ricardo.de.moura@ist.utl.pt</email>
