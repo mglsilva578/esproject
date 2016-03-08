@@ -144,7 +144,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>pt.tecnico.myDrive.myDrive</mainClass> <!-- FIXME -->
+					<mainClass>pt.tecnico.myDrive.MyDriveApplication</mainClass> <!-- FIXME -->
 					<killAfter>-1</killAfter>
 				</configuration>
 			</plugin>

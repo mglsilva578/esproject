@@ -16,19 +16,32 @@ import org.apache.logging.log4j.Logger;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainRoot;
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.domain.MyDrive;
 
 public class MyDriveApplication {
     // FenixFramework will try automatic initialization when first accessed
     public static void main(String [] args) {
+    	System.out.println("Welcome to MyDrive Application");
         try {
-            applicationCodeGoesHere();
-        } finally {
+            MyDriveApplication.setup();
+        }catch(Exception e){
+        }finally {
             // ensure an orderly shutdown
             FenixFramework.shutdown();
         }
     }
+    @Atomic
+    public static void init(){
+    	//TODO clean MyDrive
+    }
+    
+    @Atomic
+    public static void setup() {
+		MyDrive drive = MyDrive.getInstance();
+		System.out.println(drive.toString());
+	}
 
-    public static void applicationCodeGoesHere() {
+	public static void applicationCodeGoesHere() {
         someTransaction();
     }
 
