@@ -1,7 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import java.util.Set;
-
 public class Dir extends Dir_Base {
 
 	public Dir() {
