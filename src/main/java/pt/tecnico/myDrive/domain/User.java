@@ -15,14 +15,14 @@ public class User extends User_Base {
         setMask(mask);
     }
 
-	private boolean isValidUsername(String username) {
+    private static boolean isValidUsername(String username) {
 		if(username == null) return false;
-		return !(username.isEmpty() || isComposedOnlyLettersDigits(username));
+		return isComposedonlyLettersDigits(username);
 	}
-
-	private boolean isComposedOnlyLettersDigits(String username) {
-		String patternNotToMatch = "[a-zA-Z0-9]*[^(a-zA-Z0-9)]+[a-zA-Z0-9]*";
-		return !username.matches(patternNotToMatch);
+	
+	private static boolean isComposedonlyLettersDigits(String username) {
+		String patternToMatch = "[a-zA-Z0-9]+";
+		return username.matches(patternToMatch);
 	}
     
 }
