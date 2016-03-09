@@ -17,6 +17,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.DomainRoot;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class MyDriveApplication {
     // FenixFramework will try automatic initialization when first accessed
@@ -24,7 +25,10 @@ public class MyDriveApplication {
     	System.out.println("Welcome to MyDrive Application");
         try {
             MyDriveApplication.setup();
+        }catch(MyDriveException mde){
+        	System.out.println(mde.getMessage());
         }catch(Exception e){
+        	System.out.println(e.getMessage());
         }finally {
             // ensure an orderly shutdown
             FenixFramework.shutdown();

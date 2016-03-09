@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
+
 public class User extends User_Base {
 
 	protected User(){super();}
@@ -8,7 +10,7 @@ public class User extends User_Base {
     	if(this.isUsernameValid(username)){
     		setUsername(username);    		
     	}else{
-    		//TODO lancar aqui a excepcao adequada
+    		throw new InvalidUsernameException(username);
     	}
         setPassword(password);
         setName(name);
