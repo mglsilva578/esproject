@@ -1,12 +1,15 @@
 package pt.tecnico.myDrive.domain;
 
-class MyDrive;
+class MyDrive {
+  Integer fileIdCounter;	
+}
 
 class User {
   String username;
   String password;
   String name;
   String mask;
+  String homeDir;
 }
 
 class SuperUser extends User{}
@@ -23,7 +26,6 @@ class PlainFile extends File {
 }
 
 class Dir extends File {
-  Integer size;
 }
 
 class Link extends PlainFile {

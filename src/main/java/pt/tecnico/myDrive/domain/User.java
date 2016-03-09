@@ -5,7 +5,7 @@ public class User extends User_Base {
 	protected User(){super();}
 	
     public User(String username, String password, String name, String mask) {
-    	if(isValidUsername(username)){
+    	if(this.isUsernameValid(username)){
     		setUsername(username);    		
     	}else{
     		//TODO lancar aqui a excepcao adequada
@@ -15,12 +15,12 @@ public class User extends User_Base {
         setMask(mask);
     }
 
-    private static boolean isValidUsername(String username) {
+    private boolean isUsernameValid(String username) {
 		if(username == null) return false;
-		return isComposedonlyLettersDigits(username);
+		return isComposedOnlyLettersDigits(username);
 	}
 	
-	private static boolean isComposedonlyLettersDigits(String username) {
+	private boolean isComposedOnlyLettersDigits(String username) {
 		String patternToMatch = "[a-zA-Z0-9]+";
 		return username.matches(patternToMatch);
 	}
