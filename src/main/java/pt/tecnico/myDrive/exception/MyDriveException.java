@@ -9,6 +9,6 @@ public class MyDriveException extends RuntimeException {
 	}
 	
 	public MyDriveException(String message){
-		super(message);
+		super("!!!\tMyDriveException\n!!!\t" + message + "\n!!!");
 	}
 }

@@ -1,22 +1,10 @@
 package pt.tecnico.myDrive;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.File;
-
-import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.DomainRoot;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.SuperUser;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class MyDriveApplication {
@@ -42,9 +30,20 @@ public class MyDriveApplication {
     @Atomic
     public static void setup() {
 		MyDrive drive = MyDrive.getInstance();
-		System.out.println(drive.toString());
+		if(drive.isEmpty()){
+			drive.addUser(new SuperUser());
+			drive.addUser(new User("zttr", "76534", "Diogo", "rwxdr-x-"));
+			drive.addUser(new User("mglsilva578", "68230", "Miguel", "rwxdr-x-"));
+			drive.addUser(new User("R3Moura", "74005", "Ricardo", "rwxdr-x-"));
+			drive.addUser(new User("joseluisvf", "55816", "JoseLuis", "rwxdr-x-"));
+			drive.addUser(new User("dddd", "11111", "Daniel", "rwxdr-x-"));
+		}else{
+			return;
+		}
 	}
 
+    
+    
 	public static void applicationCodeGoesHere() {
         someTransaction();
     }
