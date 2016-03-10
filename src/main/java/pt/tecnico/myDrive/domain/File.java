@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
 import org.joda.time.DateTime;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
 
@@ -15,5 +16,13 @@ public class File extends File_Base {
 		setLast_modification(creationdate);
 		setPermissions(permissions);
 	}
+	
+	@Override
+    public void setName(String n) {
+		if(n.contains("/") || n.contains("\0")) {
+            throw new InvalidFileNameException(n);
+        }
+        super.setName(n);
+    }
 
 }
