@@ -1,4 +1,5 @@
 package pt.tecnico.myDrive.domain;
+import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
 
@@ -18,6 +19,8 @@ public class Dir extends Dir_Base {
 		for(File file: getFileSet()){
 			if(file.getName().equals(arg1))
 				((Dir) file).listDirContent(arg2);
+			else
+				throw new NoDirException(path);
 		}
 		return null;
 
