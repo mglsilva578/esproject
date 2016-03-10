@@ -11,6 +11,7 @@ public class MyDrive extends MyDrive_Base {
 	private MyDrive() {
 		super();
 		setRoot(FenixFramework.getDomainRoot());
+		this.setFileIdCounter(new Integer(0));
 	}
 
 	public static MyDrive getInstance(){
@@ -39,12 +40,9 @@ public class MyDrive extends MyDrive_Base {
 		return isEmptyOfUsers() && isEmptyOfFiles();
 	}
 
-	private boolean isEmptyOfFiles() {
-		return super.getFileSet().size() == 0;
-	}
-
-	private boolean isEmptyOfUsers() {
-		return super.getUserSet().size() == 0;
+	public Integer getNewFileId(){
+		this.setFileIdCounter(this.getFileIdCounter() + 1);
+		return this.getFileIdCounter();
 	}
 		
 	public void removeUserByUsername(String usernameToRemove) throws UsernameDoesNotExistException{
@@ -52,14 +50,6 @@ public class MyDrive extends MyDrive_Base {
 		super.removeUser(userToRemove);
 	}
 	
-	private User getUserByUsername(String usernameToFind) throws UsernameDoesNotExistException{
-		for(User user : this.getUserSet()){
-			if(user.getUsername().equals(usernameToFind)){
-				return user;
-			}
-		}
-		throw new UsernameDoesNotExistException(usernameToFind);
-	}
 	
 	public Set<String> getAllUsernames(){
 		Set<String> allUsernames = new HashSet<String>();
@@ -68,5 +58,31 @@ public class MyDrive extends MyDrive_Base {
 		}
 		return allUsernames;
 	}
+	
+	public void erasePlainFileOrEmptyDirectory( String pathname ){
+		// TODO - para joseluis
+	}
+	
+	public void setRootDir( Dir rootDir ){
+		rootDir.setId( this.getNewFileId() );
+		super.setRootDir( rootDir );
+	}
+	
+	public User getUserByUsername(String usernameToFind) throws UsernameDoesNotExistException{
+		for(User user : this.getUserSet()){
+			if(user.getUsername().equals(usernameToFind)){
+				return user;
+			}
+		}
+		throw new UsernameDoesNotExistException(usernameToFind);
+	}
+	
+	private boolean isEmptyOfFiles() {
+		return super.getFileSet().size() == 0;
+	}
 
+	private boolean isEmptyOfUsers() {
+		return super.getUserSet().size() == 0;
+	}
+	
 }

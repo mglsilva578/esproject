@@ -9,11 +9,11 @@ public class File extends File_Base {
 		super();
 	}
 
-	public File(int id,String name, String permissions) {
-		setId(id);
+	public File(MyDrive myDrive, User owner, String name, String permissions) {
+		setOwner(owner);
 		setName(name);
-		DateTime creationdate= new DateTime();
-		setLast_modification(creationdate);
+		setId(myDrive.getNewFileId());
+		setLast_modification(new DateTime());
 		setPermissions(permissions);
 	}
 	
@@ -24,5 +24,16 @@ public class File extends File_Base {
         }
         super.setName(n);
     }
+	
+	@Override
+	public String toString(){
+		String description = "";
+		description += "File with id " + this.getId() + "\n";
+		description += "\twith name " + this.getName() + "\n";
+		description += "\tbelonging to " + this.getOwner().getUsername() + "\n";
+		description += "\tlast modified at " + this.getLast_modification() + "\n";
+		description += "\twith permissions " + this.getPermissions() + "\n";
+		return description;
+	}
 
 }

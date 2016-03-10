@@ -7,6 +7,13 @@ public class Dir extends Dir_Base {
 		super();
 	}
 
+	public Dir(User owner, String name, String permissions){
+		super();
+		super.setOwner(owner);
+		super.setName(name);
+		super.setPermissions(permissions);
+	}
+	
 	public String listDirContent(String path){
 		String array[];
 		array = path.split("/",2);
@@ -23,7 +30,14 @@ public class Dir extends Dir_Base {
 				throw new NoDirException(path);
 		}
 		return null;
-
-
+	}
+	
+	@Override
+	public String toString(){
+		String description = super.toString();
+		description += "\n";
+		description += "Dir contents : \n";
+		description += this.getFileSet();
+		return description;
 	}
 }
