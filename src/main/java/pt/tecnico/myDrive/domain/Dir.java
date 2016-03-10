@@ -14,7 +14,7 @@ public class Dir extends Dir_Base {
 		String arg2 = array[1];
 		if (arg2==null){
 			for(File file: getFileSet())
-				System.out.println(file.getName());
+				return file.getName();
 		}
 		for(File file: getFileSet()){
 			if(file.getName().equals(arg1))
