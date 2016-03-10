@@ -2,7 +2,7 @@ package pt.tecnico.myDrive.exception;
 
 public class MyDriveException extends RuntimeException {
 
-	private static final long serialVersionUID = -5495644594099515732L;
+	private static final long serialVersionUID = 1L;
 	
 	public MyDriveException(){
 		super();
