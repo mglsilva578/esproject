@@ -12,4 +12,9 @@ public class PlainFile extends PlainFile_Base {
 		super.setPermissions(permissions);
 		setContent(content);
 	}
+	
+	public String readContent(){
+		return getContent();
+	}
+	
 }
