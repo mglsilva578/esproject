@@ -1,7 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import java.util.List;
-
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -25,7 +23,7 @@ public class User extends User_Base {
 		return username.matches(patternToMatch);
 	}
 	
-	protected void init( MyDrive md, String username, String password, String name, String mask ){
+	protected void init( MyDrive drive, String username, String password, String name, String mask ){
 		if(this.isUsernameValid(username)){
 			setUsername(username);    	
 		}else{
@@ -34,7 +32,12 @@ public class User extends User_Base {
 		setPassword(password);
 		setName(name);
 		setMask(mask);
-		setMydrive(md);
+		setMydrive(drive);
+		
+		if( !( username == "root" ) ){
+			Dir userDir = drive.createUserDir( this );
+			this.setHomeDir( userDir.getPath() );			
+		}
 	}
 	
 	@Override
@@ -61,7 +64,6 @@ public class User extends User_Base {
 		description += "\twith mask " + this.getMask() + "\n";
 		return description;
 	}
-    
 	
 	public void importXML(Element elm){
 		try{
@@ -74,4 +76,5 @@ public class User extends User_Base {
 			throw new ImportDocumentException("user");
 		}
 	}
+    
 }

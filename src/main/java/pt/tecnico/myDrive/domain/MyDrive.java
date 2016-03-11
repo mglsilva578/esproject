@@ -103,7 +103,6 @@ public class MyDrive extends MyDrive_Base {
 
 
 	public void setRootDir( Dir rootDir ){
-		rootDir.setId( this.getNewFileId() );
 		super.setRootDir( rootDir );
 	}
 
@@ -173,6 +172,14 @@ public class MyDrive extends MyDrive_Base {
 			}
 			
 		}
+	}
+
+	public Dir createUserDir( User user ){
+		Dir slash = this.getRootDir();
+		Dir home = slash.getDirByName( "home" );
+		Dir userDir = new Dir( this, user, user.getName(), user.getMask() );
+		home.addFile( userDir );
+		return userDir;
 	}
 
 }

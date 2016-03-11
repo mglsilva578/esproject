@@ -7,17 +7,17 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
+	private static final int SLASH_DIR_1 = 1;
 
 	protected File(){
 		super();
 	}
 
 	protected void init( MyDrive myDrive, User owner, String name, String permissions ){
-		setName( name );
 		setId(myDrive.getNewFileId());
+		setName( name );
 		setLast_modification( new DateTime() );
 		setPermissions( permissions );
-
 		this.setMydrive( myDrive );
 		this.setOwner( owner );
 	}
@@ -27,11 +27,11 @@ public class File extends File_Base {
 	}
 	
 	@Override
-    public void setMydrive(MyDrive md) {
-        if (md == null)
+    public void setMydrive(MyDrive drive) {
+        if (drive == null)
             super.setMydrive(null);
         else
-            md.addFile(this);
+        	drive.addFile(this);
     }
 	
 	@Override
@@ -44,8 +44,10 @@ public class File extends File_Base {
 
 	@Override
 	public void setName(String n) {
-		if(n.contains("/") || n.contains("\0")) {
-			throw new InvalidFileNameException(n);
+		if(!( this.getId() == SLASH_DIR_1 )){
+			if(n.contains("/") || n.contains("\0")) {
+				throw new InvalidFileNameException(n);
+			}			
 		}
 		super.setName(n);
 	}

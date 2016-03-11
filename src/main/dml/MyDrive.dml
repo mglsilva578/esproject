@@ -19,6 +19,7 @@ class File {
   String name;
   DateTime last_modification;
   String permissions;
+  String path;
 }
 
 class PlainFile extends File {

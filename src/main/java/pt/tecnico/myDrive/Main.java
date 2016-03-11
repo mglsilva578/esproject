@@ -39,21 +39,33 @@ public class Main {
 	public static void setup() {
 		MyDrive drive = MyDrive.getInstance();
 		if(drive.isEmpty()){
-			SuperUser superUser = new SuperUser(drive);
-
-			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxdr-x-");
-			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxdr-x-");
-			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxdr-x-");
-			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxdr-x-");
-			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxdr-x-");
+			SuperUser rootUser = new SuperUser(drive);
+			Dir slash = new Dir(drive, rootUser, "/", rootUser.getMask());
+			slash.setParent(slash);		
+			drive.setRootDir(slash);
 			
-			Dir rootDir = new Dir(drive, superUser, "rootDir", "rwxdr-x-");
+			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask());
+			slash.addFile( home );
+			Dir rootDir = drive.createUserDir(rootUser);
+			rootUser.setHomeDir(rootDir.getPath());
+			/*
+			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
+			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
+			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
+			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
+			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
+			*/
+			/*
+			Dir rootDir = new Dir(drive, rootUser, "rootDir", "rwxdr-x-");
 			rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso.txt", "rwxdr-x-"));
 			rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso_the_sequel.txt", "rwxdr-x-"));
-			drive.setRootDir(rootDir);
+			*/
 			
-			System.out.println("Conteudos da drive : \n" + drive.getUserSet() + "----------------------");
+			System.out.println("\n\n\n");
+			System.out.println("Users da drive : \n" + drive.getUserSet() + "----------------------");
+			System.out.println("Directorios da drive : \n" + drive.getRootDir().toString());
 		}else{
+			System.out.println("\n\n MyDrive is not empty! \n\n");
 			return;
 		}
 	}
