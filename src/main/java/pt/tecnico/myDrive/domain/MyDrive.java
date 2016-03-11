@@ -4,6 +4,8 @@ package pt.tecnico.myDrive.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jdom2.Element;
+
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
@@ -16,7 +18,7 @@ public class MyDrive extends MyDrive_Base {
 		setRoot(FenixFramework.getDomainRoot());
 		this.setFileIdCounter( new Integer(0) );
 	}
-	
+
 	private boolean isEmptyDirectory( File fileToTest ){
 		if( fileToTest instanceof Dir ){
 			return ((Dir)fileToTest).getFileSet().size() == 0;
@@ -24,16 +26,16 @@ public class MyDrive extends MyDrive_Base {
 			return false;			
 		}
 	}
-	
+
 	private boolean isPlainFile ( File fileToTest ){
 		return fileToTest instanceof PlainFile;
 	}
-	
+
 	private File getFileByPathname( String pathnameFileToFind ){
 		return null;
 		// TODO implementar isto.
 	}
-	
+
 	private boolean isEmptyOfFiles() {
 		return super.getFileSet().size() == 0;
 	}
@@ -97,8 +99,8 @@ public class MyDrive extends MyDrive_Base {
 			throw new CannotEraseFileException( pathnameFileToFind );
 		}
 	}
-	
-	
+
+
 
 	public void setRootDir( Dir rootDir ){
 		rootDir.setId( this.getNewFileId() );
@@ -114,7 +116,7 @@ public class MyDrive extends MyDrive_Base {
 		throw new UsernameDoesNotExistException(usernameToFind);
 	}
 
-	
+
 
 	private boolean hasUser(String username) {
 		try{
@@ -132,12 +134,41 @@ public class MyDrive extends MyDrive_Base {
 		}
 		super.addUser(userToBeAdded);
 	}
-	
+
 	@Override
 	public void removeUser(User user){
 		user.remove();
 		super.removeUser(user);		
 	}
 
-	
+	public void importXML(Element toImport){
+
+		for(Element node : toImport.getChildren()){
+			String type = node.getName();
+			switch(type){
+			case "user":
+				User user = new User();
+				user.importXML(node);
+				break;
+			case "app":
+				App a = new App();
+				a.importXML(node);
+				break;
+			case "link":
+				Link link = new Link();
+				link.importXML(node);
+				break;
+			case "plain":
+				PlainFile p = new PlainFile();
+				p.importXML(node);
+				break;
+			case "dir":
+				Dir d = new Dir();
+				d.importXML(node);
+			default:
+				break;
+			}
+		}
+	}
+
 }
