@@ -27,7 +27,7 @@ public class User extends User_Base {
 	
 	protected void init( MyDrive md, String username, String password, String name, String mask ){
 		if(this.isUsernameValid(username)){
-			setUsername(username);    		
+			setUsername(username);    	
 		}else{
 			throw new InvalidUsernameException(username);
 		}
@@ -38,11 +38,12 @@ public class User extends User_Base {
 	}
 	
 	@Override
-    public void setMydrive(MyDrive md) {
-        if (md == null)
-            super.setMydrive(null);
-        else
-            md.addUser(this);
+    public void setMydrive(MyDrive drive) {
+        if (drive == null){
+        	super.setMydrive(null);        	
+        }else{
+        	drive.addUser(this);        	
+        }
     }
 	
 	public void remove(){
