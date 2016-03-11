@@ -6,4 +6,6 @@ public class Link extends Link_Base {
         super.init( myDrive, owner, name, permissions );
     }
     
+    public Link(){}
+    public void importXML(){}
 }

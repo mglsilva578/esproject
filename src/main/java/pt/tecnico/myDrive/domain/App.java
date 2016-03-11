@@ -6,4 +6,8 @@ public class App extends App_Base {
         super.init( myDrive, owner, name, permissions );
     }
     
+    public App(){}
+    
+    public void importXML(){}
+    
 }
