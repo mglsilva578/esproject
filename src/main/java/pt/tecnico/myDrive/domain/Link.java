@@ -7,7 +7,7 @@ import pt.ist.fenixframework.FenixFramework;
 
 public class Link extends Link_Base {
     
-    public Link( MyDrive myDrive, User owner, int id, String name, String permissions,String content ) {
+    public Link( MyDrive myDrive, User owner, String name, String permissions,String content ) {
         super.init( myDrive, owner, name, permissions );
     }
     

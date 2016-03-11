@@ -60,6 +60,7 @@ public class File extends File_Base {
 		description += "\tbelonging to " + this.getOwner().getUsername() + "\n";
 		description += "\tlast modified at " + this.getLast_modification() + "\n";
 		description += "\twith permissions " + this.getPermissions() + "\n";
+		description += "\twith path" + this.getPath() + "\n";
 		return description;
 	}
 
@@ -75,6 +76,6 @@ public class File extends File_Base {
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
 		this.setPath(elm.getAttributeValue("path"));
-		
 	}
+	
 }

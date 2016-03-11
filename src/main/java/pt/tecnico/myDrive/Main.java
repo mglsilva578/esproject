@@ -41,7 +41,8 @@ public class Main {
 		if(drive.isEmpty()){
 			SuperUser rootUser = new SuperUser(drive);
 			Dir slash = new Dir(drive, rootUser, "/", rootUser.getMask());
-			slash.setParent(slash);		
+			slash.setParent(slash);	
+			slash.setPath("/");
 			drive.setRootDir(slash);
 			
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask());
@@ -63,7 +64,7 @@ public class Main {
 			
 			System.out.println("\n\n\n");
 			System.out.println("Users da drive : \n" + drive.getUserSet() + "----------------------");
-			System.out.println("Directorios da drive : \n" + drive.getRootDir().toString());
+			System.out.println("Directorios da drive : \n" + drive.getFileSet().toString());
 		}else{
 			System.out.println("\n\n MyDrive is not empty! \n\n");
 			return;

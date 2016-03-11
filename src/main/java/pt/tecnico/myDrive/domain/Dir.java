@@ -14,35 +14,42 @@ public class Dir extends Dir_Base {
 
 	public Dir(MyDrive myDrive, User owner, String name, String permissions){
 		super.init(myDrive, owner, name, permissions);
-		this.self = this;
+		self.setName(".");
+		this.self = this;		
 	}
 
 	public Dir getSelf(){
 		return this.self;
 	}
-	
+
 	public Dir getParent() {
 		return parent;
 	}
 
 	public void setParent(Dir parent) {
+		self.setName("..");
 		this.parent = parent;
 	}
 
 	public void addFile( File fileToAdd ){
-		if( fileToAdd instanceof Dir ){
-			((Dir)fileToAdd).setParent( this );
-		}
 		if(!hasFileWithName( fileToAdd.getName() )){
 			super.addFile( fileToAdd );			
+			if( fileToAdd instanceof Dir ){
+				((Dir)fileToAdd).setParent( this );
+			}
+			if(this.getName().equals("/")){
+				fileToAdd.setPath(this.getPath() +  fileToAdd.getName());
+			}else{
+				fileToAdd.setPath(this.getPath() + "/" + fileToAdd.getName());
+			}
 		}else{
 			throw new FileAlreadyExistsException(fileToAdd.getName(), this);
 		}
 	}
-	
+
 	private boolean hasFileWithName( String name ){
 		if( this.getFileSet().size() == 0 ) return false;
-		
+
 		for (File file : this.getFileSet()) {
 			if( file.getName().equals(name) ){
 				return true;
@@ -50,7 +57,7 @@ public class Dir extends Dir_Base {
 		}
 		return false;
 	}
-	
+
 	public String listDirContent(String path){
 		String array[];
 		array = path.split("/",2);
@@ -68,13 +75,13 @@ public class Dir extends Dir_Base {
 		}
 		return null;
 	}
-	
-	
+
+
 	public void importXML(Element elm){
 		super.importXML(elm);
-		
+
 	}
-	
+
 	public Dir getDirByName( String name ){
 		for (File file : this.getFileSet()) {
 			if( file instanceof Dir){
@@ -85,15 +92,12 @@ public class Dir extends Dir_Base {
 		}
 		throw new NoDirException( name );
 	}
-	
+
 	@Override
 	public String toString(){
 		String description = super.toString();
-		description += "\n";
-		description += "With parent : " + this.getParent().getName() +"\n";
-		description += "Dir contents : ------------------\n";
-		description += this.getFileSet();
-		description += "-----------------------------------\n";
+		description += "\t With parent : " + this.getParent().getName() +"\n";
+		description += "\t Dir size : " + this.getFileSet().size() + "\n\n";
 		return description;
 	}
 }

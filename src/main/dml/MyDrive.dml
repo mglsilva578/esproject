@@ -57,7 +57,7 @@ relation UsersContainFiles {
 }
 
 relation DirContainFiles {
-	Dir playsRole dir {multiplicity 1;}
+	Dir playsRole father {multiplicity 1;}
 	File playsRole file {multiplicity 0..*;}
 }
 
