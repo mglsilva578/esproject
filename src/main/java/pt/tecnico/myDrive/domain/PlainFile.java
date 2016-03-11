@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
+import org.jdom2.Element;
+
 public class PlainFile extends PlainFile_Base {
 
 	protected PlainFile(){
@@ -17,6 +19,10 @@ public class PlainFile extends PlainFile_Base {
 	
 	public String readContent(){
 		return getContent();
+	}
+	public void importXML(Element elm){
+		super.importXML(elm);
+		this.setContent(elm.getAttributeValue("contents"));
 	}
 	
 }

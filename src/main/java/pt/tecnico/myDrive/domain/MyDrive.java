@@ -147,27 +147,31 @@ public class MyDrive extends MyDrive_Base {
 			String type = node.getName();
 			switch(type){
 			case "user":
-				User user = new User();
+				String name = node.getAttributeValue("username");
+				User user = getUserByUsername(name);
+				if(user == null) user = new User();
 				user.importXML(node);
 				break;
-			case "app":
-				App a = new App();
-				a.importXML(node);
-				break;
-			case "link":
-				Link link = new Link();
-				link.importXML(node);
+			case "dir":
+				Dir d = new Dir();
+				d.importXML(node);
 				break;
 			case "plain":
 				PlainFile p = new PlainFile();
 				p.importXML(node);
 				break;
-			case "dir":
-				Dir d = new Dir();
-				d.importXML(node);
+			case "link":
+				Link l = new Link();
+				l.importXML(node);
+				break;
+			case "app":
+				App a = new App();
+				a.importXML(node);
+				break;
 			default:
 				break;
 			}
+			
 		}
 	}
 

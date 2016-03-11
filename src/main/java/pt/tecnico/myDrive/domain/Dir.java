@@ -1,4 +1,7 @@
 package pt.tecnico.myDrive.domain;
+import org.jdom2.Element;
+
+import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
@@ -27,6 +30,11 @@ public class Dir extends Dir_Base {
 				throw new NoDirException(path);
 		}
 		return null;
+	}
+	
+	public void importXML(Element elm){
+		super.importXML(elm);
+		
 	}
 	
 	@Override

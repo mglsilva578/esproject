@@ -2,6 +2,8 @@ package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
 import org.joda.time.DateTime;
+
+import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
@@ -65,5 +67,11 @@ public class File extends File_Base {
 		deleteDomainObject();
 	}
 	
-	public void importXML(Element elm){}
+	public void importXML(Element elm){
+		this.setName(elm.getAttributeValue("name"));
+		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
+		this.setOwner(user);
+		this.setPermissions(elm.getAttributeValue("permissions"));
+		
+	}
 }

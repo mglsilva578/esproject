@@ -61,4 +61,5 @@ public class Main {
 	public static void someTransaction() {
 		System.out.println("FenixFramework's root object is: " + FenixFramework.getDomainRoot());
 	}
+	
 }
