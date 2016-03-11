@@ -7,11 +7,8 @@ public class Dir extends Dir_Base {
 		super();
 	}
 
-	public Dir(User owner, String name, String permissions){
-		super();
-		super.setOwner(owner);
-		super.setName(name);
-		super.setPermissions(permissions);
+	public Dir(MyDrive myDrive, User owner, String name, String permissions){
+		super.init(myDrive, owner, name, permissions);
 	}
 	
 	public String listDirContent(String path){

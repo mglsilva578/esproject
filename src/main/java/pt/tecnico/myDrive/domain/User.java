@@ -6,16 +6,8 @@ public class User extends User_Base {
 
 	protected User(){super();}
 	
-    public User(MyDrive md, String username, String password, String name, String mask) {
-        setMydrive(md);
-        if(this.isUsernameValid(username)){
-    		setUsername(username);    		
-    	}else{
-    		throw new InvalidUsernameException(username);
-    	}
-        setPassword(password);
-        setName(name);
-        setMask(mask);
+    public User(MyDrive drive, String username, String password, String name, String mask) {
+        this.init( drive, username, password, name, mask );
     }
 
     private boolean isUsernameValid(String username) {
@@ -26,6 +18,18 @@ public class User extends User_Base {
 	private boolean isComposedOnlyLettersDigits(String username) {
 		String patternToMatch = "[a-zA-Z0-9]+";
 		return username.matches(patternToMatch);
+	}
+	
+	protected void init( MyDrive md, String username, String password, String name, String mask ){
+		if(this.isUsernameValid(username)){
+			setUsername(username);    		
+		}else{
+			throw new InvalidUsernameException(username);
+		}
+		setPassword(password);
+		setName(name);
+		setMask(mask);
+		setMydrive(md);
 	}
 	
 	@Override
@@ -40,6 +44,7 @@ public class User extends User_Base {
 		setMydrive(null);
 		deleteDomainObject();
 	}
+	
 	
 	@Override
 	public String toString(){

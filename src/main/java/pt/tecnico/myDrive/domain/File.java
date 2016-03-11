@@ -9,22 +9,44 @@ public class File extends File_Base {
 		super();
 	}
 
-	public File(MyDrive myDrive, User owner, String name, String permissions) {
-		setOwner(owner);
-		setName(name);
+	protected void init( MyDrive myDrive, User owner, String name, String permissions ){
+		setName( name );
 		setId(myDrive.getNewFileId());
-		setLast_modification(new DateTime());
-		setPermissions(permissions);
+		setLast_modification( new DateTime() );
+		setPermissions( permissions );
+
+		this.setMydrive( myDrive );
+		this.setOwner( owner );
+	}
+
+	public File(MyDrive myDrive, User owner, String name, String permissions) {
+		this.init( myDrive, owner, name, permissions );
 	}
 	
 	@Override
-    public void setName(String n) {
-		if(n.contains("/") || n.contains("\0")) {
-            throw new InvalidFileNameException(n);
-        }
-        super.setName(n);
+    public void setMydrive(MyDrive md) {
+        if (md == null)
+            super.setMydrive(null);
+        else
+            md.addFile(this);
     }
 	
+	@Override
+    public void setOwner(User owner) {
+        if (owner == null)
+            super.setOwner(null);
+        else
+            owner.addFile(this);
+    }
+
+	@Override
+	public void setName(String n) {
+		if(n.contains("/") || n.contains("\0")) {
+			throw new InvalidFileNameException(n);
+		}
+		super.setName(n);
+	}
+
 	@Override
 	public String toString(){
 		String description = "";
@@ -36,4 +58,9 @@ public class File extends File_Base {
 		return description;
 	}
 
+	public void remove(){
+		setMydrive(null);
+		setOwner(null);
+		deleteDomainObject();
+	}
 }

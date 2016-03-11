@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
@@ -60,8 +61,32 @@ public class MyDrive extends MyDrive_Base {
 		return allUsernames;
 	}
 
-	public void erasePlainFileOrEmptyDirectory( String pathname ){
-		// TODO - para joseluis
+	public void erasePlainFileOrEmptyDirectoryByPathname( String pathnameFileToFind ){
+		File fileToRemove = this.getFileByPathname( pathnameFileToFind );
+		if ((isEmptyDirectory( fileToRemove ) ||
+				isPlainFile( fileToRemove ))){
+			// TODO cortar ligacao atraves do file como no PB
+			this.removeFile(fileToRemove);
+		}else{
+			throw new CannotEraseFileException( pathnameFileToFind );
+		}
+	}
+	
+	private boolean isEmptyDirectory( File fileToTest ){
+		if( fileToTest instanceof Dir ){
+			return ((Dir)fileToTest).getFileSet().size() == 0;
+		}else{
+			return false;			
+		}
+	}
+	
+	private boolean isPlainFile ( File fileToTest ){
+		return fileToTest instanceof PlainFile;
+	}
+	
+	private File getFileByPathname( String pathnameFileToFind ){
+		return null;
+		// TODO implementar isto.
 	}
 
 	public void setRootDir( Dir rootDir ){
@@ -78,15 +103,9 @@ public class MyDrive extends MyDrive_Base {
 		throw new UsernameDoesNotExistException(usernameToFind);
 	}
 
-	private boolean isEmptyOfFiles() {
-		return super.getFileSet().size() == 0;
-	}
+	
 
-	private boolean isEmptyOfUsers() {
-		return super.getUserSet().size() == 0;
-	}
-
-	public boolean hasUser(String username) {
+	boolean hasUser(String username) {
 		return getUserByUsername(username) != null;
 	}
 
@@ -103,4 +122,11 @@ public class MyDrive extends MyDrive_Base {
 		super.removeUser(user);		
 	}
 
+	private boolean isEmptyOfFiles() {
+		return super.getFileSet().size() == 0;
+	}
+
+	private boolean isEmptyOfUsers() {
+		return super.getUserSet().size() == 0;
+	}
 }

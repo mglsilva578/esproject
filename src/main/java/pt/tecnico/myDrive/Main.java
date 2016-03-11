@@ -9,12 +9,12 @@ import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
-public class MyDriveApplication {
+public class Main {
     // FenixFramework will try automatic initialization when first accessed
     public static void main(String [] args) {
     	System.out.println("Welcome to MyDrive Application");
         try {
-            MyDriveApplication.setup();
+            Main.setup();
         }catch(MyDriveException mde){
         	System.out.println(mde.getMessage());
         }catch(Exception e){
@@ -42,11 +42,12 @@ public class MyDriveApplication {
 		}
 	}
 	private static void populateRootDir(MyDrive drive, SuperUser superUser) {
-		Dir rootDir = new Dir(superUser, "rootDir", "rwxdr-x-");
+		Dir rootDir = new Dir(drive, superUser, "rootDir", "rwxdr-x-");
 		rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso.txt", "rwxdr-x-"));
 		rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso_the_sequel.txt", "rwxdr-x-"));
 		drive.setRootDir(rootDir);
 	}
+	
 	private static SuperUser populateUsers(MyDrive drive) {
 		SuperUser superUser = new SuperUser(drive);
 		User u1 = new User(drive, "zttr", "76534", "Diogo", "rwxdr-x-");
