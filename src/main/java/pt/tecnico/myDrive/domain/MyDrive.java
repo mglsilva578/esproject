@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class MyDrive extends MyDrive_Base {
@@ -22,7 +23,7 @@ public class MyDrive extends MyDrive_Base {
 			return new MyDrive();
 		}
 	}
-	
+
 	public File getFileByName(String name) {
 		for (File file : getFileSet()) {
 			if (file.getName().equals(name)) {
@@ -35,7 +36,7 @@ public class MyDrive extends MyDrive_Base {
 	public boolean hasFile(String Name) {
 		return getFileByName(Name) != null;
 	}
-	
+
 	public boolean isEmpty(){
 		return isEmptyOfUsers() && isEmptyOfFiles();
 	}
@@ -44,13 +45,13 @@ public class MyDrive extends MyDrive_Base {
 		this.setFileIdCounter(this.getFileIdCounter() + 1);
 		return this.getFileIdCounter();
 	}
-		
+
 	public void removeUserByUsername(String usernameToRemove) throws UsernameDoesNotExistException{
 		User userToRemove = this.getUserByUsername(usernameToRemove);
 		super.removeUser(userToRemove);
 	}
-	
-	
+
+
 	public Set<String> getAllUsernames(){
 		Set<String> allUsernames = new HashSet<String>();
 		for(User user : this.getUserSet()){
@@ -58,16 +59,16 @@ public class MyDrive extends MyDrive_Base {
 		}
 		return allUsernames;
 	}
-	
+
 	public void erasePlainFileOrEmptyDirectory( String pathname ){
 		// TODO - para joseluis
 	}
-	
+
 	public void setRootDir( Dir rootDir ){
 		rootDir.setId( this.getNewFileId() );
 		super.setRootDir( rootDir );
 	}
-	
+
 	public User getUserByUsername(String usernameToFind) throws UsernameDoesNotExistException{
 		for(User user : this.getUserSet()){
 			if(user.getUsername().equals(usernameToFind)){
@@ -76,7 +77,7 @@ public class MyDrive extends MyDrive_Base {
 		}
 		throw new UsernameDoesNotExistException(usernameToFind);
 	}
-	
+
 	private boolean isEmptyOfFiles() {
 		return super.getFileSet().size() == 0;
 	}
@@ -84,5 +85,22 @@ public class MyDrive extends MyDrive_Base {
 	private boolean isEmptyOfUsers() {
 		return super.getUserSet().size() == 0;
 	}
+
+	public boolean hasUser(String username) {
+		return getUserByUsername(username) != null;
+	}
+
+	@Override
+	public void addUser(User userToBeAdded) throws UsernameAlreadyExistsException{
+		if (hasUser(userToBeAdded.getUsername()))
+			throw new UsernameAlreadyExistsException(userToBeAdded.getUsername());
+		super.addUser(userToBeAdded);
+	}
 	
+	@Override
+	public void removeUser(User user){
+		user.remove();
+		super.removeUser(user);		
+	}
+
 }

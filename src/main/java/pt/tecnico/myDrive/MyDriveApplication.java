@@ -48,13 +48,12 @@ public class MyDriveApplication {
 		drive.setRootDir(rootDir);
 	}
 	private static SuperUser populateUsers(MyDrive drive) {
-		SuperUser superUser = new SuperUser();
-		drive.addUser(superUser);
-		drive.addUser(new User("zttr", "76534", "Diogo", "rwxdr-x-"));
-		drive.addUser(new User("mglsilva578", "68230", "Miguel", "rwxdr-x-"));
-		drive.addUser(new User("R3Moura", "74005", "Ricardo", "rwxdr-x-"));
-		drive.addUser(new User("joseluisvf", "55816", "JoseLuis", "rwxdr-x-"));
-		drive.addUser(new User("dddd", "11111", "Daniel", "rwxdr-x-"));
+		SuperUser superUser = new SuperUser(drive);
+		User u1 = new User(drive, "zttr", "76534", "Diogo", "rwxdr-x-");
+		User u2 = new User(drive, "mglsilva578", "68230", "Miguel", "rwxdr-x-");
+		User u3 = new User(drive, "R3Moura", "74005", "Ricardo", "rwxdr-x-");
+		User u4 = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxdr-x-");
+		User u5 = new User(drive, "dddd", "11111", "Daniel", "rwxdr-x-");
 		return superUser;
 	}
 
