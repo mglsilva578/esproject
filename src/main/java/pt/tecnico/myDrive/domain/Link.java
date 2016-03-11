@@ -18,6 +18,6 @@ public class Link extends Link_Base {
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
     	this.setContent(elm.getAttributeValue("value"));
-    	//this.setDir(elm.getAttributeValue("path"));
+    	this.setPath(elm.getAttributeValue("path"));
     }
 }

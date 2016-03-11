@@ -18,6 +18,7 @@ public class App extends App_Base {
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
     	this.setContent(elm.getAttributeValue("method"));
+    	this.setPath(elm.getAttributeValue("path"));
     }
     
 }

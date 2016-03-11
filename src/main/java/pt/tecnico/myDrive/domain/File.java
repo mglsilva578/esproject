@@ -74,6 +74,7 @@ public class File extends File_Base {
 		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
+		this.setPath(elm.getAttributeValue("path"));
 		
 	}
 }
