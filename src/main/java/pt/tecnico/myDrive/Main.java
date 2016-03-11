@@ -1,5 +1,11 @@
 package pt.tecnico.myDrive;
 
+import java.io.IOException;
+
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.Dir;
@@ -61,5 +67,11 @@ public class Main {
 	public static void someTransaction() {
 		System.out.println("FenixFramework's root object is: " + FenixFramework.getDomainRoot());
 	}
-	
+	@Atomic
+	public static void xmlScan(Document file){
+		MyDrive md = FenixFramework.getDomainRoot().getMydrive().getInstance();
+		md.importXML(file.getRootElement());
+			
+		
+	}
 }
