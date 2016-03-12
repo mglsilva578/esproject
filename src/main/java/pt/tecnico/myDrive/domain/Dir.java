@@ -6,24 +6,51 @@ import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
+
 	private Dir self;
 	private Dir parent;
-	public Dir() {
+
+	public Dir(){
 		super();
 	}
 
-	public Dir(MyDrive myDrive, User owner, String name, String permissions){
-		super.init(myDrive, owner, name, permissions);
-		self.setName(".");
-		this.self = this;		
+	public Dir(MyDrive drive, User owner, String name, String permissions){
+		super.init(drive, owner, name, permissions);
+		if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
+			self = new Dir(drive, owner, ".", permissions); 
+			this.addFile(self); 
+		}  
+		if(name.equals("/")){  
+			if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
+				parent = new Dir(drive, owner, "..", permissions);
+				this.addFile(parent); 
+			}  
+		}  
+		else { 
+			if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
+				parent = new Dir(drive, owner, "..", permissions); 
+				this.addFile(parent); 
+			} 
+		}  
 	}
 
 	public Dir getSelf(){
 		return this.self;
 	}
 
-	public Dir getParent() {
-		return parent;
+	public Dir getParent(){
+		return this.parent;
+	}
+
+	public Dir getDirByName(String name){
+		for (File file : this.getFileSet()){
+			if(file instanceof Dir){
+				if(file.getName().equals(name)){
+					return (Dir)file;
+				}				
+			}
+		}
+		throw new NoDirException(name);
 	}
 
 	public void setParent(Dir parent) {
@@ -31,31 +58,34 @@ public class Dir extends Dir_Base {
 		this.parent = parent;
 	}
 
-	public void addFile( File fileToAdd ){
-		if(!hasFileWithName( fileToAdd.getName() )){
-			super.addFile( fileToAdd );			
-			if( fileToAdd instanceof Dir ){
-				((Dir)fileToAdd).setParent( this );
-			}
-			if(this.getName().equals("/")){
-				fileToAdd.setPath(this.getPath() +  fileToAdd.getName());
-			}else{
-				fileToAdd.setPath(this.getPath() + "/" + fileToAdd.getName());
-			}
-		}else{
-			throw new FileAlreadyExistsException(fileToAdd.getName(), this);
+	private boolean hasFileWithName(String name){
+		if(this.getFileSet().size() == 0){
+			return false;
 		}
-	}
-
-	private boolean hasFileWithName( String name ){
-		if( this.getFileSet().size() == 0 ) return false;
-
-		for (File file : this.getFileSet()) {
-			if( file.getName().equals(name) ){
+		for (File file : this.getFileSet()){
+			if(file.getName().equals(name)){
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public void addFile(File fileToAdd){
+		if(!hasFileWithName(fileToAdd.getName())){
+			super.addFile(fileToAdd);			
+			if(fileToAdd instanceof Dir){
+			//	((Dir)fileToAdd).setParent(this);
+			}
+			if(this.getName().equals("/")){
+				//	fileToAdd.setPath(this.getPath() +  fileToAdd.getName());
+			}
+			else{
+				//	fileToAdd.setPath(this.getPath() + "/" + fileToAdd.getName());
+			}
+		}
+		else{
+			throw new FileAlreadyExistsException(fileToAdd.getName(), this);
+		}
 	}
 
 	public String listDirContent(String path){
@@ -68,29 +98,14 @@ public class Dir extends Dir_Base {
 				return file.getName();
 		}
 		for(File file: getFileSet()){
-			if(file.getName().equals(arg1))
+			if(file.getName().equals(arg1)){
 				((Dir) file).listDirContent(arg2);
-			else
+			}
+			else{
 				throw new NoDirException(path);
-		}
-		return null;
-	}
-
-
-	public void importXML(Element elm){
-		super.importXML(elm);
-
-	}
-
-	public Dir getDirByName( String name ){
-		for (File file : this.getFileSet()) {
-			if( file instanceof Dir){
-				if( file.getName().equals(name) ){
-					return (Dir)file;
-				}				
 			}
 		}
-		throw new NoDirException( name );
+		return null;
 	}
 
 	@Override
@@ -100,4 +115,9 @@ public class Dir extends Dir_Base {
 		description += "\t Dir size : " + this.getFileSet().size() + "\n\n";
 		return description;
 	}
+
+	public void importXML(Element elm){
+		super.importXML(elm);
+	}
+
 }
