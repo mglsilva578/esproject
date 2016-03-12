@@ -17,38 +17,37 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class Main {
 	// FenixFramework will try automatic initialization when first accessed
-	public static void main(String [] args) {
+	public static void main(String [] args){
 		System.out.println("Welcome to MyDrive Application");
-		try {
+		try{
 			Main.setup();
 		}catch(MyDriveException mde){
 			System.out.println(mde.getMessage());
 		}catch(Exception e){
 			System.out.println(e.getMessage());
-		}finally {
+		}finally{
 			// ensure an orderly shutdown
 			FenixFramework.shutdown();
 		}
 	}
+	
 	@Atomic
 	public static void init(){
 		//TODO clean MyDrive
 	}
 
 	@Atomic
-	public static void setup() {
+	public static void setup(){
 		MyDrive drive = MyDrive.getInstance();
 		if(drive.isEmpty()){
 			SuperUser rootUser = new SuperUser(drive);
 			Dir slash = new Dir(drive, rootUser, "/", rootUser.getMask());
-			slash.setParent(slash);	
-			slash.setPath("/");
 			drive.setRootDir(slash);
-			
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask());
-			slash.addFile( home );
+			//TO DO
 			Dir rootDir = drive.createUserDir(rootUser);
-			rootUser.setHomeDir(rootDir.getPath());
+
+			//rootUser.setHomeDir(rootDir.getPath());
 			/*
 			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
 			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
