@@ -4,6 +4,7 @@ package pt.tecnico.myDrive.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -11,6 +12,7 @@ import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.InvalidPathameException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
+import pt.tecnico.phonebook.domain.Person;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -207,6 +209,17 @@ public class MyDrive extends MyDrive_Base {
 			
 		}
 	}
+
+	public Document xmlExport() {
+        Element element = new Element("phonebook");
+        Document doc = new Document(element);
+
+        for (User u: getUserSet())
+            element.addContent(u.xmlExport());
+        for (File f: getFileSet())
+        	element.addContent(f.xmlExport());
+        return doc;
+    }
 
 	public Dir createUserDir( User user ){
 		Dir slash = this.getRootDir();
