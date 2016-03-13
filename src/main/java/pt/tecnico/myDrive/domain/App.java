@@ -1,16 +1,24 @@
 package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
-
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class App extends App_Base {
     
-    public App( MyDrive myDrive, User owner, String name, String permissions,String content ) {
-        super.init( myDrive, owner, name, permissions );
+	public App(){
+		super();
+	}
+	
+    public App(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
+        super.init(drive, owner, name, permissions, content, dir);
+        dir.addFile(this);
     }
     
-    public App(){}
+    public String toString(){
+		String description = super.toString();
+		return description;
+	}
     
     public void importXML(Element elm){
     	this.setName(elm.getAttributeValue("name"));
@@ -18,7 +26,7 @@ public class App extends App_Base {
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
     	this.setContent(elm.getAttributeValue("method"));
-    	this.setPath(elm.getAttributeValue("path"));
+    	//this.setPath(elm.getAttributeValue("path"));
     }
     
 }

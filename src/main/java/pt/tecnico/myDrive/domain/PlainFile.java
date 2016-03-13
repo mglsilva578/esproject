@@ -1,25 +1,45 @@
 package pt.tecnico.myDrive.domain;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 public class PlainFile extends PlainFile_Base {
-
+	static final Logger log = LogManager.getRootLogger();
+	
 	protected PlainFile(){
 		super();
 	}
 	
-	public PlainFile(MyDrive myDrive, User owner, String name, String permissions, String content) {
-		this.init( myDrive, owner, name, permissions );
+	public PlainFile(MyDrive drive, User owner, String name, String permissions, String content){
+		this.init(drive, owner, name, permissions, content);
 	}
 	
-	protected void init( MyDrive myDrive, User owner, String name, String permissions, String content ){
-		super.init( myDrive, owner, name, permissions );
-		this.setContent(content);
+	public PlainFile(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
+		this.init(drive, owner, name, permissions, content, dir);
+		dir.addFile(this);
+	}
+	
+	protected void init(MyDrive drive, User owner, String name, String permissions, String content){
+		super.init(drive, owner, name, permissions);
+		setContent(content);
+	}
+	
+	protected void init(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
+		super.init(drive, owner, name, permissions, dir);
+		setContent(content);
 	}
 		
 	public String readContent(){
 		return getContent();
 	}
+	
+	public String toString(){
+		String description = super.toString();
+		description += "\tcontent: " + this.getContent() + "\n";
+		return description;
+	}
+	
 	public void importXML(Element elm){
 		super.importXML(elm);
 		this.setContent(elm.getAttributeValue("contents"));

@@ -16,6 +16,10 @@ public class File extends File_Base {
 	public File(MyDrive drive, User owner, String name, String permissions){
 		this.init(drive, owner, name, permissions);
 	}
+	
+	public File(MyDrive drive, User owner, String name, String permissions, Dir dir){
+		this.init(drive, owner, name, permissions, dir);
+	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions){
 		setId(drive.getNewFileId());
@@ -25,13 +29,21 @@ public class File extends File_Base {
 		this.setMydrive(drive);
 		this.setOwner(owner);
 	}
+	
+	protected void init(MyDrive drive, User owner, String name, String permissions, Dir dir){
+		setId(drive.getNewFileId());
+		setName(name);
+		setLast_modification(new DateTime());
+		setPermissions(permissions);
+		this.setMydrive(drive);
+		this.setOwner(owner);
+	}
 
-	public String getPath(File file, MyDrive drive, String p){
+	public String getPath(MyDrive drive, String p){
 		String path = null;
-		if(!(file.getFather().equals(drive.getRootDir()))){
-			path = file.getName() + p; 
-			file = file.getFather();
-			getPath(file, drive, path);
+		if(!(this.getFather().equals(drive.getRootDir()))){
+			path = this.getName() + p; 
+			this.getFather().getPath(drive, path);
 			return null;
 		}
 		else{
@@ -68,7 +80,7 @@ public class File extends File_Base {
 			owner.addFile(this);
 		}
 	}
-
+	
 	public void remove(){
 		setMydrive(null);
 		setOwner(null);
@@ -77,13 +89,12 @@ public class File extends File_Base {
 
 	@Override
 	public String toString(){
-		String description = "";
-		description += "File with id " + this.getId() + "\n";
-		description += "\twith name " + this.getName() + "\n";
-		description += "\tbelonging to " + this.getOwner().getUsername() + "\n";
-		description += "\tlast modified at " + this.getLast_modification() + "\n";
-		description += "\twith permissions " + this.getPermissions() + "\n";
-	//	description += "\twith path" + this.getPath() + "\n";
+		String description = "\n";
+		description += "\tid: " + this.getId() + "\n";
+		description += "\tname: " + this.getName() + "\n";
+		description += "\towner: " + this.getOwner().getUsername() + "\n";
+		description += "\tlast modified: " + this.getLast_modification() + "\n";
+		description += "\tpermissions: " + this.getPermissions() + "\n";
 		return description;
 	}
 
