@@ -10,6 +10,7 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.InvalidPathameException;
+import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
@@ -167,6 +168,16 @@ public class MyDrive extends MyDrive_Base {
 	public void removeUser(User user){
 		user.remove();
 		super.removeUser(user);		
+	}
+	
+	public String readContent(String path){
+		File file = getFileByPathname(path);
+		if (file instanceof PlainFile){
+			return ((PlainFile)file).getContent();
+		}
+		else {
+			throw new NoPlainFileException(path);
+		}
 	}
 
 	public void importXML(Element toImport){
