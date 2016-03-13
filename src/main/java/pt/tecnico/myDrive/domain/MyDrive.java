@@ -182,11 +182,12 @@ public class MyDrive extends MyDrive_Base {
 	
 
 	public String listDirContent(String path){
-		String content ="";
+		//String content ="";
 		Dir dir=(Dir) getFileByPathname(path);
-		for(File file:dir.getFileSet())
-			content+=file.getName();
-		return content;
+		return dir.getContentNames();
+		/*for(File file:dir.getFileSet())
+			content+=file.getName()+"|";
+		return content;*/
 	}
 
 

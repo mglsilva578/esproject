@@ -53,4 +53,14 @@ public class Tests {
 		Dir home = (Dir)drive.getFileByPathname("/home");
 		// TODO
 	}
+	
+	public static void listDirContent(MyDrive drive){
+		Dir slash = drive.getRootDir();
+		Dir home = new Dir(drive, "home", "rwxd----", slash);
+		Dir a = new Dir(drive, "a", "rwxd----", home);
+		Dir b = new Dir(drive, "b", "rwxd----",home);
+		drive.listDirContent("/home");
+		log.debug("lisDirContent SUCCESS!");
+		
+	}
 }
