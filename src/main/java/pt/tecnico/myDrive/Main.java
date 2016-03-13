@@ -77,8 +77,11 @@ public class Main {
 
 				String pathname = "/home/joseluisvf";
 				try{
-					Tests.testeCriarDirUsrLocalBin(drive);
-					Tests.testeRemoverDirUsrLocalBin(drive);
+					Tests.createHomeReadmeWithUsersList(drive);
+					Tests.createDirUsrLocalBin(drive);
+					Tests.printContentOfHomeReadme(drive);
+					Tests.removeDirUsrLocalBin(drive);
+					Tests.removeFileHomeReadme(drive);
 				}catch( MyDriveException mde){
 					System.out.println("Nossa : ");
 					System.out.println(mde.getMessage());

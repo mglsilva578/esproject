@@ -1,5 +1,8 @@
 package pt.tecnico.myDrive;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -8,40 +11,46 @@ import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 
 public class Tests {
-	
-	//Criar o ficheiro de texto /home/README com o conteudo lista de utilizadores
-	public static void Teste01(String username,MyDrive md){
-		String content = "utilizador1, utilizador2";
-		String path = "/Home/README";
-		String permissions = "rw";
-		String name = "nome";
-		User owner = md.getInstance().getUserByUsername(username);
-		PlainFile pf = new PlainFile(md, owner, name, permissions, content);
-		
+	private static final Logger log = LogManager.getRootLogger();
+	public static void createHomeReadmeWithUsersList(MyDrive drive){
+		Dir home = (Dir)drive.getFileByPathname("/home");
+		User superUser = drive.getUserByUsername(SuperUser.NAME);
+		new PlainFile(drive, superUser, "README", "rwxd----", "lista de utilizadores", home);
+		log.debug("createHomeReadmeWithUsersList SUCCESS!");
 	}
-	//criar a directoria /usr/local/bin
-	public static void testeCriarDirUsrLocalBin(MyDrive drive){
+
+	public static void createDirUsrLocalBin(MyDrive drive){
 		Dir slash = drive.getRootDir();
-		Dir usr = new Dir(drive, "usr", "rw", slash);
-		Dir local = new Dir(drive, "local", "rw", usr);
-		new Dir(drive, "bin", "rw", local);
+		Dir usr = new Dir(drive, "usr", "rwxd----", slash);
+		Dir local = new Dir(drive, "local", "rwxd----", usr);
+		new Dir(drive, "bin", "rwxd----", local);
+		log.debug("createDirUsrLocalBin SUCCESS!");
 	}
-	//imprimir o conteudo do ficheiro /home/README
-	public static void Teste03(String filename,  MyDrive md){
-		for(File file : md.getInstance().getFileSet()){
-			if(filename.equals(file.getName()))
-				System.out.println(file.toString());
+	
+	public static void printContentOfHomeReadme(MyDrive drive){
+		File readme = drive.getFileByPathname("/home/README");
+		if(readme instanceof PlainFile){
+			System.out.println(((PlainFile)readme).getContent());
+			log.debug("printContentOfHomeReadme SUCCESS!");
+		}else{
+			log.debug("printContentOfHomeReadme SILENT FAIL ...");
 		}
 	}
 	
-	//Remover a diretoria /usr/local/bin
-	public static void testeRemoverDirUsrLocalBin(MyDrive drive){
+	public static void removeDirUsrLocalBin(MyDrive drive){
 		drive.removePlainFileOrEmptyDirectoryByPathname("/usr/local/bin");
+		log.debug("removeDirUsrLocalBin SUCCESS!");
 	}
 	//Imprimir a exportacao em XML do sistema de ficheiros
 	public static void Teste05(){}
-	//Remover o ficheiro /home/README
-	public static void Teste06(){}
+
+	public static void removeFileHomeReadme(MyDrive drive){
+		drive.removePlainFileOrEmptyDirectoryByPathname("/home/README");
+		log.debug("removeFileHomeReadme SUCCESS!");
+	}
 	//Imprimir a listagem simples da directoria /home
-	public static void Teste07(){}
+	public static void listContentsHome(MyDrive drive){
+		Dir home = (Dir)drive.getFileByPathname("/home");
+		// TODO
+	}
 }
