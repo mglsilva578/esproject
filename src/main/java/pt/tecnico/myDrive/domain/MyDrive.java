@@ -62,9 +62,7 @@ public class MyDrive extends MyDrive_Base {
 			if(pathname.length() == 1) return previousDir;
 			pathnameSplit = pathname.split(Dir.SLASH_NAME);
 			howManyLinks = pathnameSplit.length;
-			for (String string : pathnameSplit) {
-				System.out.println(string);
-			}
+			
 			while(nextDirIndex < howManyLinks){
 				content = previousDir.getFileByName(pathnameSplit[nextDirIndex++]);
 				if (content instanceof Dir){

@@ -91,6 +91,7 @@ public String toString(){
 	description += "\towner: " + this.getOwner().getUsername() + "\n";
 	description += "\tlast modified: " + this.getLast_modification() + "\n";
 	description += "\tpermissions: " + this.getPermissions() + "\n";
+	description += "\tfull path: " + this.getFullyQualifiedPath() + "\n";
 	return description;
 }
 
@@ -101,12 +102,11 @@ public void importXML(Element elm){
 	this.setPermissions(elm.getAttributeValue("permissions"));
 }
 
-public String getFullyQualifiedPath(){
+private String getFullyQualifiedPath(){
 	String path = "";
 	path = this.getFather().getFullyQualifiedPath();
 	path = path + "/" + this.getName();
 	return path;
-	
 }
 
 }
