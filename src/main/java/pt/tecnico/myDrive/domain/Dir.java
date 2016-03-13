@@ -26,6 +26,11 @@ public class Dir extends Dir_Base {
 	public Dir(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
 	}
+	
+	public Dir(MyDrive drive, String name, String permissions, Dir dir){
+		User owner = drive.getUserByUsername(SuperUser.NAME);
+		super.init(drive, owner, name, permissions, dir);
+	}
 
 	public File getFileByName(String nameToLook){
 		for (File file : this.getFileSet()){

@@ -50,12 +50,6 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
-	/**
-	 * Dado um caminho, devolve a ultima entidade presente nesse caminho.
-	 * /home/joseluisvf/teste.txt devolve teste.txt.
-	 * @param pathname
-	 * @return
-	 */
 	public File getFileByPathname(String pathname){
 		Dir previousDir;
 		File content = null;
@@ -79,12 +73,12 @@ public class MyDrive extends MyDrive_Base {
 				}
 			}
 			if(content == null){
-				throw new InvalidPathameException("1" + pathname);
+				throw new InvalidPathameException(pathname);
 			}else{
 				return content;				
 			}
 		}else{
-			throw new InvalidPathameException("2" + pathname);
+			throw new InvalidPathameException(pathname);
 		}
 	}
 	

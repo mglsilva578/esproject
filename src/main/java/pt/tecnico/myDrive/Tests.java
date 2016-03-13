@@ -4,6 +4,7 @@ import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 
 public class Tests {
@@ -19,11 +20,11 @@ public class Tests {
 		
 	}
 	//criar a directoria /usr/local/bin
-	public static void Teste02(String username, MyDrive md){
-		User owner = md.getInstance().getUserByUsername(username);
-		String name = "nome";
-		String permissions = "rw";
-		Dir dir = new Dir(md, owner, name, permissions);
+	public static void testeCriarDirUsrLocalBin(MyDrive drive){
+		Dir slash = drive.getRootDir();
+		Dir usr = new Dir(drive, "usr", "rw", slash);
+		Dir local = new Dir(drive, "local", "rw", usr);
+		new Dir(drive, "bin", "rw", local);
 	}
 	//imprimir o conteudo do ficheiro /home/README
 	public static void Teste03(String filename,  MyDrive md){
@@ -34,7 +35,9 @@ public class Tests {
 	}
 	
 	//Remover a diretoria /usr/local/bin
-	public static void Teste04(){}
+	public static void testeRemoverDirUsrLocalBin(MyDrive drive){
+		drive.removePlainFileOrEmptyDirectoryByPathname("/usr/local/bin");
+	}
 	//Imprimir a exportacao em XML do sistema de ficheiros
 	public static void Teste05(){}
 	//Remover o ficheiro /home/README

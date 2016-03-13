@@ -77,29 +77,8 @@ public class Main {
 
 				String pathname = "/home/joseluisvf";
 				try{
-					System.out.println("\n Vamos tentar com o pathname <" + pathname + ">");
-					File resultado = drive.getFileByPathname(pathname);
-					System.out.println("Resultado : ");
-					System.out.println(resultado);
-					
-					pathname = "/home/root";
-					System.out.println("\n Vamos tentar com o pathname <" + pathname + ">");
-					resultado = drive.getFileByPathname(pathname);
-					System.out.println("Resultado : ");
-					System.out.println(resultado);
-					
-					pathname = "/";
-					System.out.println("\n Vamos tentar com o pathname <" + pathname + ">");
-					resultado = drive.getFileByPathname(pathname);
-					System.out.println("Resultado : ");
-					System.out.println(resultado);
-					
-					pathname = "/home3/plainfile1";
-					System.out.println("\n Vamos tentar com o pathname <" + pathname + ">");
-					resultado = drive.getFileByPathname(pathname);
-					System.out.println("Resultado : ");
-					System.out.println(resultado);
-					
+					Tests.testeCriarDirUsrLocalBin(drive);
+					Tests.testeRemoverDirUsrLocalBin(drive);
 				}catch( MyDriveException mde){
 					System.out.println("Nossa : ");
 					System.out.println(mde.getMessage());
@@ -111,7 +90,7 @@ public class Main {
 				//String a = app.getPath(drive, "");
 				//System.out.println("\n" + a + "\n\n");
 				//System.out.println("Users da drive : \n" + drive.getUserSet() + "----------------------");
-				//System.out.println("Directorios da drive : \n" + drive.getFileSet().toString());
+				System.out.println("Directorios da drive : \n" + drive.getFileSet().toString());
 			}
 			else{
 				System.out.println("\n\n MyDrive is not empty! \n\n");
