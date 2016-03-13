@@ -50,22 +50,12 @@ public class Main {
 				SuperUser rootUser = new SuperUser(drive);
 
 				Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
-				log.info("0");
-
 				Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
-				log.info("00");
-
-				String a = home.getFather().getName();
-				log.info("Father home is:" + a);
-				
 				Dir root = new Dir(drive, rootUser, "root", rootUser.getMask(), home);
 				Dir home2 = new Dir(drive, rootUser, "home2", rootUser.getMask(), slash);				
 				Dir home3 = new Dir(drive, rootUser, "home3", rootUser.getMask(), slash);
 				Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask(), home3);
 				Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask(), home4);
-				
-				String b = home5.getFather().getFather().getName();
-				log.info("Father home5 is:" + b);
 				
 				User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
 				userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
@@ -74,8 +64,16 @@ public class Main {
 				userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
 
 				PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
+				String content = plainFile.readContent("/home3/plainfile1");
+				log.info("\nread content of PlainFile\t" + content);
+				
 				Link link = new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", home4);
+				content = link.readContent("/home3/home4/link1");
+				log.info("\nread content of Link\t" + content);
+				
 				App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
+				content = app.readContent("/home3/home4/home5/app1");
+				log.info("\nread content of App\t" + content);
 
 				String pathname = "/home/joseluisvf";
 				try{

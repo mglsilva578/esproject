@@ -30,8 +30,9 @@ public class PlainFile extends PlainFile_Base {
 		setContent(content);
 	}
 		
-	public String readContent(){
-		return getContent();
+	public String readContent(String path){
+		File file = getMydrive().getFileByPathname(path);
+		return ((PlainFile)file).getContent();
 	}
 	
 	public String toString(){
