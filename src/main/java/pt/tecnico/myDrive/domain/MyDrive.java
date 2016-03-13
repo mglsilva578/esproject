@@ -12,7 +12,6 @@ import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.InvalidPathameException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
-import pt.tecnico.phonebook.domain.Person;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -125,14 +124,14 @@ public class MyDrive extends MyDrive_Base {
 		return allUsernames;
 	}
 
-	public void erasePlainFileOrEmptyDirectoryByPathname( String pathnameFileToFind ){
+	public void removePlainFileOrEmptyDirectoryByPathname( String pathnameFileToFind ){
 		File fileToRemove = this.getFileByPathname( pathnameFileToFind );
 		if ((isEmptyDirectory( fileToRemove ) ||
 				isPlainFile( fileToRemove ))){
-			// TODO cortar ligacao atraves do file como no PB
-			this.removeFile(fileToRemove);
+			fileToRemove.getFather().removeFile(fileToRemove);
+			fileToRemove.remove();
 		}else{
-			throw new CannotEraseFileException( pathnameFileToFind );
+			throw new CannotEraseFileException( fileToRemove.getName() );
 		}
 	}
 
@@ -209,7 +208,7 @@ public class MyDrive extends MyDrive_Base {
 			
 		}
 	}
-
+/*
 	public Document xmlExport() {
         Element element = new Element("phonebook");
         Document doc = new Document(element);
@@ -220,7 +219,7 @@ public class MyDrive extends MyDrive_Base {
         	element.addContent(f.xmlExport());
         return doc;
     }
-
+*/
 	public Dir createUserDir( User user ){
 		Dir slash = this.getRootDir();
 		Dir home = (Dir)slash.getFileByName( "home" );

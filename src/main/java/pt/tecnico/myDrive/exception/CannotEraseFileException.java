@@ -8,7 +8,7 @@ public class CannotEraseFileException extends MyDriveException {
 		super();
 	}
 	
-	public CannotEraseFileException(String username){
-		super("Exists user with same username <" + username +"> in MyDrive");
+	public CannotEraseFileException(String fileName){
+		super("Cannot erase the file with name <" + fileName +">");
 	}
 }

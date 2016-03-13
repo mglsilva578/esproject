@@ -4,7 +4,6 @@ import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.phonebook.domain.Contact;
 
 public class User extends User_Base {
 
@@ -80,7 +79,7 @@ public class User extends User_Base {
 		}
 	}
 
-	public Element xmlExport() {
+	/*public Element xmlExport() {
         Element element = new Element("user");
         element.setAttribute("username", getUsername());
         element.setAttribute("password", getPassword());
@@ -94,5 +93,5 @@ public class User extends User_Base {
             filesElement.addContent(f.xmlExport());
 
         return element;
-    }
+    }*/
 }
