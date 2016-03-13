@@ -12,7 +12,6 @@ public class Link extends Link_Base {
 	
     public Link(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
         super.init(drive, owner, name, permissions, content, dir);
-        dir.addFile(this);
     }
     
     public String toString(){

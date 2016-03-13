@@ -20,27 +20,11 @@ public class Dir extends Dir_Base {
 		super.init(drive, owner, name, permissions);
 		if(name.equals(SLASH_NAME)){
 			drive.setRootDir(this);
-			Dir self = new Dir(drive, owner, ".", permissions); 
-			drive.getRootDir().addFile(self); 
-			Dir parent = new Dir(drive, owner, "..", permissions);
-			drive.getRootDir().addFile(parent); 
-		}
-		if(!getFather().getName().equals(SLASH_NAME)){
-			if(name.equals(".")){
-				getFather().addFile(this);
-			}
-			if(name.equals("..")){
-				getFather().addFile(this);
-			}
 		}
 	}
 
 	public Dir(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
-		if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
-			Dir self = new Dir(drive, owner, ".", permissions); 
-			Dir parent = new Dir(drive, owner, "..", permissions);
-		}
 	}
 
 	public Dir getDirByName(String nameToLook){

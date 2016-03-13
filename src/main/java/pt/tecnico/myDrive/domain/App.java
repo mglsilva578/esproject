@@ -12,7 +12,6 @@ public class App extends App_Base {
 	
     public App(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
         super.init(drive, owner, name, permissions, content, dir);
-        dir.addFile(this);
     }
     
     public String toString(){

@@ -17,7 +17,7 @@ public class PlainFile extends PlainFile_Base {
 	
 	public PlainFile(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
 		this.init(drive, owner, name, permissions, content, dir);
-		dir.addFile(this);
+		//dir.addFile(this);
 	}
 	
 	protected void init(MyDrive drive, User owner, String name, String permissions, String content){

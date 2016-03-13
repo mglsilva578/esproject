@@ -37,6 +37,7 @@ public class File extends File_Base {
 		setPermissions(permissions);
 		this.setMydrive(drive);
 		this.setOwner(owner);
+		dir.addFile(this);
 	}
 
 	public String getPath(MyDrive drive, String p){
