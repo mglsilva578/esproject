@@ -89,7 +89,12 @@ public class Dir extends Dir_Base {
 
 	@Override
 	public String toString(){
-		String description = super.toString();
+		String description = "";
+		if(!this.getName().equals(Dir.SLASH_NAME)){
+			description = super.toString();
+		}else{
+			
+		}
 		description += "\tsize: " + this.getFileSet().size() + "\n";
 		description += "\tcontent: " + this.getContentNames() + "\n";
 		return description;
@@ -100,7 +105,7 @@ public class Dir extends Dir_Base {
 	}
 
 	public String getFullyQualifiedPath(){
-		if(this.getName().equals(Dir.SLASH_NAME)) return "/";
+		if(this.getName().equals(Dir.SLASH_NAME)) return "";
 		
 		Dir parent = this.getFather();
 		String path = "" + this.getName();
@@ -111,5 +116,4 @@ public class Dir extends Dir_Base {
 		path = "/" + path;
 		return path;
 	}
-	
 }
