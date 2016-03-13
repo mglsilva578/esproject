@@ -9,14 +9,21 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 
 public class Tests {
 	private static final Logger log = LogManager.getRootLogger();
+	
 	public static void createHomeReadmeWithUsersList(MyDrive drive){
-		Dir home = (Dir)drive.getFileByPathname("/home");
-		User superUser = drive.getUserByUsername(SuperUser.NAME);
-		new PlainFile(drive, superUser, "README", "rwxd----", "lista de utilizadores", home);
-		log.debug("createHomeReadmeWithUsersList SUCCESS!");
+		File fileFound = drive.getFileByPathname("/home");
+		if(fileFound instanceof Dir){
+			Dir home = (Dir)fileFound;
+			User superUser = drive.getUserByUsername(SuperUser.NAME);
+			new PlainFile(drive, superUser, "README", "rwxd----", "lista de utilizadores", home);
+			log.debug("createHomeReadmeWithUsersList SUCCESS!");			
+		}else{
+			throw new WrongTypeOfFileFoundException(fileFound.getName(), "Dir");
+		}
 	}
 
 	public static void createDirUsrLocalBin(MyDrive drive){
@@ -30,10 +37,10 @@ public class Tests {
 	public static void printContentOfHomeReadme(MyDrive drive){
 		File readme = drive.getFileByPathname("/home/README");
 		if(readme instanceof PlainFile){
-			System.out.println(((PlainFile)readme).getContent());
+			log.trace("printing contents of /home/README :\n" + ((PlainFile)readme).getContent());
 			log.debug("printContentOfHomeReadme SUCCESS!");
 		}else{
-			log.debug("printContentOfHomeReadme SILENT FAIL ...");
+			throw new WrongTypeOfFileFoundException(readme.getName(), "PlainFile");
 		}
 	}
 	
@@ -41,26 +48,32 @@ public class Tests {
 		drive.removePlainFileOrEmptyDirectoryByPathname("/usr/local/bin");
 		log.debug("removeDirUsrLocalBin SUCCESS!");
 	}
-	//Imprimir a exportacao em XML do sistema de ficheiros
-	public static void Teste05(){}
+	public static void printXMLExport(){
+		//TODO print xml export
+	}
 
 	public static void removeFileHomeReadme(MyDrive drive){
 		drive.removePlainFileOrEmptyDirectoryByPathname("/home/README");
 		log.debug("removeFileHomeReadme SUCCESS!");
 	}
-	//Imprimir a listagem simples da directoria /home
+	
 	public static void listContentsHome(MyDrive drive){
-		Dir home = (Dir)drive.getFileByPathname("/home");
-		// TODO
+		log.trace("listing contents of /home :\n" + drive.listDirContent("/home"));
+		log.debug("listContentsHome SUCCESS!");
 	}
 	
 	public static void listDirContent(MyDrive drive){
-		Dir slash = drive.getRootDir();
-		Dir home = new Dir(drive, "home", "rwxd----", slash);
-		Dir a = new Dir(drive, "a", "rwxd----", home);
-		Dir b = new Dir(drive, "b", "rwxd----",home);
-		drive.listDirContent("/home");
-		log.debug("lisDirContent SUCCESS!");
+		File fileFound = drive.getFileByPathname("/home");
+		Dir home;
+		if(fileFound instanceof Dir){
+			home = (Dir)fileFound;
+			new Dir(drive, "a", "rwxd----", home);
+			new Dir(drive, "b", "rwxd----",home);
+			drive.listDirContent("/home");
+			log.debug("lisDirContent SUCCESS!");			
+		}else{
+			throw new WrongTypeOfFileFoundException(fileFound.getName(), "Dir");
+		}
 		
 	}
 }

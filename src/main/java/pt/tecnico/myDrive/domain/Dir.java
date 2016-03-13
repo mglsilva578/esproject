@@ -2,8 +2,7 @@ package pt.tecnico.myDrive.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
-import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.CannotFindFileException;
+
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.NoDirException;
 
@@ -57,26 +56,6 @@ public class Dir extends Dir_Base {
 		else{
 			throw new FileAlreadyExistsException(fileToAdd.getName(), this);
 		}
-	}
-
-	public String listDirContent(String path){
-		String array[];
-		array = path.split(SLASH_NAME,2);
-		String arg1 = array[0];
-		String arg2 = array[1];
-		if (arg2==null){
-			for(File file: getFileSet())
-				return file.getName();
-		}
-		for(File file: getFileSet()){
-			if(file.getName().equals(arg1)){
-				((Dir) file).listDirContent(arg2);
-			}
-			else{
-				throw new NoDirException(path);
-			}
-		}
-		return null;
 	}
 
 	public String getContentNames(){

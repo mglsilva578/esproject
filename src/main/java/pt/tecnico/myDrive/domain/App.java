@@ -1,8 +1,8 @@
 package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
+
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class App extends App_Base {
     

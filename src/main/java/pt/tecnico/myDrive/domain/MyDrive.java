@@ -4,7 +4,6 @@ package pt.tecnico.myDrive.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -13,6 +12,7 @@ import pt.tecnico.myDrive.exception.InvalidPathameException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -178,16 +178,14 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 	
-
-	public String listDirContent(String path){
-		//String content ="";
-		Dir dir=(Dir) getFileByPathname(path);
-		return dir.getContentNames();
-		/*for(File file:dir.getFileSet())
-			content+=file.getName()+"|";
-		return content;*/
+	public String listDirContent(String pathname){
+		File fileFound = this.getFileByPathname(pathname);
+		if(fileFound instanceof Dir){
+			return ((Dir) fileFound).getContentNames();
+		}else{
+			throw new WrongTypeOfFileFoundException(fileFound.getName(), "Dir");
+		}
 	}
-
 
 	public void importXML(Element toImport){
 
@@ -241,4 +239,18 @@ public class MyDrive extends MyDrive_Base {
 		return userDir;
 	}
 	
+	@Override
+	public String toString(){
+		String description = "";
+		description += "\n\t\tMyDrive files\n";
+		for (File file : this.getFileSet()) {
+			description += "\t" + file.toString() + "\n";
+		}
+
+		description += "\n\t\tMyDrive users\n";
+		for (User user : this.getUserSet()) {
+			description += "\t" + user.toString() + "\n";
+		}
+		return description;
+	}
 }

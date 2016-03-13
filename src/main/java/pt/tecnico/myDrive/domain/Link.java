@@ -1,8 +1,8 @@
 package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
+
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class Link extends Link_Base {
     
@@ -25,6 +25,5 @@ public class Link extends Link_Base {
 		this.setOwner(user);
 		this.setPermissions(elm.getAttributeValue("permissions"));
     	this.setContent(elm.getAttributeValue("value"));
-    	//this.setPath(elm.getAttributeValue("path"));
     }
 }

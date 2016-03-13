@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
+
 public class PlainFile extends PlainFile_Base {
 	static final Logger log = LogManager.getRootLogger();
 	
@@ -32,7 +34,11 @@ public class PlainFile extends PlainFile_Base {
 		
 	public String readContent(String path){
 		File file = getMydrive().getFileByPathname(path);
-		return ((PlainFile)file).getContent();
+		if(file instanceof PlainFile){
+			return ((PlainFile)file).getContent();			
+		}else{
+			throw new WrongTypeOfFileFoundException(file.getName(), "PlainFile");
+		}
 	}
 	
 	public String toString(){
