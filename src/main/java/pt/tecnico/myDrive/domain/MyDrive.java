@@ -179,6 +179,16 @@ public class MyDrive extends MyDrive_Base {
 			throw new NoPlainFileException(path);
 		}
 	}
+	
+
+	public String listDirContent(String path){
+		String content ="";
+		Dir dir=(Dir) getFileByPathname(path);
+		for(File file:dir.getFileSet())
+			content+=file.getName();
+		return content;
+	}
+
 
 	public void importXML(Element toImport){
 
