@@ -101,4 +101,12 @@ public void importXML(Element elm){
 	this.setPermissions(elm.getAttributeValue("permissions"));
 }
 
+public String getFullyQualifiedPath(){
+	String path = "";
+	path = this.getFather().getFullyQualifiedPath();
+	path = path + "/" + this.getName();
+	return path;
+	
+}
+
 }

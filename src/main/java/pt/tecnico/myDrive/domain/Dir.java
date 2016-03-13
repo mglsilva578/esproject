@@ -99,4 +99,17 @@ public class Dir extends Dir_Base {
 		super.importXML(elm);
 	}
 
+	public String getFullyQualifiedPath(){
+		if(this.getName().equals(Dir.SLASH_NAME)) return "/";
+		
+		Dir parent = this.getFather();
+		String path = "" + this.getName();
+		while(!parent.getName().equals(Dir.SLASH_NAME)){
+			path = parent.getName() + "/" + path;
+			parent = parent.getFather();
+		}
+		path = "/" + path;
+		return path;
+	}
+	
 }
