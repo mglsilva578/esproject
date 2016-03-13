@@ -7,6 +7,7 @@ import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
 
+	public static final String SLASH_NAME = "/";
 	private Dir self;
 	private Dir parent;
 
@@ -14,25 +15,26 @@ public class Dir extends Dir_Base {
 		super();
 	}
 
+	/**
+	 * Creates a  Dir into MyDrive, associated to a User.
+	 * A dir's parent is not set upon creation. Instead, it is set whenever
+	 * a dir is added to another. Special attention is given to when the dir 
+	 * in question is the root dir, in which case its parent is immediatly set
+	 * as itself.
+	 * 
+	 * @param drive instancia da MyDrive a qual nos estamos a adicionar.
+	 * @param owner User who is associated to this Dir.
+	 * @param name name by which this dir is known to MyDrive.
+	 * @param permissions permissions associated to this Dir.
+	 */
 	public Dir(MyDrive drive, User owner, String name, String permissions){
 		super.init(drive, owner, name, permissions);
-		if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
-			self = new Dir(drive, owner, ".", permissions); 
-			this.addFile(self); 
-		}  
-		if(name.equals("/")){  
-			if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
-				parent = new Dir(drive, owner, "..", permissions);
-				this.addFile(parent); 
-			}  
-		}  
-		else { 
-			if(!(this.getName().equals(".")) && !(this.getName().equals(".."))){ 
-				parent = new Dir(drive, owner, "..", permissions); 
-				this.addFile(parent); 
-			} 
-		}  
+		this.setSelf(this);
+		if(name.equals(SLASH_NAME)){
+			this.setParent(this);
+		}
 	}
+
 
 	public Dir getSelf(){
 		return this.self;
@@ -42,19 +44,22 @@ public class Dir extends Dir_Base {
 		return this.parent;
 	}
 
-	public Dir getDirByName(String name){
+	public Dir getDirByName(String nameToLook){
 		for (File file : this.getFileSet()){
 			if(file instanceof Dir){
-				if(file.getName().equals(name)){
+				if(file.getName().equals(nameToLook)){
 					return (Dir)file;
 				}				
 			}
 		}
-		throw new NoDirException(name);
+		throw new NoDirException(nameToLook, this.getName());
+	}
+
+	public void setSelf(Dir self){
+		this.self = self;
 	}
 
 	public void setParent(Dir parent) {
-		self.setName("..");
 		this.parent = parent;
 	}
 
@@ -71,26 +76,28 @@ public class Dir extends Dir_Base {
 	}
 
 	public void addFile(File fileToAdd){
-		if(!hasFileWithName(fileToAdd.getName())){
-			super.addFile(fileToAdd);			
-			if(fileToAdd instanceof Dir){
-			//	((Dir)fileToAdd).setParent(this);
-			}
-			if(this.getName().equals("/")){
-				//	fileToAdd.setPath(this.getPath() +  fileToAdd.getName());
-			}
-			else{
-				//	fileToAdd.setPath(this.getPath() + "/" + fileToAdd.getName());
+		if(fileToAdd.equals(this)){
+			super.addFile(fileToAdd);
+		}else{
+			if (canAddFile(fileToAdd)){
+				if(fileToAdd instanceof Dir){
+					if(!((Dir)fileToAdd).equals(this.parent))
+						((Dir)fileToAdd).setParent(this);
+				}
+				super.addFile(fileToAdd);			
+			} else {
+				throw new FileAlreadyExistsException(fileToAdd.getName(), this);
 			}
 		}
-		else{
-			throw new FileAlreadyExistsException(fileToAdd.getName(), this);
-		}
+	}
+
+	private boolean canAddFile(File fileToAdd) {
+		return !hasFileWithName(fileToAdd.getName());
 	}
 
 	public String listDirContent(String path){
 		String array[];
-		array = path.split("/",2);
+		array = path.split(SLASH_NAME,2);
 		String arg1 = array[0];
 		String arg2 = array[1];
 		if (arg2==null){
@@ -108,11 +115,23 @@ public class Dir extends Dir_Base {
 		return null;
 	}
 
+	public String getContentNames(){
+		String contentNames = "";
+		contentNames += ".[" + this.self.getName() + "] | ";
+		contentNames += "..[" + this.parent.getName() + "] | ";
+		for (File file : this.getFileSet()) {
+			contentNames += file.getName() + " | ";
+		}
+		return contentNames;
+	}
+	
+
 	@Override
 	public String toString(){
 		String description = super.toString();
 		description += "\t With parent : " + this.getParent().getName() +"\n";
-		description += "\t Dir size : " + this.getFileSet().size() + "\n\n";
+		description += "\t Dir size : " + this.getFileSet().size() + "\n";
+		description += "\t Dir content names : " + this.getContentNames() + "\n";
 		return description;
 	}
 

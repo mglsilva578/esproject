@@ -8,7 +8,7 @@ import pt.tecnico.myDrive.domain.User;
 
 public class Tests {
 	
-	//Criar o ficheiro de texto /home/README com o conteúdo lista de utilizadores
+	//Criar o ficheiro de texto /home/README com o conteudo lista de utilizadores
 	public static void Teste01(String username,MyDrive md){
 		String content = "utilizador1, utilizador2";
 		String path = "/Home/README";

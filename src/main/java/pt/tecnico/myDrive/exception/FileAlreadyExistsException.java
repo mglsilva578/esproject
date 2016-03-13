@@ -11,6 +11,6 @@ public class FileAlreadyExistsException extends MyDriveException {
 	}
 	
 	public FileAlreadyExistsException(String name, Dir dir){
-		super("Exists file with same name <" + name +"> in dir <" + dir.getPath() + ">");
+		super("Exists file with same name <" + name +"> in dir <" + dir.getName() + ">");
 	}
 }

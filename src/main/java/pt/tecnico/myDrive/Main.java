@@ -11,6 +11,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -30,7 +31,7 @@ public class Main {
 			FenixFramework.shutdown();
 		}
 	}
-	
+
 	@Atomic
 	public static void init(){
 		//TODO clean MyDrive
@@ -38,35 +39,46 @@ public class Main {
 
 	@Atomic
 	public static void setup(){
-		MyDrive drive = MyDrive.getInstance();
-		if(drive.isEmpty()){
-			SuperUser rootUser = new SuperUser(drive);
-			Dir slash = new Dir(drive, rootUser, "/", rootUser.getMask());
-			drive.setRootDir(slash);
-			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask());
-			//TO DO
-			Dir rootDir = drive.createUserDir(rootUser);
+		try{
+			MyDrive drive = MyDrive.getInstance();
+			if(drive.isEmpty()){
+				SuperUser rootUser = new SuperUser(drive);
+				Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
+				drive.setRootDir(slash);
+				Dir home = new Dir(drive, rootUser, "home", rootUser.getMask());
+				Dir home2 = new Dir(drive, rootUser, "home2", rootUser.getMask());
+				Dir home3 = new Dir(drive, rootUser, "home3", rootUser.getMask());
+				Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask());
+				Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask());
+				slash.addFile(home);
+				slash.addFile(home2);
+				slash.addFile(home3);
+				home3.addFile(home4);
+				home3.addFile(home5);
+				//TO DO
+				Dir rootDir = drive.createUserDir(rootUser);
 
-			//rootUser.setHomeDir(rootDir.getPath());
-			/*
-			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
-			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
-			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
-			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
-			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
-			*/
-			/*
-			Dir rootDir = new Dir(drive, rootUser, "rootDir", "rwxdr-x-");
-			rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso.txt", "rwxdr-x-"));
-			rootDir.addFile(new File(drive, drive.getUserByUsername("joseluisvf"), "coiso_the_sequel.txt", "rwxdr-x-"));
-			*/
-			
-			System.out.println("\n\n\n");
-			System.out.println("Users da drive : \n" + drive.getUserSet() + "----------------------");
-			System.out.println("Directorios da drive : \n" + drive.getFileSet().toString());
-		}else{
-			System.out.println("\n\n MyDrive is not empty! \n\n");
-			return;
+				rootUser.setHomeDir(rootDir.getPath());
+
+				User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
+				userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
+				userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
+				userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
+				userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
+
+				home3.addFile(new PlainFile(drive, userToAdd, "xxx", userToAdd.getMask(), "Lusty Argonian Maid"));
+				
+				System.out.println("\n\n\n");
+				System.out.println("Users da drive : \n" + drive.getUserSet() + "----------------------");
+				System.out.println("Directorios da drive : \n" + drive.getFileSet().toString());
+			}else{
+				System.out.println("\n\n MyDrive is not empty! \n\n");
+				return;
+			}
+		}catch(Exception e){
+			System.out.println("\n---<MAIN>--- - " + e.getClass().toString()+"\n");
+			e.printStackTrace();
+			System.out.println("\n---</MAIN>---\n");
 		}
 	}
 
@@ -83,7 +95,7 @@ public class Main {
 	public static void xmlScan(Document file){
 		MyDrive md = FenixFramework.getDomainRoot().getMydrive().getInstance();
 		md.importXML(file.getRootElement());
-			
-		
+
+
 	}
 }
