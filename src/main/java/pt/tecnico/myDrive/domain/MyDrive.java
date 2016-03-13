@@ -8,6 +8,7 @@ import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
+import pt.tecnico.myDrive.exception.InvalidPathameException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
@@ -31,11 +32,6 @@ public class MyDrive extends MyDrive_Base {
 		return fileToTest instanceof PlainFile;
 	}
 
-	private File getFileByPathname( String pathnameFileToFind ){
-		return null;
-		// TODO implementar isto.
-	}
-
 	private boolean isEmptyOfFiles() {
 		return super.getFileSet().size() == 0;
 	}
@@ -53,6 +49,44 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
+	/**
+	 * Dado um caminho, devolve a ultima entidade presente nesse caminho.
+	 * /home/joseluisvf/teste.txt devolve teste.txt.
+	 * @param pathname
+	 * @return
+	 */
+	public File getFileByPathname(String pathname){
+		Dir previousDir;
+		File content = null;
+		String[] pathnameSplit;
+		int nextDirIndex = 1; 
+		int howManyLinks;
+		if(new String("" + pathname.charAt(0)).equals(Dir.SLASH_NAME)){
+			previousDir = this.getRootDir();
+			if(pathname.length() == 1) return previousDir;
+			pathnameSplit = pathname.split(Dir.SLASH_NAME);
+			howManyLinks = pathnameSplit.length;
+			for (String string : pathnameSplit) {
+				System.out.println(string);
+			}
+			while(nextDirIndex < howManyLinks){
+				content = previousDir.getFileByName(pathnameSplit[nextDirIndex++]);
+				if (content instanceof Dir){
+					previousDir = (Dir)content;
+				}else{
+					break;
+				}
+			}
+			if(content == null){
+				throw new InvalidPathameException("1" + pathname);
+			}else{
+				return content;				
+			}
+		}else{
+			throw new InvalidPathameException("2" + pathname);
+		}
+	}
+	
 	public File getFileByName(String name) {
 		for (File file : getFileSet()) {
 			if (file.getName().equals(name)) {
@@ -176,7 +210,7 @@ public class MyDrive extends MyDrive_Base {
 
 	public Dir createUserDir( User user ){
 		Dir slash = this.getRootDir();
-		Dir home = slash.getDirByName( "home" );
+		Dir home = (Dir)slash.getFileByName( "home" );
 		Dir userDir = new Dir( this, user, user.getUsername(), user.getMask(), home);
 		return userDir;
 	}

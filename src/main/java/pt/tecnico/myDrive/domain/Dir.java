@@ -27,12 +27,10 @@ public class Dir extends Dir_Base {
 		super.init(drive, owner, name, permissions, dir);
 	}
 
-	public Dir getDirByName(String nameToLook){
+	public File getFileByName(String nameToLook){
 		for (File file : this.getFileSet()){
-			if(file instanceof Dir){
-				if(file.getName().equals(nameToLook)){
-					return (Dir)file;
-				}				
+			if(file.getName().equals(nameToLook)){
+				return file;
 			}
 		}
 		throw new NoDirException(nameToLook, this.getName());
