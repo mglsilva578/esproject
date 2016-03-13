@@ -89,7 +89,12 @@ public class Dir extends Dir_Base {
 
 	@Override
 	public String toString(){
-		String description = super.toString();
+		String description = "";
+		if(!this.getName().equals(Dir.SLASH_NAME)){
+			description = super.toString();
+		}else{
+			
+		}
 		description += "\tsize: " + this.getFileSet().size() + "\n";
 		description += "\tcontent: " + this.getContentNames() + "\n";
 		return description;
@@ -99,4 +104,16 @@ public class Dir extends Dir_Base {
 		super.importXML(elm);
 	}
 
+	public String getFullyQualifiedPath(){
+		if(this.getName().equals(Dir.SLASH_NAME)) return "";
+		
+		Dir parent = this.getFather();
+		String path = "" + this.getName();
+		while(!parent.getName().equals(Dir.SLASH_NAME)){
+			path = parent.getName() + "/" + path;
+			parent = parent.getFather();
+		}
+		path = "/" + path;
+		return path;
+	}
 }
