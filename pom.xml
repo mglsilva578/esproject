@@ -76,6 +76,21 @@
 				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist155816</picUrl>
 			</properties>
 		</developer>
+		<developer>
+			<id>ist76544</id>
+			<name>ist176544</name>
+			<email>danielpenteado@live.com.pt</email>
+			<organization>es16 g28tg</organization>
+			<roles>
+				<role>Developer</role>
+				<role>Architect</role>
+				<role>Tester</role>
+				<role>Integrator</role>
+			</roles>
+			<properties>
+				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist176544</picUrl>
+			</properties>
+		</developer>
 	</developers>
 
 	<properties>
