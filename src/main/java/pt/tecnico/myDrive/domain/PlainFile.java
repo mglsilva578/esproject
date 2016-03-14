@@ -49,10 +49,10 @@ public class PlainFile extends PlainFile_Base {
 
 
 	public Element exportXML() {
-		Element element;
+		Element element;		
 		element = super.exportXML();
-		element.setName("PlainFile");
-		element.setAttribute("content", this.getContent());
+		element.setName("plain");
+		element.setAttribute("contents", this.getContent());
 		return element;
 	}
 

@@ -191,20 +191,19 @@ public class MyDrive extends MyDrive_Base {
 	
 	public Document exportXML() {
         Element element = new Element("myDrive");
-        Element users = new Element("myDriveUsers");
-        element.addContent(users);
-        Element files = new Element("myDriveFiles");
-        element.addContent(files);
+        Document doc = new Document(element); //
+        //Element users = new Element("myDriveUsers");
+        //element.addContent(users);
+        //Element files = new Element("myDriveFiles");
+        //element.addContent(files);
         for (User user: getUserSet()){
-        	users.addContent(user.exportXML());
+        	element.addContent(user.exportXML());
         }
         for (File f: getFileSet()){
-        	files.addContent(f.exportXML());
+        	element.addContent(f.exportXML());
         }
-        Document doc = new Document(element); 
         return doc;
     }
-
 	
 	public void importXML(Element toImport){
 

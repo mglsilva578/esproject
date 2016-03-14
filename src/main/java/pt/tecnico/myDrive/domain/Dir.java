@@ -89,11 +89,11 @@ public class Dir extends Dir_Base {
 		Element element = super.exportXML(); 
 		element.setName("dir");
 
-		Element dirContents = new Element("dirContents");
-		element.addContent(dirContents);
-		for (File file : this.getFileSet()) {
-			dirContents.addContent(file.exportXML());
-		}
+		//Element dirContents = new Element("dirContents");
+		//element.addContent(dirContents);
+		//for (File file : this.getFileSet()) {
+		//	dirContents.addContent(file.exportXML());
+		//}
 		return element;
 	}
 

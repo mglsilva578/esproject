@@ -92,11 +92,12 @@ public class File extends File_Base {
 	}
 
 	public Element exportXML() {
-		Element element = new Element("file");
+		Element element = new Element("File");
+		element.setAttribute("id", this.getId().toString());
+		element.setAttribute("path", this.getFullyQualifiedPath());
 		element.setAttribute("name", this.getName());
 		element.setAttribute("owner", this.getOwner().getName());
-		element.setAttribute("permissions", this.getPermissions());
-		element.setAttribute("path", this.getFullyQualifiedPath());
+		element.setAttribute("perm", this.getPermissions());
 		return element;
 	}
 
@@ -104,7 +105,7 @@ public class File extends File_Base {
 		this.setName(elm.getAttributeValue("name"));
 		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
 		this.setOwner(user);
-		this.setPermissions(elm.getAttributeValue("permissions"));
+		this.setPermissions(elm.getAttributeValue("perm"));
 	}
 
 	private String getFullyQualifiedPath(){

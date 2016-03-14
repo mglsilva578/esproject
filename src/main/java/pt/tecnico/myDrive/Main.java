@@ -31,7 +31,7 @@ public class Main {
 		try{
 				Main.setup();
 			//for (String s: args) xmlScan(new File(s));
-			Main.testMyDrive();
+			//Main.testMyDrive();
 			Main.printMyDrive();
 		    xmlPrint();
 		}catch(MyDriveException mde){

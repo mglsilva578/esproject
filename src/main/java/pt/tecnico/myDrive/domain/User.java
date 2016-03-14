@@ -72,14 +72,9 @@ public class User extends User_Base {
 		element.setAttribute("username", getUsername());
 		element.setAttribute("password", getPassword());
 		element.setAttribute("name", getName());
+		element.setAttribute("homeDir", "/home/" + getUsername());
 		element.setAttribute("mask", getMask());
-
-		Element filesElement = new Element("files");
-		element.addContent(filesElement);
-		for (File file: getFileSet()){
-			System.out.println(file.getName());
-			filesElement.addContent(file.exportXML());			
-		}
+	
 		return element;
 	}
 
