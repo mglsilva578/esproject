@@ -10,6 +10,7 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.InvalidPathameException;
+import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
@@ -154,6 +155,45 @@ public class MyDrive extends MyDrive_Base {
 			return false;
 		}
 	}
+	
+	public void createNecessaryDirForPathname(String pathname){
+		Dir previousDir;
+		File content = null;
+		User rootUser = this.getUserByUsername(SuperUser.NAME);
+		String[] pathnameSplit;
+		int nextDirIndex = 1; 
+		int howManyLinks;
+		if(new String("" + pathname.charAt(0)).equals(Dir.SLASH_NAME)){
+			previousDir = this.getRootDir();
+			if(pathname.length() == 1) return;
+			pathnameSplit = pathname.split(Dir.SLASH_NAME);
+			howManyLinks = pathnameSplit.length;
+
+			while(nextDirIndex < howManyLinks){
+				while(true){
+					try{
+						content = previousDir.getFileByName(pathnameSplit[nextDirIndex]);
+						break;						
+					}catch(NoDirException nde){
+						new Dir(this, rootUser, pathnameSplit[nextDirIndex], rootUser.getMask(), previousDir);
+					}
+				}
+				nextDirIndex++;
+				if (content instanceof Dir){
+					previousDir = (Dir)content;
+				}else{
+					break;
+				}
+			}
+			if(content == null){
+				throw new InvalidPathameException(pathname);
+			}else{
+				return;				
+			}
+		}else{
+			throw new InvalidPathameException(pathname);
+		}
+	}
 
 	@Override
 	public void addUser(User userToBeAdded) throws UsernameAlreadyExistsException{
@@ -220,47 +260,7 @@ public class MyDrive extends MyDrive_Base {
 		this.initBaseState();
 		for(Element node : toImport.getChildren()){
 			this.importElement(node);
-			//User user = new User(this, node);
-			//System.out.println(user.toString());
-			//			String password = node.getAttribute("password").getValue();
-			//		String name = node.getAttribute("name").getValue();
-			//	String mask = node.getAttribute("username").getValue();
-			//if(user == null) user = new User(this, username, password, name, mask);
-			//user.importXML(node);
-		} /*
-			String type = node.getName();
-			switch(type){
-			case "user":
-
-				String username = toImport.getChildren("username").getValue();
-				String password = toImport.getChildren("password");
-				String name = toImport.getChildren("name");
-				String mask = toImport.getChildren("username");
-				User user = getUserByUsername(username);
-				if(user == null) user = new User(this, username, password, name, mask);
-				user.importXML(node);
-				break;
-			case "dir":
-				Dir d = new Dir();
-				d.importXML(node);
-				break;
-			case "plain":
-				PlainFile p = new PlainFile();
-				p.importXML(node);
-				break;
-			case "link":
-				Link l = new Link();
-				l.importXML(node);
-				break;
-			case "app":
-				App a = new App();
-				a.importXML(node);
-				break;
-			default:
-				break;
-			}
-
-		}*/
+		} 
 	}
 
 	private void importElement(Element node) {

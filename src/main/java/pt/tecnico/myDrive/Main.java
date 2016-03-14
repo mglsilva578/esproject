@@ -115,6 +115,12 @@ public class Main {
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
+			
+			try{
+				Main.xmlPrint();
+			}catch( MyDriveException mde){
+				log.error(mde.getMessage());
+			}
 
 			try{
 				Tests.removeFileHomeReadme(drive);

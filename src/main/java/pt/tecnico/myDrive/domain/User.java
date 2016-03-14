@@ -1,7 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import java.io.UnsupportedEncodingException;
-
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -86,12 +84,32 @@ public class User extends User_Base {
 
 	protected void importXML(MyDrive drive, Element elm){
 		try{
+			Element element;
+			String password;
+			String name;
+			String mask;
 			String username = new String(elm.getAttribute("username").getValue().getBytes("UTF-8"));
-			String password = new String(elm.getChild("password").getValue());//.getBytes("UTF-8")));
-			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
-			System.out.println("Name - " + name);
-			System.out.println("Mask - " + elm.getChild("mask"));
-			String mask = new String(elm.getChild("mask").getValue());//.getBytes("UTF-8")));
+			
+			element = elm.getChild("password");
+			if(element == null){
+				password = username;
+			}else{
+				password = new String(element.getValue());//.getBytes("UTF-8")));				
+			}
+			
+			element = elm.getChild("name");
+			if(element == null){
+				name = username;
+			}else{
+				name = new String(element.getValue());//.getBytes("UTF-8")));				
+			}
+			
+			element = elm.getChild("mask");
+			if(element == null){
+				mask = "rwxd----";
+			}else{
+				mask = new String(element.getValue());//.getBytes("UTF-8")));				
+			}
 			init(drive, username, password, name, mask);
 		}catch(Exception e){
 			e.printStackTrace();

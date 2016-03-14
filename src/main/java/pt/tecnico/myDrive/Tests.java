@@ -2,6 +2,7 @@ package pt.tecnico.myDrive;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdom2.Document;
 
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.File;
@@ -48,8 +49,9 @@ public class Tests {
 		drive.removePlainFileOrEmptyDirectoryByPathname("/usr/local/bin");
 		log.debug("removeDirUsrLocalBin SUCCESS!");
 	}
-	public static void printXMLExport(){
-		//TODO print xml export
+	
+	public static Document printXMLExport(MyDrive drive){
+		return drive.exportXML();
 	}
 
 	public static void removeFileHomeReadme(MyDrive drive){

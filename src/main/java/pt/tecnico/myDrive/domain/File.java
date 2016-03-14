@@ -118,7 +118,7 @@ public class File extends File_Base {
 			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
 			String owner = new String(elm.getChild("owner").getValue());
 			User u = drive.getUserByUsername(owner);
-			String perm = new String(elm.getChild("perm").getValue());//.getBytes("UTF-8")));
+			String perm = new String(elm.getChild("mask").getValue());//.getBytes("UTF-8")));
 			init(drive, u, name, perm);
 		}catch(Exception e){
 			e.printStackTrace();
