@@ -4,6 +4,8 @@ package pt.tecnico.myDrive.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -17,7 +19,7 @@ import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 
 public class MyDrive extends MyDrive_Base {
-
+	static final Logger log = LogManager.getRootLogger();
 	private MyDrive() {
 		super();
 		setRoot(FenixFramework.getDomainRoot());
@@ -268,13 +270,13 @@ public class MyDrive extends MyDrive_Base {
 		switch(typeOfNode){
 		case "superUser" : new SuperUser(this, node);break;
 		case "user" : new User(this, node);break;
-		case "dir" : new Dir(this, node); break;
-		case "plain" : new PlainFile(this, node); break;
-		case "app" : new App(this, node); break;
-		case "link" : new Link(this, node); break;
+		//case "dir" : new Dir(this, node); break;
+		//case "plain" : new PlainFile(this, node); break;
+		//case "app" : new App(this, node); break;
+		//case "link" : new Link(this, node); break;
 
 		
-		default: System.out.println("Ainda nao sei fazer isto " + typeOfNode); return;
+		default: log.error("Ainda nao sei fazer isto " + typeOfNode); return;
 		}
 		
 	}

@@ -156,7 +156,9 @@ public class Main {
 		Document doc = MyDrive.getInstance().exportXML();
 		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
 		try { xmlOutput.output(doc, new PrintStream(System.out));
-		} catch (IOException e) { System.out.println(e); }
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	@Atomic
