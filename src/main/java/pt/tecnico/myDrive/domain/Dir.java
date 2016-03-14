@@ -19,6 +19,7 @@ public class Dir extends Dir_Base {
 		super.init(drive, owner, name, permissions);
 		if(name.equals(SLASH_NAME)){
 			drive.setRootDir(this);
+			this.setFather(this);
 		}
 	}
 
