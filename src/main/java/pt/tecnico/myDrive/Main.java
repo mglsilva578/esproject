@@ -34,9 +34,8 @@ public class Main {
 			}else{
 				for (String s: args) xmlScan(new File(s));				
 			}
-			//Main.testMyDrive();
+			Main.testMyDrive();
 			Main.printMyDrive();
-			xmlPrint();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
 		}catch(Exception e){
