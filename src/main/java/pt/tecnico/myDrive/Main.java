@@ -21,9 +21,11 @@ public class Main {
 	public static void main(String [] args){
 		log.trace("Welcome to MyDrive Application");
 		try{
-			Main.setup();
+				Main.setup();
+			//for (String s: args) xmlScan(new File(s));
 			Main.testMyDrive();
 			Main.printMyDrive();
+		    xmlPrint();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
 		}catch(Exception e){
@@ -134,9 +136,25 @@ public class Main {
 	}
 
 	@Atomic
-	public static void xmlScan(Document file){
-		MyDrive md = FenixFramework.getDomainRoot().getMydrive().getInstance();
-		md.importXML(file.getRootElement());
+	public static void xmlPrint() {
+		log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
+		Document doc = MyDrive.getInstance().exportXML();
+		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
+		try { xmlOutput.output(doc, new PrintStream(System.out));
+		} catch (IOException e) { System.out.println(e); }
+	}
+
+	@Atomic
+	public static void xmlScan(File file) {
+		log.trace("xmlScan: " + FenixFramework.getDomainRoot());
+		MyDrive drive = MyDrive.getInstance();
+		SAXBuilder builder = new SAXBuilder();
+		try {
+			Document document = (Document)builder.build(file);
+			drive.importXML(document.getRootElement());
+		} catch (JDOMException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
