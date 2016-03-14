@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
+import java.io.UnsupportedEncodingException;
+
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -13,6 +15,12 @@ public class User extends User_Base {
 
 	public User(MyDrive drive, String username, String password, String name, String mask){
 		this.init(drive, username, password, name, mask);
+		//drive.addUser(this);
+	}
+	
+	public User(MyDrive drive, Element xml){
+		this.importXML(drive, xml);
+		//drive.addUser(this);
 	}
 
 	private boolean isUsernameValid(String username){
@@ -66,7 +74,7 @@ public class User extends User_Base {
 		description += "\tmask: " + this.getMask() + "\n";
 		return description;
 	}
-	
+
 	public Element exportXML() {
 		Element element = new Element("user");
 		element.setAttribute("username", getUsername());
@@ -74,19 +82,19 @@ public class User extends User_Base {
 		element.setAttribute("name", getName());
 		element.setAttribute("homeDir", "/home/" + getUsername());
 		element.setAttribute("mask", getMask());
-	
+
 		return element;
 	}
 
-	public void importXML(Element elm){
+	public void importXML(MyDrive drive, Element elm){
 		try{
-			this.setUsername(elm.getAttributeValue("username"));
-			this.setPassword(elm.getAttributeValue("password"));
-			this.setName(elm.getAttributeValue("name"));
-			this.setHomeDir(elm.getAttributeValue("home"));
-			this.setMask(elm.getAttributeValue("mask"));
+			String username = new String(elm.getAttribute("username").getValue().getBytes("UTF-8"));
+			String password = new String(elm.getChild("password").getValue());//.getBytes("UTF-8")));
+			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
+			String mask = new String(elm.getChild("mask").getValue());//.getBytes("UTF-8")));
+			init(drive, username, password, name, mask);
 		}catch(Exception e){
-			throw new ImportDocumentException("user");
+			throw new ImportDocumentException("In User");
 		}
 	}
 

@@ -63,7 +63,7 @@ public class MyDrive extends MyDrive_Base {
 			if(pathname.length() == 1) return previousDir;
 			pathnameSplit = pathname.split(Dir.SLASH_NAME);
 			howManyLinks = pathnameSplit.length;
-			
+
 			while(nextDirIndex < howManyLinks){
 				content = previousDir.getFileByName(pathnameSplit[nextDirIndex++]);
 				if (content instanceof Dir){
@@ -81,7 +81,7 @@ public class MyDrive extends MyDrive_Base {
 			throw new InvalidPathameException(pathname);
 		}
 	}
-	
+
 	public File getFileByName(String name) {
 		for (File file : getFileSet()) {
 			if (file.getName().equals(name)) {
@@ -168,7 +168,7 @@ public class MyDrive extends MyDrive_Base {
 		user.remove();
 		super.removeUser(user);		
 	}
-	
+
 	public String readContent(String path){
 		File file = getFileByPathname(path);
 		if (file instanceof PlainFile){
@@ -178,7 +178,7 @@ public class MyDrive extends MyDrive_Base {
 			throw new NoPlainFileException(path);
 		}
 	}
-	
+
 	public String listDirContent(String pathname){
 		File fileFound = this.getFileByPathname(pathname);
 		if(fileFound instanceof Dir){
@@ -188,32 +188,54 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
-	
-	public Document exportXML() {
-        Element element = new Element("myDrive");
-        Document doc = new Document(element); //
-        //Element users = new Element("myDriveUsers");
-        //element.addContent(users);
-        //Element files = new Element("myDriveFiles");
-        //element.addContent(files);
-        for (User user: getUserSet()){
-        	element.addContent(user.exportXML());
-        }
-        for (File f: getFileSet()){
-        	element.addContent(f.exportXML());
-        }
-        return doc;
-    }
-	
-	public void importXML(Element toImport){
 
-		for(Element node : toImport.getChildren()){
+	public Document exportXML() {
+		Element element = new Element("myDrive");
+		Document doc = new Document(element); //
+		//Element users = new Element("myDriveUsers");
+		//element.addContent(users);
+		//Element files = new Element("myDriveFiles");
+		//element.addContent(files);
+		for (User user: getUserSet()){
+			element.addContent(user.exportXML());
+		}
+		for (File f: getFileSet()){
+			element.addContent(f.exportXML());
+		}
+		return doc;
+	}
+	/*public void xmlImport(Element element) {
+		for (Element node: element.getChildren("person")) {
+			String name = node.getAttribute("name").getValue();
+			Person person = getPersonByName(name);
+
+			if (person == null) // Does not exist
+				person = new Person(this, name);
+
+			person.xmlImport(node);
+		}
+	}*/
+
+	public void importXML(Element toImport){
+		for(Element node : toImport.getChildren("user")){
+			User user = new User(this, node);
+			System.out.println(user.toString());
+			//			String password = node.getAttribute("password").getValue();
+			//		String name = node.getAttribute("name").getValue();
+			//	String mask = node.getAttribute("username").getValue();
+			//if(user == null) user = new User(this, username, password, name, mask);
+			//user.importXML(node);
+		} /*
 			String type = node.getName();
 			switch(type){
 			case "user":
-				String name = node.getAttributeValue("username");
-				User user = getUserByUsername(name);
-				if(user == null) user = new User();
+
+				String username = toImport.getChildren("username").getValue();
+				String password = toImport.getChildren("password");
+				String name = toImport.getChildren("name");
+				String mask = toImport.getChildren("username");
+				User user = getUserByUsername(username);
+				if(user == null) user = new User(this, username, password, name, mask);
 				user.importXML(node);
 				break;
 			case "dir":
@@ -235,8 +257,8 @@ public class MyDrive extends MyDrive_Base {
 			default:
 				break;
 			}
-			
-		}
+
+		}*/
 	}
 
 	public Dir createUserDir( User user ){
@@ -250,7 +272,7 @@ public class MyDrive extends MyDrive_Base {
 			throw new WrongTypeOfFileFoundException(fileFound.getName(), "dir");
 		}
 	}
-	
+
 	@Override
 	public String toString(){
 		String description = "";

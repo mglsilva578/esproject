@@ -29,11 +29,11 @@ public class Main {
 	public static void main(String [] args){
 		log.trace("Welcome to MyDrive Application");
 		try{
-				Main.setup();
-			//for (String s: args) xmlScan(new File(s));
+			Main.setup();
+			for (String s: args) xmlScan(new File(s));
 			//Main.testMyDrive();
 			Main.printMyDrive();
-		    xmlPrint();
+			xmlPrint();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
 		}catch(Exception e){
@@ -56,37 +56,37 @@ public class Main {
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			
+
 			//TODO apagar
-			Main.additionalSetup();
+			//Main.additionalSetup();
 		}
 		else{
 			return;
 		}
 	}
-	
+
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
 		SuperUser rootUser = (SuperUser)drive.getUserByUsername(SuperUser.NAME);
 		Dir slash = drive.getRootDir();
 		Dir home2 = new Dir(drive, rootUser, "home2", rootUser.getMask(), slash);    
-	    Dir home3 = new Dir(drive, rootUser, "home3", rootUser.getMask(), slash);
-	    Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask(), home3);
-	    Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask(), home4);
-	    
-	    User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
-	    userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
-	    userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
-	    userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
-	    userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
-	    
-	    PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
-	    
-	    Link link = new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", home4);
-	    
-	    App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
+		Dir home3 = new Dir(drive, rootUser, "home3", rootUser.getMask(), slash);
+		Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask(), home3);
+		Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask(), home4);
+
+		User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
+		userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
+		userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
+		userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
+		userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
+
+		PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
+
+		Link link = new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", home4);
+
+		App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
 	}
-	
+
 	@Atomic
 	public static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
@@ -96,37 +96,37 @@ public class Main {
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Tests.createDirUsrLocalBin(drive);
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Tests.printContentOfHomeReadme(drive);
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}		
-			
+
 			try{
 				Tests.removeDirUsrLocalBin(drive);
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Tests.removeFileHomeReadme(drive);
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Tests.listContentsHome(drive);
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Tests.listDirContent(drive);
 			}catch( MyDriveException mde){

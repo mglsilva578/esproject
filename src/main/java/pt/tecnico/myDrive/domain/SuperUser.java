@@ -16,7 +16,7 @@ public class SuperUser extends SuperUser_Base {
 		return element;
 	}
 	
-	public void importXML(Element elm){
-		super.importXML(elm);
+	public void importXML(MyDrive drive, Element elm){
+		super.importXML(drive, elm);
 	}
 }
