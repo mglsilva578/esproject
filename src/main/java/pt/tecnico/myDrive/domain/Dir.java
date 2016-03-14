@@ -37,6 +37,11 @@ public class Dir extends Dir_Base {
 	}
 
 	public File getFileByName(String nameToLook){
+		if(nameToLook.equals("."))
+			return this;
+		if(nameToLook.equals(".."))
+			return this.getFather();
+		
 		for (File file : this.getFileSet()){
 			if(file.getName().equals(nameToLook)){
 				return file;
