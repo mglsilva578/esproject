@@ -10,13 +10,18 @@ public class SuperUser extends SuperUser_Base {
     	super.init( drive, NAME, "***", "Super User", "rwxdr-x-");
     }
 	
+	public SuperUser(MyDrive drive, Element xml){
+		super.importXML(drive, xml);
+		//drive.addUser(this);
+	}
+	
 	public Element exportXML() {
 		Element element = super.exportXML(); 
 		element.setName("superUser");
 		return element;
 	}
 	
-	public void importXML(MyDrive drive, Element elm){
+	protected void importXML(MyDrive drive, Element elm){
 		super.importXML(drive, elm);
 	}
 }

@@ -217,9 +217,11 @@ public class MyDrive extends MyDrive_Base {
 	}*/
 
 	public void importXML(Element toImport){
-		for(Element node : toImport.getChildren("user")){
-			User user = new User(this, node);
-			System.out.println(user.toString());
+		this.initBaseState();
+		for(Element node : toImport.getChildren()){
+			this.importElement(node);
+			//User user = new User(this, node);
+			//System.out.println(user.toString());
 			//			String password = node.getAttribute("password").getValue();
 			//		String name = node.getAttribute("name").getValue();
 			//	String mask = node.getAttribute("username").getValue();
@@ -261,6 +263,16 @@ public class MyDrive extends MyDrive_Base {
 		}*/
 	}
 
+	private void importElement(Element node) {
+		String typeOfNode = node.getName();
+		switch(typeOfNode){
+		case "superUser" : new SuperUser(this, node);break;
+		case "user" : new User(this, node);break;
+		default: System.out.println("Ainda nao sei fazer isto " + typeOfNode); return;
+		}
+		
+	}
+
 	public Dir createUserDir( User user ){
 		Dir slash = this.getRootDir();
 		File fileFound = slash.getFileByName( "home" );
@@ -271,6 +283,13 @@ public class MyDrive extends MyDrive_Base {
 		}else{
 			throw new WrongTypeOfFileFoundException(fileFound.getName(), "dir");
 		}
+	}
+
+	private void initBaseState() {
+		SuperUser superUser = new SuperUser(this);
+		Dir slash = new Dir(this, superUser, Dir.SLASH_NAME, superUser.getMask());
+		Dir home = new Dir(this, superUser, "home", superUser.getMask(), slash);
+		new Dir(this, superUser, "root", superUser.getMask(), home);
 	}
 
 	@Override

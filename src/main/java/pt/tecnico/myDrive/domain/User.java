@@ -20,7 +20,6 @@ public class User extends User_Base {
 	
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
-		//drive.addUser(this);
 	}
 
 	private boolean isUsernameValid(String username){
@@ -86,14 +85,17 @@ public class User extends User_Base {
 		return element;
 	}
 
-	public void importXML(MyDrive drive, Element elm){
+	protected void importXML(MyDrive drive, Element elm){
 		try{
 			String username = new String(elm.getAttribute("username").getValue().getBytes("UTF-8"));
 			String password = new String(elm.getChild("password").getValue());//.getBytes("UTF-8")));
 			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
+			System.out.println("Name - " + name);
+			System.out.println("Mask - " + elm.getChild("mask"));
 			String mask = new String(elm.getChild("mask").getValue());//.getBytes("UTF-8")));
 			init(drive, username, password, name, mask);
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new ImportDocumentException("In User");
 		}
 	}

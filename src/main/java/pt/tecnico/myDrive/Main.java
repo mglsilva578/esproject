@@ -29,8 +29,11 @@ public class Main {
 	public static void main(String [] args){
 		log.trace("Welcome to MyDrive Application");
 		try{
-			Main.setup();
-			for (String s: args) xmlScan(new File(s));
+			if(args.length == 0){
+				Main.setup();				
+			}else{
+				for (String s: args) xmlScan(new File(s));				
+			}
 			//Main.testMyDrive();
 			Main.printMyDrive();
 			xmlPrint();
@@ -56,11 +59,9 @@ public class Main {
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-
-			//TODO apagar
-			//Main.additionalSetup();
 		}
 		else{
+			log.trace("MyDrive is not empty for which reason no setup was done.");
 			return;
 		}
 	}
