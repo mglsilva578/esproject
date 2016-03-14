@@ -4,6 +4,7 @@ package pt.tecnico.myDrive.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -188,20 +189,20 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	
-	public Element exportXML() {
+	public Document exportXML() {
         Element element = new Element("myDrive");
         Element users = new Element("myDriveUsers");
         element.addContent(users);
         Element files = new Element("myDriveFiles");
         element.addContent(files);
-        
         for (User user: getUserSet()){
         	users.addContent(user.exportXML());
         }
-        for (File file: getFileSet()){
-        	files.addContent(file.exportXML());
+        for (File f: getFileSet()){
+        	files.addContent(f.exportXML());
         }
-        return element;
+        Document doc = new Document(element); 
+        return doc;
     }
 
 	
