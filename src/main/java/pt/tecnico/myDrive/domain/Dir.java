@@ -25,7 +25,7 @@ public class Dir extends Dir_Base {
 	public Dir(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
 	}
-	
+
 	public Dir(MyDrive drive, String name, String permissions, Dir dir){
 		User owner = drive.getUserByUsername(SuperUser.NAME);
 		super.init(drive, owner, name, permissions, dir);
@@ -72,11 +72,23 @@ public class Dir extends Dir_Base {
 		if(!this.getName().equals(Dir.SLASH_NAME)){
 			description = super.toString();
 		}else{
-			
+
 		}
 		description += "\tsize: " + this.getFileSet().size() + "\n";
 		description += "\tcontent: " + this.getContentNames() + "\n";
 		return description;
+	}
+
+	public Element exportXML() {
+		Element element = super.exportXML(); 
+		element.setName("dir");
+
+		Element dirContents = new Element("dirContents");
+		element.addContent(dirContents);
+		for (File file : this.getFileSet()) {
+			dirContents.addContent(file.exportXML());
+		}
+		return element;
 	}
 
 	public void importXML(Element elm){
@@ -85,7 +97,7 @@ public class Dir extends Dir_Base {
 
 	public String getFullyQualifiedPath(){
 		if(this.getName().equals(Dir.SLASH_NAME)) return "";
-		
+
 		Dir parent = this.getFather();
 		String path = "" + this.getName();
 		while(!parent.getName().equals(Dir.SLASH_NAME)){

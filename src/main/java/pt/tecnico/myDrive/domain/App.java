@@ -19,6 +19,12 @@ public class App extends App_Base {
 		return description;
 	}
     
+    public Element exportXML() {
+    	Element element = super.exportXML(); 
+    	element.setName("app");
+    	return element;
+    }
+    
     public void importXML(Element elm){
     	this.setName(elm.getAttributeValue("name"));
 		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));

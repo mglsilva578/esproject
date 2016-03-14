@@ -95,6 +95,13 @@ public String toString(){
 	return description;
 }
 
+public Element exportXML() {
+    Element element = new Element("file");
+    element.setAttribute("name", this.getName());
+    element.setAttribute("permissions", this.getPermissions());
+    return element;
+}
+
 public void importXML(Element elm){
 	this.setName(elm.getAttributeValue("name"));
 	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));

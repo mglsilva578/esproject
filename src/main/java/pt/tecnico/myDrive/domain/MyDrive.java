@@ -187,6 +187,24 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
+	
+	public Element exportXML() {
+        Element element = new Element("myDrive");
+        Element users = new Element("myDriveUsers");
+        element.addContent(users);
+        Element files = new Element("myDriveFiles");
+        element.addContent(files);
+        
+        for (User user: getUserSet()){
+        	users.addContent(user.exportXML());
+        }
+        for (File f: getFileSet()){
+        	files.addContent(f.exportXML());
+        }
+        return element;
+    }
+
+	
 	public void importXML(Element toImport){
 
 		for(Element node : toImport.getChildren()){
@@ -220,23 +238,17 @@ public class MyDrive extends MyDrive_Base {
 			
 		}
 	}
-/*
-	public Document xmlExport() {
-        Element element = new Element("phonebook");
-        Document doc = new Document(element);
 
-        for (User u: getUserSet())
-            element.addContent(u.xmlExport());
-        for (File f: getFileSet())
-        	element.addContent(f.xmlExport());
-        return doc;
-    }
-*/
 	public Dir createUserDir( User user ){
 		Dir slash = this.getRootDir();
-		Dir home = (Dir)slash.getFileByName( "home" );
-		Dir userDir = new Dir( this, user, user.getUsername(), user.getMask(), home);
-		return userDir;
+		File fileFound = slash.getFileByName( "home" );
+		if (fileFound instanceof Dir){
+			Dir home = (Dir) fileFound;			
+			Dir userDir = new Dir( this, user, user.getUsername(), user.getMask(), home);
+			return userDir;
+		}else{
+			throw new WrongTypeOfFileFoundException(fileFound.getName(), "dir");
+		}
 	}
 	
 	@Override
