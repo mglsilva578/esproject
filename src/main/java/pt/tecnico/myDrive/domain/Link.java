@@ -14,6 +14,10 @@ public class Link extends Link_Base {
         super.init(drive, owner, name, permissions, content, dir);
     }
     
+    public Link(MyDrive drive, Element xml){
+		this.importXML(drive, xml);
+	}
+    
     public String toString(){
 		String description = super.toString();
 		return description;
@@ -25,11 +29,13 @@ public class Link extends Link_Base {
     	return element;
     }
     
-    public void importXML(Element elm){
-    	this.setName(elm.getAttributeValue("name"));
-		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-		this.setOwner(user);
-		this.setPermissions(elm.getAttributeValue("perm"));
-    	this.setContent(elm.getAttributeValue("value"));
+    public void importXML(MyDrive drive, Element elm){
+    //	this.setName(elm.getAttributeValue("name"));
+	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
+	//	this.setOwner(user);
+	//	this.setPermissions(elm.getAttributeValue("perm"));
+    //	this.setContent(elm.getAttributeValue("value"));
+    String Content = new String(elm.getChild("value").getValue());//.getBytes("UTF-8")));
+    super.importXML(drive, elm);
     }
 }

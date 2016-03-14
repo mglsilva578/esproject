@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
@@ -19,6 +20,10 @@ public class File extends File_Base {
 
 	public File(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		this.init(drive, owner, name, permissions, dir);
+	}
+	
+	public File(MyDrive drive, Element xml){
+		this.importXML(drive, xml);
 	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions){
@@ -39,9 +44,6 @@ public class File extends File_Base {
 		this.setOwner(owner);
 		dir.addFile(this);
 	}
-
-
-
 
 	@Override
 	public void setName(String n){
@@ -101,11 +103,27 @@ public class File extends File_Base {
 		return element;
 	}
 
-	public void importXML(Element elm){
-		this.setName(elm.getAttributeValue("name"));
-		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-		this.setOwner(user);
-		this.setPermissions(elm.getAttributeValue("perm"));
+	public void importXML(MyDrive drive, Element elm){
+	//	this.setName(elm.getAttributeValue("name"));
+	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
+	//	this.setOwner(user);
+	//	this.setPermissions(elm.getAttributeValue("perm"));
+	
+	
+	
+	
+		try{
+			int id = elm.getAttribute("id").getIntValue();
+			String path = new String(elm.getChild("path").getValue());//.getBytes("UTF-8")));
+			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
+			String owner = new String(elm.getChild("owner").getValue());
+			User u = drive.getUserByUsername(owner);
+			String perm = new String(elm.getChild("perm").getValue());//.getBytes("UTF-8")));
+			init(drive, u, name, perm);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new ImportDocumentException("In File");
+		}
 	}
 
 	private String getFullyQualifiedPath(){

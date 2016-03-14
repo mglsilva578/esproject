@@ -13,7 +13,9 @@ public class App extends App_Base {
     public App(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
         super.init(drive, owner, name, permissions, content, dir);
     }
-    
+    public App(MyDrive drive, Element xml){
+		this.importXML(drive, xml);
+	}
     public String toString(){
 		String description = super.toString();
 		return description;
@@ -25,13 +27,16 @@ public class App extends App_Base {
     	return element;
     }
     
-    public void importXML(Element elm){
-    	this.setName(elm.getAttributeValue("name"));
-		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-		this.setOwner(user);
-		this.setPermissions(elm.getAttributeValue("perm"));
-    	this.setContent(elm.getAttributeValue("method"));
+    public void importXML(MyDrive drive, Element elm){
+    //	this.setName(elm.getAttributeValue("name"));
+	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
+	//	this.setOwner(user);
+	//	this.setPermissions(elm.getAttributeValue("perm"));
+    //	this.setContent(elm.getAttributeValue("method"));
     	//this.setPath(elm.getAttributeValue("path"));
+    	
+    	String Content = new String(elm.getChild("method").getValue());//.getBytes("UTF-8")));
+    	super.importXML(drive, elm);
     }
     
 }

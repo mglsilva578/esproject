@@ -15,7 +15,6 @@ public class User extends User_Base {
 
 	public User(MyDrive drive, String username, String password, String name, String mask){
 		this.init(drive, username, password, name, mask);
-		//drive.addUser(this);
 	}
 	
 	public User(MyDrive drive, Element xml){

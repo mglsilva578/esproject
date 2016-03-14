@@ -31,6 +31,10 @@ public class Dir extends Dir_Base {
 		User owner = drive.getUserByUsername(SuperUser.NAME);
 		super.init(drive, owner, name, permissions, dir);
 	}
+	
+	public Dir(MyDrive drive, Element node){
+		this.importXML(drive, node);
+	}
 
 	public File getFileByName(String nameToLook){
 		for (File file : this.getFileSet()){
@@ -91,8 +95,8 @@ public class Dir extends Dir_Base {
 		return element;
 	}
 
-	public void importXML(Element elm){
-		super.importXML(elm);
+	public void importXML(MyDrive drive, Element elm){
+		super.importXML(drive, elm);
 	}
 
 	public String getFullyQualifiedPath(){

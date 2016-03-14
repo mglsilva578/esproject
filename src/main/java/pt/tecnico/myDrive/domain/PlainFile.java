@@ -19,7 +19,10 @@ public class PlainFile extends PlainFile_Base {
 
 	public PlainFile(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
 		this.init(drive, owner, name, permissions, content, dir);
-		//dir.addFile(this);
+	}
+	
+	public PlainFile(MyDrive drive, Element xml){
+		this.importXML(drive, xml);
 	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions, String content){
@@ -56,9 +59,9 @@ public class PlainFile extends PlainFile_Base {
 		return element;
 	}
 
-	public void importXML(Element elm){
-		super.importXML(elm);
-		this.setContent(elm.getAttributeValue("contents"));
+	public void importXML(MyDrive drive, Element elm){
+		super.importXML(drive, elm);
+		String Content = new String(elm.getChild("contents").getValue());//.getBytes("UTF-8")));
 	}
 
 }
