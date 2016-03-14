@@ -198,8 +198,8 @@ public class MyDrive extends MyDrive_Base {
         for (User user: getUserSet()){
         	users.addContent(user.exportXML());
         }
-        for (File f: getFileSet()){
-        	files.addContent(f.exportXML());
+        for (File file: getFileSet()){
+        	files.addContent(file.exportXML());
         }
         return element;
     }

@@ -12,7 +12,7 @@ public class SuperUser extends SuperUser_Base {
 	
 	public Element exportXML() {
 		Element element = super.exportXML(); 
-		element.setName("SuperUser");
+		element.setName("superUser");
 		return element;
 	}
 	

@@ -94,6 +94,7 @@ public class File extends File_Base {
 	public Element exportXML() {
 		Element element = new Element("file");
 		element.setAttribute("name", this.getName());
+		element.setAttribute("owner", this.getOwner().getName());
 		element.setAttribute("permissions", this.getPermissions());
 		element.setAttribute("path", this.getFullyQualifiedPath());
 		return element;
@@ -107,6 +108,7 @@ public class File extends File_Base {
 	}
 
 	private String getFullyQualifiedPath(){
+		if(this.getName().equals(Dir.SLASH_NAME)) return "/";
 		String path = "";
 		path = this.getFather().getFullyQualifiedPath();
 		path = path + "/" + this.getName();

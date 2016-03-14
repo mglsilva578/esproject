@@ -69,16 +69,12 @@ public class Main {
 	    userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
 	    userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
 	    userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
-
+	    
 	    PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
-	    String content = plainFile.readContent("/home3/plainfile1");
 	    
 	    Link link = new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", home4);
-	    content = link.readContent("/home3/home4/link1");
 	    
 	    App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
-	    content = app.readContent("/home3/home4/home5/app1");
-
 	}
 	
 	@Atomic

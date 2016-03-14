@@ -37,7 +37,7 @@ public class Tests {
 	public static void printContentOfHomeReadme(MyDrive drive){
 		File readme = drive.getFileByPathname("/home/README");
 		if(readme instanceof PlainFile){
-			log.trace("printing contents of /home/README :\n" + ((PlainFile)readme).getContent());
+			log.info("printing contents of /home/README :\n" + ((PlainFile)readme).getContent());
 			log.debug("printContentOfHomeReadme SUCCESS!");
 		}else{
 			throw new WrongTypeOfFileFoundException(readme.getName(), "PlainFile");
@@ -74,6 +74,5 @@ public class Tests {
 		}else{
 			throw new WrongTypeOfFileFoundException(fileFound.getName(), "Dir");
 		}
-		
 	}
 }
