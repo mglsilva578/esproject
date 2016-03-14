@@ -40,80 +40,83 @@ public class File extends File_Base {
 		dir.addFile(this);
 	}
 
+
+
+
+	@Override
+	public void setName(String n){
+		if(!(this.getId() == SLASH_DIR_1 )){
+			if(n.contains("/") || n.contains("\0")){
+				throw new InvalidFileNameException(n);
+			}
+		}
+		super.setName(n);
+	}
+
+	@Override
+	public void setMydrive(MyDrive drive){
+		if (drive == null){
+			super.setMydrive(null);
+		}
+		else{
+			drive.addFile(this);
+		}
+	}
+
+	@Override
+	public void setOwner(User owner){
+		if (owner == null){
+			super.setOwner(null);
+		}
+		else{
+			owner.addFile(this);
+		}
+	}
+
+	public void remove(){
+		setMydrive(null);
+		setOwner(null);
+		deleteDomainObject();
+	}
+
+	@Override
+	public String toString(){
+		String description = "\n";
+		description += "\tid: " + this.getId() + "\n";
+		description += "\tname: " + this.getName() + "\n";
+		description += "\towner: " + this.getOwner().getUsername() + "\n";
+		description += "\tlast modified: " + this.getLast_modification() + "\n";
+		description += "\tpermissions: " + this.getPermissions() + "\n";
+		description += "\tfull path: " + this.getFullyQualifiedPath() + "\n";
+		return description;
+	}
+
+	public Element exportXML() {
+		Element element = new Element("file");
+		element.setAttribute("name", this.getName());
+		element.setAttribute("permissions", this.getPermissions());
+		element.setAttribute("path", this.getFullyQualifiedPath());
+		return element;
+	}
+
+	public void importXML(Element elm){
+		this.setName(elm.getAttributeValue("name"));
+		User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
+		this.setOwner(user);
+		this.setPermissions(elm.getAttributeValue("permissions"));
+	}
+
+	private String getFullyQualifiedPath(){
+		String path = "";
+		path = this.getFather().getFullyQualifiedPath();
+		path = path + "/" + this.getName();
+		return path;
+	}
+
 	public String getPath(){
 		if (!this.getName().equals("home"))
 			return getFather().getPath()+"/"+this.getName();
 		return "/"+this.getName();
 	}
-
-
-@Override
-public void setName(String n){
-	if(!(this.getId() == SLASH_DIR_1 )){
-		if(n.contains("/") || n.contains("\0")){
-			throw new InvalidFileNameException(n);
-		}
-	}
-	super.setName(n);
-}
-
-@Override
-public void setMydrive(MyDrive drive){
-	if (drive == null){
-		super.setMydrive(null);
-	}
-	else{
-		drive.addFile(this);
-	}
-}
-
-@Override
-public void setOwner(User owner){
-	if (owner == null){
-		super.setOwner(null);
-	}
-	else{
-		owner.addFile(this);
-	}
-}
-
-public void remove(){
-	setMydrive(null);
-	setOwner(null);
-	deleteDomainObject();
-}
-
-@Override
-public String toString(){
-	String description = "\n";
-	description += "\tid: " + this.getId() + "\n";
-	description += "\tname: " + this.getName() + "\n";
-	description += "\towner: " + this.getOwner().getUsername() + "\n";
-	description += "\tlast modified: " + this.getLast_modification() + "\n";
-	description += "\tpermissions: " + this.getPermissions() + "\n";
-	description += "\tfull path: " + this.getFullyQualifiedPath() + "\n";
-	return description;
-}
-
-public Element exportXML() {
-    Element element = new Element("file");
-    element.setAttribute("name", this.getName());
-    element.setAttribute("permissions", this.getPermissions());
-    return element;
-}
-
-public void importXML(Element elm){
-	this.setName(elm.getAttributeValue("name"));
-	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-	this.setOwner(user);
-	this.setPermissions(elm.getAttributeValue("permissions"));
-}
-
-private String getFullyQualifiedPath(){
-	String path = "";
-	path = this.getFather().getFullyQualifiedPath();
-	path = path + "/" + this.getName();
-	return path;
-}
 
 }

@@ -72,7 +72,12 @@ public class Dir extends Dir_Base {
 		if(!this.getName().equals(Dir.SLASH_NAME)){
 			description = super.toString();
 		}else{
-
+			description = "\n";
+			description += "\tid: " + this.getId() + "\n";
+			description += "\tname: " + this.getName() + "\n";
+			description += "\towner: " + this.getOwner().getUsername() + "\n";
+			description += "\tlast modified: " + this.getLast_modification() + "\n";
+			description += "\tpermissions: " + this.getPermissions() + "\n";
 		}
 		description += "\tsize: " + this.getFileSet().size() + "\n";
 		description += "\tcontent: " + this.getContentNames() + "\n";
