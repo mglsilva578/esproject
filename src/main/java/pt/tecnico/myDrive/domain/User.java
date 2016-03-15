@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.Optional;
+
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -81,39 +83,25 @@ public class User extends User_Base {
 
 		return element;
 	}
-
+	
 	protected void importXML(MyDrive drive, Element elm){
 		try{
-			Element element;
-			String password;
-			String name;
-			String mask;
+			Optional<String> maybeString = null;
+			
 			String username = new String(elm.getAttribute("username").getValue().getBytes("UTF-8"));
 			
-			element = elm.getChild("password");
-			if(element == null){
-				password = username;
-			}else{
-				password = new String(element.getValue());//.getBytes("UTF-8")));				
-			}
+			maybeString = Optional.ofNullable(elm.getChildText("password"));
+			String password = (maybeString.orElse(username));
+
+			maybeString = Optional.ofNullable(elm.getChildText("name"));
+			String name = maybeString.orElse(username);
 			
-			element = elm.getChild("name");
-			if(element == null){
-				name = username;
-			}else{
-				name = new String(element.getValue());//.getBytes("UTF-8")));				
-			}
+			maybeString = Optional.ofNullable(elm.getChildText("mask"));
+			String mask = (maybeString.orElse("rwxd----"));
 			
-			element = elm.getChild("mask");
-			if(element == null){
-				mask = "rwxd----";
-			}else{
-				mask = new String(element.getValue());//.getBytes("UTF-8")));				
-			}
 			init(drive, username, password, name, mask);
 		}catch(Exception e){
-			e.printStackTrace();
-			throw new ImportDocumentException("In User");
+			throw new ImportDocumentException("In User : " + e.getMessage());
 		}
 	}
 
