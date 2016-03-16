@@ -16,7 +16,7 @@ public class Tests {
 	private static final Logger log = LogManager.getRootLogger();
 	
 	public static void createHomeReadmeWithUsersList(MyDrive drive){
-		File fileFound = drive.getFileByPathname("/home");
+		File fileFound = drive.getFileByPathname("/home", false);
 		if(fileFound instanceof Dir){
 			Dir home = (Dir)fileFound;
 			User superUser = drive.getUserByUsername(SuperUser.NAME);
@@ -36,7 +36,7 @@ public class Tests {
 	}
 	
 	public static void printContentOfHomeReadme(MyDrive drive){
-		File readme = drive.getFileByPathname("/home/README");
+		File readme = drive.getFileByPathname("/home/README", false);
 		if(readme instanceof PlainFile){
 			log.info("printing contents of /home/README :\n" + ((PlainFile)readme).getContent());
 			log.debug("printContentOfHomeReadme SUCCESS!");
@@ -65,7 +65,7 @@ public class Tests {
 	}
 	
 	public static void listDirContent(MyDrive drive){
-		File fileFound = drive.getFileByPathname("/home");
+		File fileFound = drive.getFileByPathname("/home", false);
 		Dir home;
 		if(fileFound instanceof Dir){
 			home = (Dir)fileFound;

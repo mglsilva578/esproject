@@ -55,34 +55,57 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
-	public File getFileByPathname(String pathname){
-		Dir previousDir;
-		File content = null;
-		String[] pathnameSplit;
-		int nextDirIndex = 1; 
-		int howManyLinks;
-		if(new String("" + pathname.charAt(0)).equals(Dir.SLASH_NAME)){
-			previousDir = this.getRootDir();
-			if(pathname.length() == 1) return previousDir;
-			pathnameSplit = pathname.split(Dir.SLASH_NAME);
-			howManyLinks = pathnameSplit.length;
-
-			while(nextDirIndex < howManyLinks){
-				content = previousDir.getFileByName(pathnameSplit[nextDirIndex++]);
-				if (content instanceof Dir){
-					previousDir = (Dir)content;
-				}else{
-					break;
-				}
-			}
-			if(content == null){
-				throw new InvalidPathameException(pathname);
-			}else{
-				return content;				
-			}
+	public File getFileByPathname(String pathname, boolean createMissingDir){
+		 
+		if(pathBeginsWithSlash(pathname)){
+			return findAllDirInPathname(pathname, createMissingDir);
 		}else{
 			throw new InvalidPathameException(pathname);
 		}
+	}
+
+	private File findAllDirInPathname(String pathname, boolean createMissingDir) {
+		File content = null;
+		int nextDirIndex = 1;
+		Dir previousDir;
+		String[] pathnameSplit;
+		int howManyLinks;
+		previousDir = this.getRootDir();
+		User rootUser = this.getUserByUsername(SuperUser.NAME);
+		if(pathname.length() == 1) return previousDir;
+		pathnameSplit = pathname.split(Dir.SLASH_NAME);
+		howManyLinks = pathnameSplit.length;
+
+		while(nextDirIndex < howManyLinks){
+			while(true){
+				try{
+					content = previousDir.getFileByName(pathnameSplit[nextDirIndex]);
+					break;						
+				}catch(NoDirException nde){
+					if(createMissingDir){
+						new Dir(this, rootUser, pathnameSplit[nextDirIndex], rootUser.getMask(), previousDir);						
+					}else{
+						throw nde;
+					}
+				}				
+			}
+			
+			nextDirIndex++;
+			if (content instanceof Dir){
+				previousDir = (Dir)content;
+			}else{
+				break;
+			}
+		}
+		if(content == null){
+			throw new InvalidPathameException(pathname);
+		}else{
+			return content;				
+		}
+	}
+
+	private boolean pathBeginsWithSlash(String pathname) {
+		return new String("" + pathname.charAt(0)).equals(Dir.SLASH_NAME);
 	}
 
 	public File getFileByName(String name) {
@@ -122,7 +145,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public void removePlainFileOrEmptyDirectoryByPathname( String pathnameFileToFind ){
-		File fileToRemove = this.getFileByPathname( pathnameFileToFind );
+		File fileToRemove = this.getFileByPathname( pathnameFileToFind, false );
 		if ((isEmptyDirectory( fileToRemove ) ||
 				isPlainFile( fileToRemove ))){
 			fileToRemove.getFather().removeFile(fileToRemove);
@@ -157,45 +180,6 @@ public class MyDrive extends MyDrive_Base {
 			return false;
 		}
 	}
-	
-	public void createNecessaryDirForPathname(String pathname){
-		Dir previousDir;
-		File content = null;
-		User rootUser = this.getUserByUsername(SuperUser.NAME);
-		String[] pathnameSplit;
-		int nextDirIndex = 1; 
-		int howManyLinks;
-		if(new String("" + pathname.charAt(0)).equals(Dir.SLASH_NAME)){
-			previousDir = this.getRootDir();
-			if(pathname.length() == 1) return;
-			pathnameSplit = pathname.split(Dir.SLASH_NAME);
-			howManyLinks = pathnameSplit.length;
-
-			while(nextDirIndex < howManyLinks){
-				while(true){
-					try{
-						content = previousDir.getFileByName(pathnameSplit[nextDirIndex]);
-						break;						
-					}catch(NoDirException nde){
-						new Dir(this, rootUser, pathnameSplit[nextDirIndex], rootUser.getMask(), previousDir);
-					}
-				}
-				nextDirIndex++;
-				if (content instanceof Dir){
-					previousDir = (Dir)content;
-				}else{
-					break;
-				}
-			}
-			if(content == null){
-				throw new InvalidPathameException(pathname);
-			}else{
-				return;				
-			}
-		}else{
-			throw new InvalidPathameException(pathname);
-		}
-	}
 
 	@Override
 	public void addUser(User userToBeAdded) throws UsernameAlreadyExistsException{
@@ -212,7 +196,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public String readContent(String path){
-		File file = getFileByPathname(path);
+		File file = getFileByPathname(path, false);
 		if (file instanceof PlainFile){
 			return ((PlainFile)file).getContent();
 		}
@@ -222,7 +206,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public String listDirContent(String pathname){
-		File fileFound = this.getFileByPathname(pathname);
+		File fileFound = this.getFileByPathname(pathname, false);
 		if(fileFound instanceof Dir){
 			return ((Dir) fileFound).getContentNames();
 		}else{
@@ -270,7 +254,7 @@ public class MyDrive extends MyDrive_Base {
 		switch(typeOfNode){
 		case "superUser" : new SuperUser(this, node);break;
 		case "user" : new User(this, node);break;
-		//case "dir" : new Dir(this, node); break;
+		case "dir" : new Dir(this, node); break;
 		//case "plain" : new PlainFile(this, node); break;
 		//case "app" : new App(this, node); break;
 		//case "link" : new Link(this, node); break;

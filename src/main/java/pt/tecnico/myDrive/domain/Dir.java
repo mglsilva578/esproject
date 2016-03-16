@@ -1,9 +1,12 @@
 package pt.tecnico.myDrive.domain;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
@@ -101,7 +104,24 @@ public class Dir extends Dir_Base {
 	}
 
 	public void importXML(MyDrive drive, Element elm){
-		super.importXML(drive, elm);
+			Optional<String> maybeString = null;
+
+			maybeString = Optional.ofNullable(elm.getChildText("path"));
+			String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - path is not optional and must be supplied.")));
+			drive.getFileByPathname(path, true);
+			Dir father = (Dir)drive.getFileByPathname(path, true);
+			
+			maybeString = Optional.ofNullable(elm.getChildText("name"));
+			String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));
+
+			maybeString = Optional.ofNullable(elm.getChildText("owner"));
+			String ownerName = (maybeString.orElse(SuperUser.NAME));
+			User owner = drive.getUserByUsername(ownerName);
+			
+			maybeString = Optional.ofNullable(elm.getChildText("perm"));
+			String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - permission is not optional and must be supplied.")));
+			
+			super.init(drive, owner, name, perm, father);
 	}
 
 	public String getFullyQualifiedPath(){

@@ -52,6 +52,19 @@
     <owner>jtb</owner>
     <path>/home/jtb</path>
     <name>documents</name>
+    <perm>r-xdr-x-</perm>
+  </dir>
+  <dir id="4">
+    <owner>jtb</owner>
+    <path>/home</path>
+    <name>You are made at the steak</name>
+    <perm>rwxdr-x-</perm>
+  </dir>
+  <dir id="4">
+    <owner>jtb</owner>
+    <path>/home/dirThatDidNotExist/bla</path>
+    <name>New Document in newly created dir</name>
+    <perm>r-xdr-x-</perm>
   </dir>
   <link id="5">
     <path>/home/jtb</path>

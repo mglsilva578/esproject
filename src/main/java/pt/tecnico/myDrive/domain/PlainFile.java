@@ -36,7 +36,7 @@ public class PlainFile extends PlainFile_Base {
 	}
 
 	public String readContent(String path){
-		File file = getMydrive().getFileByPathname(path);
+		File file = getMydrive().getFileByPathname(path, false);
 		if(file instanceof PlainFile){
 			return ((PlainFile)file).getContent();			
 		}else{
