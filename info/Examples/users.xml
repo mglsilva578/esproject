@@ -66,6 +66,27 @@
     <name>New Document in newly created dir</name>
     <perm>r-xdr-x-</perm>
   </dir>
+  <plain id="3">
+    <path>/home</path>
+    <owner>root</owner>
+    <name>Coisas do Root</name>
+    <contents> Bacon ipsum dolor amet meatloaf beef ribs spare ribs, meatball shoulder chuck pastrami picanha. Chicken shankle jowl, leberkas rump turkey salami ribeye pancetta kielbasa prosciutto picanha turducken shoulder ground round. Boudin jerky shankle chicken pancetta corned beef pork chop meatloaf beef ribs cow ham swine. T-bone bacon beef, kielbasa cow corned beef andouille sirloin pork chop brisket short ribs. Pork chop t-bone salami, tail frankfurter capicola spare ribs meatloaf drumstick ball tip kielbasa alcatra chuck swine.
+
+Boudin chuck turkey ribeye t-bone jowl pastrami doner ball tip. Picanha meatball pork loin jerky. Brisket salami hamburger shankle fatback chicken corned beef ham hock. Biltong pig pork, porchetta shank shoulder venison pork loin t-bone. Kevin short ribs capicola pancetta pork chop corned beef shoulder porchetta tri-tip frankfurter picanha tongue.
+
+Flank hamburger meatball, tongue andouille bacon doner tri-tip kevin filet mignon venison. Bresaola sausage short loin rump capicola. Ball tip strip steak t-bone sirloin, jowl venison pastrami biltong turducken bacon shoulder andouille tail picanha. Pastrami shank beef kevin salami, bacon chuck drumstick pork loin ball tip. Swine jowl brisket ham fatback. Prosciutto ham hock kielbasa pancetta flank brisket doner jerky boudin ground round picanha pork chop bresaola. Pastrami sirloin brisket shankle ham hock picanha chuck spare ribs tail ball tip tongue ham.
+
+</contents>
+  </plain>
+  <plain id="3">
+    <path>/home/root</path>
+    <name>Coisas do Root</name>
+    <contents>
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    </contents>
+  </plain>
+  
+
   <link id="5">
     <path>/home/jtb</path>
     <owner>jtb</owner>

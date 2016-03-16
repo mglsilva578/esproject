@@ -1,9 +1,12 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 
 public class PlainFile extends PlainFile_Base {
@@ -20,7 +23,7 @@ public class PlainFile extends PlainFile_Base {
 	public PlainFile(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
 		this.init(drive, owner, name, permissions, content, dir);
 	}
-	
+
 	public PlainFile(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
@@ -59,9 +62,28 @@ public class PlainFile extends PlainFile_Base {
 		return element;
 	}
 
+	
 	public void importXML(MyDrive drive, Element elm){
-		super.importXML(drive, elm);
-		String Content = new String(elm.getChild("contents").getValue());//.getBytes("UTF-8")));
+		Optional<String> maybeString = null;
+
+		maybeString = Optional.ofNullable(elm.getChildText("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - path is not optional and must be supplied.")));
+		drive.getFileByPathname(path, true);
+		Dir father = (Dir)drive.getFileByPathname(path, true);
+
+		maybeString = Optional.ofNullable(elm.getChildText("name"));
+		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - name is not optional and must be supplied.")));
+
+		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		User owner = drive.getUserByUsername(ownerName);
+
+		maybeString = Optional.ofNullable(elm.getChildText("contents"));
+		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - name is not optional and must be supplied.")));
+		
+		String perm = owner.getMask();
+		
+		this.init(drive, owner, name, perm, contents, father);
 	}
 
 }

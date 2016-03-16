@@ -32,7 +32,7 @@ public class Main {
 			if(args.length == 0){
 				Main.setup();				
 			}else{
-				for (String s: args) xmlScan(new File(s));				
+				for (String s: args) xmlScan(new File(s));									
 			}
 			Main.testMyDrive();
 			Main.printMyDrive();
@@ -114,7 +114,7 @@ public class Main {
 			}catch( MyDriveException mde){
 				log.error(mde.getMessage());
 			}
-			
+
 			try{
 				Main.xmlPrint();
 			}catch( MyDriveException mde){
