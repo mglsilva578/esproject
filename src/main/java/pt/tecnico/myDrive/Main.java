@@ -46,19 +46,18 @@ public class Main {
 	}
 
 	@Atomic
-	public static void init(){
+	private static void init(){
 		//TODO clean MyDrive
 	}
 
 	@Atomic
-	public static void setup(){
+	private static void setup(){
 		MyDrive drive = MyDrive.getInstance();
 		if(drive.isEmpty()){
 			SuperUser rootUser = new SuperUser(drive);
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			Link l = new Link(drive,  null);
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
@@ -89,7 +88,7 @@ public class Main {
 	}
 
 	@Atomic
-	public static void testMyDrive(){
+	private static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
 		try{
 			try{
@@ -145,13 +144,13 @@ public class Main {
 	}
 
 	@Atomic
-	public static void printMyDrive(){
+	private static void printMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
 		log.trace(drive.toString());
 	}
 
 	@Atomic
-	public static void xmlPrint() {
+	private static void xmlPrint() {
 		log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
 		Document doc = MyDrive.getInstance().exportXML();
 		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
@@ -162,7 +161,7 @@ public class Main {
 	}
 
 	@Atomic
-	public static void xmlScan(File file) {
+	private static void xmlScan(File file) {
 		log.trace("xmlScan: " + FenixFramework.getDomainRoot());
 		MyDrive drive = MyDrive.getInstance();
 		SAXBuilder builder = new SAXBuilder();
