@@ -79,7 +79,7 @@ public class PlainFile extends PlainFile_Base {
 		User owner = drive.getUserByUsername(ownerName);
 
 		maybeString = Optional.ofNullable(elm.getChildText("contents"));
-		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - name is not optional and must be supplied.")));
+		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - contents are not optional and must be supplied.")));
 		
 		String perm = owner.getMask();
 		

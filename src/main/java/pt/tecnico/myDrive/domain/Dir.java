@@ -129,11 +129,15 @@ public class Dir extends Dir_Base {
 
 		Dir parent = this.getFather();
 		String path = "" + this.getName();
-		while(!parent.getName().equals(Dir.SLASH_NAME)){
+		while(!directlyUnderSlashDir(parent)){
 			path = parent.getName() + "/" + path;
 			parent = parent.getFather();
 		}
 		path = "/" + path;
 		return path;
+	}
+
+	private boolean directlyUnderSlashDir(Dir parent) {
+		return parent.getName().equals(Dir.SLASH_NAME);
 	}
 }

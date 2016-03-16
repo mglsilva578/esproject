@@ -1,8 +1,12 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.Optional;
+
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.CannotModifyLinkContentException;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 
 public class Link extends Link_Base {
     
@@ -28,14 +32,29 @@ public class Link extends Link_Base {
     	element.setName("link");
     	return element;
     }
-    
+
     public void importXML(MyDrive drive, Element elm){
-    //	this.setName(elm.getAttributeValue("name"));
-	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-	//	this.setOwner(user);
-	//	this.setPermissions(elm.getAttributeValue("perm"));
-    //	this.setContent(elm.getAttributeValue("value"));
-    String Content = new String(elm.getChild("value").getValue());//.getBytes("UTF-8")));
-    super.importXML(drive, elm);
+    	Optional<String> maybeString = null;
+
+    	maybeString = Optional.ofNullable(elm.getChildText("name"));
+    	String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Link \n name is not optional and must be supplied.")));
+
+    	maybeString = Optional.ofNullable(elm.getChildText("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n path is not optional and must be supplied.")));
+		drive.getFileByPathname(path, true);
+		Dir father = (Dir)drive.getFileByPathname(path, true);
+
+
+		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		User owner = drive.getUserByUsername(ownerName);
+
+		maybeString = Optional.ofNullable(elm.getChildText("contents"));
+		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n contents are not optional and must be supplied.")));
+		
+		String perm = owner.getMask();
+		
+		this.init(drive, owner, name, perm, contents, father);
+    
     }
 }

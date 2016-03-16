@@ -2,6 +2,7 @@ package pt.tecnico.myDrive.domain;
 
 import java.util.Optional;
 
+import org.jdom2.Attribute;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -88,13 +89,15 @@ public class User extends User_Base {
 		try{
 			Optional<String> maybeString = null;
 			
-			String username = new String(elm.getAttribute("username").getValue().getBytes("UTF-8"));
+			maybeString = Optional.ofNullable(elm.getChildText("name"));
+			String name = (maybeString.orElseThrow(() -> new ImportDocumentException("User \n name is not optional and must be supplied.")));
+
+			Optional<Attribute> maybeAttribute = Optional.ofNullable(elm.getAttribute("username"));
+			String username = new String((maybeAttribute.orElseThrow(() -> new ImportDocumentException("User <"+ name +"> \n username is not optional and must be supplied.")))
+					.getValue().getBytes("UTF-8"));
 			
 			maybeString = Optional.ofNullable(elm.getChildText("password"));
-			String password = (maybeString.orElse(username));
-
-			maybeString = Optional.ofNullable(elm.getChildText("name"));
-			String name = maybeString.orElse(username);
+			String password = (maybeString.orElseThrow(() -> new ImportDocumentException("User <"+ name +"> \n password is not optional and must be supplied.")));
 			
 			maybeString = Optional.ofNullable(elm.getChildText("mask"));
 			String mask = (maybeString.orElse("rwxd----"));

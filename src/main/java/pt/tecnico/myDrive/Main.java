@@ -58,6 +58,7 @@ public class Main {
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
+			Link l = new Link(drive,  null);
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");

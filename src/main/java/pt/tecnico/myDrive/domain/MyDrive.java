@@ -256,8 +256,8 @@ public class MyDrive extends MyDrive_Base {
 		case "user" : new User(this, node);break;
 		case "dir" : new Dir(this, node); break;
 		case "plain" : new PlainFile(this, node); break;
-		//case "app" : new App(this, node); break;
-		//case "link" : new Link(this, node); break;
+		case "app" : new App(this, node); break;
+		case "link" : new Link(this, node); break;
 
 		
 		default: log.error("Ainda nao sei fazer isto " + typeOfNode); return;

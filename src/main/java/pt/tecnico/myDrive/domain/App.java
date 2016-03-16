@@ -1,11 +1,15 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.Optional;
+
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 
 public class App extends App_Base {
     
+	private static final String DEFAULT_METHOD = "main";
 	public App(){
 		super();
 	}
@@ -26,17 +30,31 @@ public class App extends App_Base {
     	element.setName("app");
     	return element;
     }
-    
+
     public void importXML(MyDrive drive, Element elm){
-    //	this.setName(elm.getAttributeValue("name"));
-	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-	//	this.setOwner(user);
-	//	this.setPermissions(elm.getAttributeValue("perm"));
-    //	this.setContent(elm.getAttributeValue("method"));
-    	//this.setPath(elm.getAttributeValue("path"));
-    	
-    	String Content = new String(elm.getChild("method").getValue());//.getBytes("UTF-8")));
-    	super.importXML(drive, elm);
+    	Optional<String> maybeString = null;
+
+    	maybeString = Optional.ofNullable(elm.getChildText("name"));
+    	String name = (maybeString.orElseThrow(() -> new ImportDocumentException("App \n name is not optional and must be supplied.")));
+
+    	maybeString = Optional.ofNullable(elm.getChildText("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("App <"+ name +"> \n path is not optional and must be supplied.")));
+		drive.getFileByPathname(path, true);
+		Dir father = (Dir)drive.getFileByPathname(path, true);
+
+
+		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		User owner = drive.getUserByUsername(ownerName);
+
+		maybeString = Optional.ofNullable(elm.getChildText("contents"));
+		String contents = (maybeString.orElse(DEFAULT_METHOD));
+		
+		String perm = owner.getMask();
+		
+		this.init(drive, owner, name, perm, contents, father);
+    
+
     }
     
 }
