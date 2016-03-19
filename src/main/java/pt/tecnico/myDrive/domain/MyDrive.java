@@ -126,8 +126,9 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public Integer getNewFileId(){
-		this.setFileIdCounter(this.getFileIdCounter() + 1);
-		return this.getFileIdCounter();
+		int id = this.getFileIdCounter();
+		this.setFileIdCounter(id + 1);
+		return id;
 	}
 
 	public void removeUserByUsername(String usernameToRemove) throws UsernameDoesNotExistException{

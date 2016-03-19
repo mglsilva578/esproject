@@ -8,7 +8,7 @@ import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
-	private static final int SLASH_DIR_1 = 1;
+	private static final int SLASH_DIR_1 = 0;
 
 	protected File(){
 		super();
