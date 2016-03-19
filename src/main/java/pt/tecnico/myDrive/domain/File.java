@@ -21,7 +21,7 @@ public class File extends File_Base {
 	public File(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		this.init(drive, owner, name, permissions, dir);
 	}
-	
+
 	public File(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
@@ -83,13 +83,12 @@ public class File extends File_Base {
 
 	@Override
 	public String toString(){
-		String description = "\n";
-		description += "\tid: " + this.getId() + "\n";
-		description += "\tname: " + this.getName() + "\n";
-		description += "\towner: " + this.getOwner().getUsername() + "\n";
-		description += "\tlast modified: " + this.getLast_modification() + "\n";
-		description += "\tpermissions: " + this.getPermissions() + "\n";
-		description += "\tfull path: " + this.getFullyQualifiedPath() + "\n";
+		String description = this.getPermissions();
+		//To Do size
+		description += " " + this.getOwner().getUsername();
+		description += " " + this.getId();
+		description += " " + this.getLast_modification();
+		description += " " + this.getName();
 		return description;
 	}
 
@@ -104,21 +103,13 @@ public class File extends File_Base {
 	}
 
 	public void importXML(MyDrive drive, Element elm){
-	//	this.setName(elm.getAttributeValue("name"));
-	//	User user = FenixFramework.getDomainRoot().getMydrive().getUserByUsername(elm.getAttributeValue("owner"));
-	//	this.setOwner(user);
-	//	this.setPermissions(elm.getAttributeValue("perm"));
-	
-	
-	
-	
 		try{
 			int id = elm.getAttribute("id").getIntValue();
-			String path = new String(elm.getChild("path").getValue());//.getBytes("UTF-8")));
-			String name = new String(elm.getChild("name").getValue());//.getBytes("UTF-8")));
+			String path = new String(elm.getChild("path").getValue());
+			String name = new String(elm.getChild("name").getValue());
 			String owner = new String(elm.getChild("owner").getValue());
 			User u = drive.getUserByUsername(owner);
-			String perm = new String(elm.getChild("mask").getValue());//.getBytes("UTF-8")));
+			String perm = new String(elm.getChild("mask").getValue());
 			init(drive, u, name, perm);
 		}catch(Exception e){
 			e.printStackTrace();

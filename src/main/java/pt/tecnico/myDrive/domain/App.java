@@ -17,11 +17,13 @@ public class App extends App_Base {
     public App(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
         super.init(drive, owner, name, permissions, content, dir);
     }
+    
     public App(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
+    
     public String toString(){
-		String description = super.toString();
+		String description = super.toString("app");
 		return description;
 	}
     

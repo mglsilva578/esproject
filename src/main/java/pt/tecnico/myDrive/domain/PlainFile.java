@@ -47,9 +47,25 @@ public class PlainFile extends PlainFile_Base {
 		}
 	}
 
-	public String toString(){
-		String description = super.toString();
-		description += "\tcontent: " + this.getContent() + "\n";
+	public String toString(String type){
+		String description = "";
+		if(type == "app" || type == "link"){ 
+			description = type;
+		}
+		else{  
+			//doesn't enter here
+			description = "plain";
+		}
+		
+		description += " " + super.toString();
+		
+		if(type == "link"){
+			description += " ->" + this.getContent();
+		}
+		else{ 
+			description += " " + this.getContent();
+		}
+		
 		return description;
 	}
 

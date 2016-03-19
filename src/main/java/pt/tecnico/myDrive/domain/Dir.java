@@ -34,7 +34,7 @@ public class Dir extends Dir_Base {
 		User owner = drive.getUserByUsername(SuperUser.NAME);
 		super.init(drive, owner, name, permissions, dir);
 	}
-	
+
 	public Dir(MyDrive drive, Element node){
 		this.importXML(drive, node);
 	}
@@ -44,7 +44,7 @@ public class Dir extends Dir_Base {
 			return this;
 		if(nameToLook.equals(".."))
 			return this.getFather();
-		
+
 		for (File file : this.getFileSet()){
 			if(file.getName().equals(nameToLook)){
 				return file;
@@ -71,29 +71,28 @@ public class Dir extends Dir_Base {
 		}
 	}
 
+	public int getSize(){
+		return this.getFileSet().size() + 2;
+	}
+
+
 	public String getContentNames(){
 		String contentNames = "";
 		for (File file : this.getFileSet()) {
-			contentNames += file.getName() + " | ";
+			contentNames += file.toString();
 		}
 		return contentNames;
 	}
 
 	@Override
 	public String toString(){
-		String description = "";
-		if(!this.getName().equals(Dir.SLASH_NAME)){
-			description = super.toString();
-		}else{
-			description = "\n";
-			description += "\tid: " + this.getId() + "\n";
-			description += "\tname: " + this.getName() + "\n";
-			description += "\towner: " + this.getOwner().getUsername() + "\n";
-			description += "\tlast modified: " + this.getLast_modification() + "\n";
-			description += "\tpermissions: " + this.getPermissions() + "\n";
-		}
-		description += "\tsize: " + this.getFileSet().size() + "\n";
-		description += "\tcontent: " + this.getContentNames() + "\n";
+		String description = "dir";
+		description += " " + this.getPermissions();
+		description += " " + this.getSize();
+		description += " " + this.getOwner().getUsername();
+		description += " " + this.getId();
+		description += " " + this.getLast_modification();
+		description += " " + this.getName();
 		return description;
 	}
 
@@ -104,24 +103,24 @@ public class Dir extends Dir_Base {
 	}
 
 	public void importXML(MyDrive drive, Element elm){
-			Optional<String> maybeString = null;
+		Optional<String> maybeString = null;
 
-			maybeString = Optional.ofNullable(elm.getChildText("path"));
-			String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - path is not optional and must be supplied.")));
-			drive.getFileByPathname(path, true);
-			Dir father = (Dir)drive.getFileByPathname(path, true);
-			
-			maybeString = Optional.ofNullable(elm.getChildText("name"));
-			String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));
+		maybeString = Optional.ofNullable(elm.getChildText("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - path is not optional and must be supplied.")));
+		drive.getFileByPathname(path, true);
+		Dir father = (Dir)drive.getFileByPathname(path, true);
 
-			maybeString = Optional.ofNullable(elm.getChildText("owner"));
-			String ownerName = (maybeString.orElse(SuperUser.NAME));
-			User owner = drive.getUserByUsername(ownerName);
-			
-			maybeString = Optional.ofNullable(elm.getChildText("perm"));
-			String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - permission is not optional and must be supplied.")));
-			
-			super.init(drive, owner, name, perm, father);
+		maybeString = Optional.ofNullable(elm.getChildText("name"));
+		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));
+
+		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		User owner = drive.getUserByUsername(ownerName);
+
+		maybeString = Optional.ofNullable(elm.getChildText("perm"));
+		String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - permission is not optional and must be supplied.")));
+
+		super.init(drive, owner, name, perm, father);
 	}
 
 	public String getFullyQualifiedPath(){

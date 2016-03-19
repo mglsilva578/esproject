@@ -23,7 +23,7 @@ public class Link extends Link_Base {
 	}
     
     public String toString(){
-		String description = super.toString();
+		String description = super.toString("link");
 		return description;
 	}
     
