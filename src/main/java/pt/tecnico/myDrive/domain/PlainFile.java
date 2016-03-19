@@ -47,25 +47,20 @@ public class PlainFile extends PlainFile_Base {
 		}
 	}
 
+	@Override
+	public String toString(){
+		return this.toString("plain");
+	}
+
 	public String toString(String type){
-		String description = "";
-		if(type == "app" || type == "link"){ 
-			description = type;
-		}
-		else{  
-			//doesn't enter here
-			description = "plain";
-		}
-		
+		String description = type;
 		description += " " + super.toString();
-		
 		if(type == "link"){
 			description += " ->" + this.getContent();
 		}
 		else{ 
 			description += " " + this.getContent();
 		}
-		
 		return description;
 	}
 
@@ -78,7 +73,7 @@ public class PlainFile extends PlainFile_Base {
 		return element;
 	}
 
-	
+
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
 
@@ -96,9 +91,9 @@ public class PlainFile extends PlainFile_Base {
 
 		maybeString = Optional.ofNullable(elm.getChildText("contents"));
 		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - contents are not optional and must be supplied.")));
-		
+
 		String perm = owner.getMask();
-		
+
 		this.init(drive, owner, name, perm, contents, father);
 	}
 

@@ -8,7 +8,7 @@ import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 public class File extends File_Base {
-	private static final int SLASH_DIR_1 = 0;
+	private static final int SLASH_DIR_0 = 0;
 
 	protected File(){
 		super();
@@ -47,7 +47,7 @@ public class File extends File_Base {
 
 	@Override
 	public void setName(String n){
-		if(!(this.getId() == SLASH_DIR_1 )){
+		if(!(this.getId() == SLASH_DIR_0 )){
 			if(n.contains("/") || n.contains("\0")){
 				throw new InvalidFileNameException(n);
 			}

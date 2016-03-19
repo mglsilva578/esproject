@@ -1,143 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <myDrive>
-	<user username="jtb">
-		<password>Fernandes</password>
-		<name>Joaquim Teófilo Braga</name>
-		<home>/home/jtb</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="mja">
-		<password>Peyrelongue</password>
-		<name>Manuel José de Arriaga</name>
-		<home>/home/mja</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="blm">
-		<password>Guimarães</password>
-		<name>Bernardino Luís Machado</name>
-		<home>/home/blm</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="sbp">
-		<password>Cardoso da Silva</password>
-		<name>Sidónio Bernardino Pais</name>
-		<home>/home/sbp</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="jcc">
-		<password>O Júnior</password>
-		<name>João do Canto e Castro</name>
-		<home>/home/jcc</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="aja">
-		<password>password</password>
-		<name>António José de Almeida</name>
-		<home>/home/aja</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<user username="mtg">
-		<password>nefelibata</password>
-		<name>Manuel Teixeira Gomes</name>
-		<home>/home/mtg</home>
-		<mask>rwxdr-x-</mask>
-	</user>
-	<plain id="3">
-		<path>/home/jtb</path>
-		<owner>jtb</owner>
-		<name>profile</name>
-		<contents>Primeiro chefe de Estado do regime republicano (acumulando
-			com a chefia do governo), numa capacidade provisória até à eleição do
-			primeiro presidente da República.</contents>
-	</plain>
-	<dir id="4">
-		<owner>jtb</owner>
-		<path>/home/jtb</path>
-		<name>documents</name>
-		<perm>r-xdr-x-</perm>
-	</dir>
-	<dir id="4">
-		<owner>jtb</owner>
-		<path>/home</path>
-		<name>You are made at the steak</name>
-		<perm>rwxdr-x-</perm>
-	</dir>
-	<dir id="4">
-		<owner>jtb</owner>
-		<path>/home/dirThatDidNotExist/bla</path>
-		<name>New Document in newly created dir</name>
-		<perm>r-xdr-x-</perm>
-	</dir>
-	<plain id="3">
-		<path>/home</path>
-		<owner>root</owner>
-		<name>Coisas do Root</name>
-		<contents> Bacon ipsum dolor amet meatloaf beef ribs spare ribs,
-			meatball shoulder chuck pastrami picanha. Chicken shankle jowl,
-			leberkas rump turkey salami ribeye pancetta kielbasa prosciutto
-			picanha turducken shoulder ground round. Boudin jerky shankle chicken
-			pancetta corned beef pork chop meatloaf beef ribs cow ham swine.
-			T-bone bacon beef, kielbasa cow corned beef andouille sirloin pork
-			chop brisket short ribs. Pork chop t-bone salami, tail frankfurter
-			capicola spare ribs meatloaf drumstick ball tip kielbasa alcatra
-			chuck swine.
-
-			Boudin chuck turkey ribeye t-bone jowl pastrami doner ball tip. Picanha
-			meatball pork loin jerky. Brisket salami hamburger shankle fatback
-			chicken corned beef ham hock. Biltong pig pork, porchetta shank
-			shoulder venison pork loin t-bone. Kevin short ribs capicola pancetta
-			pork chop corned beef shoulder porchetta tri-tip frankfurter picanha
-			tongue.
-
-			Flank hamburger meatball, tongue andouille bacon doner tri-tip kevin filet
-			mignon venison. Bresaola sausage short loin rump capicola. Ball tip
-			strip steak t-bone sirloin, jowl venison pastrami biltong turducken
-			bacon shoulder andouille tail picanha. Pastrami shank beef kevin
-			salami, bacon chuck drumstick pork loin ball tip. Swine jowl brisket
-			ham fatback. Prosciutto ham hock kielbasa pancetta flank brisket
-			doner jerky boudin ground round picanha pork chop bresaola. Pastrami
-			sirloin brisket shankle ham hock picanha chuck spare ribs tail ball
-			tip tongue ham.
-
-		</contents>
-	</plain>
-	<plain id="3">
-		<path>/home/root</path>
-		<name>Coisas do Root</name>
-		<contents>
-			@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-		</contents>
-	</plain>
-
-	<link id="5">
-		<path>/home/jtb</path>
-		<name>doc</name>
-		<owner>jtb</owner>
-		<perm>r-xdr-x-</perm>
-		<value>/home/jtb/documents</value>
-		<contents>CAMINHO / PARA / UMA / APLICACAO</contents>
-
-	</link>
-	<link id="5">
-		<path>/home/root</path>
-		<name>doc</name>
-		<value>/home/jtb/documents</value>
-		<contents>CAMINHO / PARA / ROOT / APLICACAO</contents>
-
-	</link>
-	<app id="7">
-		<path>/home/jtb/bin</path>
-		<name>Red</name>
-		<owner>jtb</owner>
-		<contents>pt.tecnico.myDrive.presentation.Red</contents>
-	</app>
-	<app id="7">
-		<path>/home/mtg/bin/banana</path>
-		<name>Green default owner</name>
-		<contents>pt.tecnico.myDrive.presentation.Green</contents>
-	</app>
-	<app id="7">
-		<path>/home/ruffles/</path>
-		<name>default contents and owner</name>
-	</app>
+  <user username="jtb">
+    <password>Fernandes</password>
+    <name>Joaquim Teófilo Braga</name>
+    <home>/home/jtb</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="mja">
+    <password>Peyrelongue</password>
+    <name>Manuel José de Arriaga</name>
+    <home>/home/mja</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="blm">
+    <password>Guimarães</password>
+    <name>Bernardino Luís Machado</name>
+    <home>/home/blm</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="sbp">
+    <password>Cardoso da Silva</password>
+    <name>Sidónio Bernardino Pais</name>
+    <home>/home/sbp</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="jcc">
+    <password>O Júnior</password>
+    <name>João do Canto e Castro</name>
+    <home>/home/jcc</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="aja">
+    <password>password</password>
+    <name>António José de Almeida</name>
+    <home>/home/aja</home>
+    <mask>rwxdr-x-</mask>
+  </user>
+  <user username="mtg">
+    <password>nefelibata</password>
+    <name>Manuel Teixeira Gomes</name>
+    <home>/home/mtg</home>
+    <mask>rwxdr-x-</mask>
+  </user>
 </myDrive>

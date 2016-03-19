@@ -34,7 +34,7 @@ public class Main {
 			}else{
 				for (String s: args) xmlScan(new File(s));									
 			}
-			Main.testMyDrive();
+			//Main.testMyDrive();
 			Main.printMyDrive();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
@@ -65,7 +65,8 @@ public class Main {
 			return;
 		}
 	}
-
+	
+	
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
 		SuperUser rootUser = (SuperUser)drive.getUserByUsername(SuperUser.NAME);
@@ -87,7 +88,8 @@ public class Main {
 
 		App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
 	}
-
+	
+	
 	@Atomic
 	private static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
@@ -143,7 +145,8 @@ public class Main {
 			log.error(e.getMessage());
 		}
 	}
-
+	
+	
 	@Atomic
 	private static void printMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
