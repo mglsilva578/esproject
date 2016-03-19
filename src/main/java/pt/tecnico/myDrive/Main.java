@@ -58,6 +58,7 @@ public class Main {
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
+			additionalSetup();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
@@ -74,11 +75,11 @@ public class Main {
 		Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask(), home3);
 		Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask(), home4);
 
-		User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----");
-		userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----");
-		userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----");
-		userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----");
-		userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----");
+		User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
+		userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
+		userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
+		userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
+		userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
 
 		PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
 

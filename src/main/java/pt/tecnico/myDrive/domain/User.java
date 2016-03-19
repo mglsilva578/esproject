@@ -14,12 +14,43 @@ public class User extends User_Base {
 		super();
 	}
 
-	public User(MyDrive drive, String username, String password, String name, String mask){
-		this.init(drive, username, password, name, mask);
+	public User(MyDrive drive, String username, String password, String name, String mask, String homeDir){
+		this.init(drive, username, password, name, mask, homeDir);
 	}
 	
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
+	}
+
+	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
+		Optional<String> omission = null;
+		
+		if(this.isUsernameValid(username)){
+			setUsername(username);    	
+		}
+		else{
+			throw new InvalidUsernameException(username);
+		}
+		
+		omission = Optional.ofNullable(password);
+		password = omission.orElse(username);
+		setPassword(password);
+		
+		omission = Optional.ofNullable(name);
+		name = omission.orElse(username);
+		setName(name);
+		
+		omission = Optional.ofNullable(mask);
+		mask = omission.orElse("rwxd----");
+		setMask(mask);
+		
+		setMydrive(drive);
+		
+		if(homeDir == null && !(username == "root")){
+			Dir dir = drive.createUserDir(this);
+			homeDir = dir.getName();
+		}
+		setHomeDir(homeDir);				
 	}
 
 	private boolean isUsernameValid(String username){
@@ -32,22 +63,6 @@ public class User extends User_Base {
 		return username.matches(patternToMatch);
 	}
 
-	protected void init(MyDrive drive, String username, String password, String name, String mask){
-		if(this.isUsernameValid(username)){
-			setUsername(username);    	
-		}
-		else{
-			throw new InvalidUsernameException(username);
-		}
-		setPassword(password);
-		setName(name);
-		setMask(mask);
-		setMydrive(drive);
-
-		if(!(username == "root")){
-			drive.createUserDir(this);		
-		}
-	}
 
 	@Override
 	public void setMydrive(MyDrive drive) {
@@ -102,7 +117,15 @@ public class User extends User_Base {
 			maybeString = Optional.ofNullable(elm.getChildText("mask"));
 			String mask = (maybeString.orElse("rwxd----"));
 			
-			init(drive, username, password, name, mask);
+			String homeDir = elm.getChildText("home");
+			
+			//TO DO if homeDir!=null don't work
+			if(homeDir == null && !(username == "root")){
+				Dir dir = drive.createUserDir(this);
+				homeDir = dir.getName();
+			}
+						
+			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			throw new ImportDocumentException("In User : " + e.getMessage());
 		}
