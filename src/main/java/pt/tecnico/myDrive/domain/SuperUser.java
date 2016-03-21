@@ -12,7 +12,6 @@ public class SuperUser extends SuperUser_Base {
 	
 	public SuperUser(MyDrive drive, Element xml){
 		super.importXML(drive, xml);
-		//drive.addUser(this);
 	}
 	
 	public Element exportXML() {

@@ -56,7 +56,6 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public File getFileByPathname(String pathname, boolean createMissingDir){
-		 
 		if(pathBeginsWithSlash(pathname)){
 			return findAllDirInPathname(pathname, createMissingDir);
 		}else{
@@ -70,12 +69,11 @@ public class MyDrive extends MyDrive_Base {
 		Dir previousDir;
 		String[] pathnameSplit;
 		int howManyLinks;
-		previousDir = this.getRootDir();
+		previousDir = getRootDir();
 		User rootUser = this.getUserByUsername(SuperUser.NAME);
 		if(pathname.length() == 1) return previousDir;
 		pathnameSplit = pathname.split(Dir.SLASH_NAME);
 		howManyLinks = pathnameSplit.length;
-
 		while(nextDirIndex < howManyLinks){
 			while(true){
 				try{
@@ -84,22 +82,24 @@ public class MyDrive extends MyDrive_Base {
 				}catch(NoDirException nde){
 					if(createMissingDir){
 						new Dir(this, rootUser, pathnameSplit[nextDirIndex], rootUser.getMask(), previousDir);						
-					}else{
+					}
+					else{
 						throw nde;
 					}
 				}				
 			}
-			
 			nextDirIndex++;
 			if (content instanceof Dir){
 				previousDir = (Dir)content;
-			}else{
+			}
+			else{
 				break;
 			}
 		}
 		if(content == null){
 			throw new InvalidPathameException(pathname);
-		}else{
+		}
+		else{
 			return content;				
 		}
 	}
@@ -219,10 +219,6 @@ public class MyDrive extends MyDrive_Base {
 	public Document exportXML() {
 		Element element = new Element("myDrive");
 		Document doc = new Document(element); //
-		//Element users = new Element("myDriveUsers");
-		//element.addContent(users);
-		//Element files = new Element("myDriveFiles");
-		//element.addContent(files);
 		for (User user: getUserSet()){
 			element.addContent(user.exportXML());
 		}
@@ -231,20 +227,9 @@ public class MyDrive extends MyDrive_Base {
 		}
 		return doc;
 	}
-	/*public void xmlImport(Element element) {
-		for (Element node: element.getChildren("person")) {
-			String name = node.getAttribute("name").getValue();
-			Person person = getPersonByName(name);
-
-			if (person == null) // Does not exist
-				person = new Person(this, name);
-
-			person.xmlImport(node);
-		}
-	}*/
 
 	public void importXML(Element toImport){
-		this.initBaseState();
+		//this.initBaseState();
 		for(Element node : toImport.getChildren()){
 			this.importElement(node);
 		} 
@@ -260,10 +245,10 @@ public class MyDrive extends MyDrive_Base {
 		case "app" : new App(this, node); break;
 		case "link" : new Link(this, node); break;
 
-		
+
 		default: log.error("Ainda nao sei fazer isto " + typeOfNode); return;
 		}
-		
+
 	}
 
 	public Dir createUserDir( User user ){

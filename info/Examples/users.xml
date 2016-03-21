@@ -42,4 +42,27 @@
     <home>/home/mtg</home>
     <mask>rwxdr-x-</mask>
   </user>
+  <plain id="3">
+    <path>/home/jtb</path>
+    <owner>jtb</owner>
+    <name>profile</name>
+    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
+  </plain>
+  <dir id="4">
+    <owner>jtb</owner>
+    <path>/home/jtb</path>
+    <name>documents</name>
+  </dir>
+  <link id="5">
+    <path>/home/jtb</path>
+    <owner>jtb</owner>
+    <name>doc</name>
+    <value>/home/jtb/documents</value>
+  </link>
+  <app id="7">
+    <path>/home/jtb/bin</path>
+    <name>length</name>
+    <owner>jtb</owner>
+    <method>pt.tecnico.myDrive.presentation.Hello.sum</method>
+  </app>
 </myDrive>

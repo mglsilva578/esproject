@@ -22,7 +22,6 @@ public class Dir extends Dir_Base {
 		super.init(drive, owner, name, permissions);
 		if(name.equals(SLASH_NAME)){
 			drive.setRootDir(this);
-			this.setFather(this);
 		}
 	}
 
@@ -79,7 +78,7 @@ public class Dir extends Dir_Base {
 	public String getContentNames(){
 		String contentNames = "";
 		for (File file : this.getFileSet()) {
-			contentNames += file.toString();
+			contentNames += file.getName() + " | ";
 		}
 		return contentNames;
 	}
@@ -93,6 +92,7 @@ public class Dir extends Dir_Base {
 		description += " " + this.getId();
 		description += " " + this.getLast_modification();
 		description += " " + this.getName();
+		description += "\ncontent: " + this.getContentNames() + "\n";
 		return description;
 	}
 

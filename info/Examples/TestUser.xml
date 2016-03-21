@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<myDrive>
+  <user username="User1">
+    <password>Pass1</password>
+    <name>Name1</name>
+    <home>/home/User1</home>
+    <mask>rw------</mask>
+  </user>
+  <user username="User2">
+    <password>Pass2</password>
+    <name>Name2</name>
+    <home>/home/User2</home>
+  </user>
+  <user username="User3">
+    <password>Pass3</password>
+    <name>Name3</name>
+    <mask>rw------</mask>
+  </user>
+  <user username="User4">
+    <password>Pass4</password>
+    <home>/home/User4</home>
+    <mask>rw------</mask>
+  </user>
+  <user username="User5">
+    <name>Name5</name>
+    <home>/home/User5</home>
+    <mask>rw------</mask>
+  </user>
+  <user username="User6">
+    <password>Pass6</password>
+    <name>Name6</name>
+  </user>
+  <user username="User7">
+    <password>Pass7</password>
+    <home>/home/User7</home>
+  </user>
+  <user username="User8">
+    <name>Name8</name>
+    <home>/home/User8</home>
+  </user>
+  <user username="User9">
+    <password>Pass9</password>
+    <mask>rw------</mask>
+  </user>
+  <user username="User10">
+    <name>Name10</name>
+    <mask>rw------</mask>
+  </user>
+  <user username="User11">
+    <home>/home/User11</home>
+    <mask>rw------</mask>
+  </user>
+  <user username="User12">
+    <password>Pass12</password>
+  </user>
+  <user username="User13">
+    <name>Name13</name>
+  </user>
+  <user username="User14">
+    <home>/home/User14</home>
+  </user>
+  <user username="User15">
+    <mask>rw------</mask>
+  </user>
+  <user username="User16">
+  </user>
+  <user username="User17">
+    <password>Pass17</password>
+    <name>Name17</name>
+    <home>/home/root/User17</home>
+    <mask>rw------</mask>
+  </user>
+</myDrive>

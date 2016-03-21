@@ -17,40 +17,43 @@ public class User extends User_Base {
 	public User(MyDrive drive, String username, String password, String name, String mask, String homeDir){
 		this.init(drive, username, password, name, mask, homeDir);
 	}
-	
+
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
 
 	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
 		Optional<String> omission = null;
-		
 		if(this.isUsernameValid(username)){
 			setUsername(username);    	
 		}
 		else{
 			throw new InvalidUsernameException(username);
 		}
-		
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
 		setPassword(password);
-		
+
 		omission = Optional.ofNullable(name);
 		name = omission.orElse(username);
 		setName(name);
-		
+
 		omission = Optional.ofNullable(mask);
 		mask = omission.orElse("rwxd----");
 		setMask(mask);
-		
+
 		setMydrive(drive);
-		
-		if(homeDir == null && !(username == "root")){
-			Dir dir = drive.createUserDir(this);
-			homeDir = dir.getName();
+		if(!(username == "root")){
+			if(homeDir == null){
+
+				Dir dir = drive.createUserDir(this);
+				homeDir = dir.getPath();
+			}
+			else{
+				this.getMydrive().getFileByPathname(homeDir, true);
+			}
 		}
-		setHomeDir(homeDir);				
+		setHomeDir(homeDir);	
 	}
 
 	private boolean isUsernameValid(String username){
@@ -62,7 +65,6 @@ public class User extends User_Base {
 		String patternToMatch = "[a-zA-Z0-9]+";
 		return username.matches(patternToMatch);
 	}
-
 
 	@Override
 	public void setMydrive(MyDrive drive) {
@@ -77,7 +79,6 @@ public class User extends User_Base {
 		setMydrive(null);
 		deleteDomainObject();
 	}
-
 
 	@Override
 	public String toString(){
@@ -96,35 +97,16 @@ public class User extends User_Base {
 		element.setAttribute("name", getName());
 		element.setAttribute("homeDir", "/home/" + getUsername());
 		element.setAttribute("mask", getMask());
-
 		return element;
 	}
-	
+
 	protected void importXML(MyDrive drive, Element elm){
 		try{
-			Optional<String> maybeString = null;
-			
-			maybeString = Optional.ofNullable(elm.getChildText("name"));
-			String name = (maybeString.orElseThrow(() -> new ImportDocumentException("User \n name is not optional and must be supplied.")));
-
-			Optional<Attribute> maybeAttribute = Optional.ofNullable(elm.getAttribute("username"));
-			String username = new String((maybeAttribute.orElseThrow(() -> new ImportDocumentException("User <"+ name +"> \n username is not optional and must be supplied.")))
-					.getValue().getBytes("UTF-8"));
-			
-			maybeString = Optional.ofNullable(elm.getChildText("password"));
-			String password = (maybeString.orElseThrow(() -> new ImportDocumentException("User <"+ name +"> \n password is not optional and must be supplied.")));
-			
-			maybeString = Optional.ofNullable(elm.getChildText("mask"));
-			String mask = (maybeString.orElse("rwxd----"));
-			
+			String username = elm.getAttribute("username").getValue();
+			String name = elm.getChildText("name");
+			String password = elm.getChildText("password");
+			String mask = elm.getChildText("mask");
 			String homeDir = elm.getChildText("home");
-			
-			//TO DO if homeDir!=null don't work
-			if(homeDir == null && !(username == "root")){
-				Dir dir = drive.createUserDir(this);
-				homeDir = dir.getName();
-			}
-						
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			throw new ImportDocumentException("In User : " + e.getMessage());

@@ -29,11 +29,8 @@ public class Main {
 	public static void main(String [] args){
 		log.trace("Welcome to MyDrive Application");
 		try{
-			if(args.length == 0){
-				Main.setup();				
-			}else{
-				for (String s: args) xmlScan(new File(s));									
-			}
+			setup();
+		    for (String s: args) xmlScan(new File(s));
 			//Main.testMyDrive();
 			Main.printMyDrive();
 		}catch(MyDriveException mde){
@@ -56,9 +53,10 @@ public class Main {
 		if(drive.isEmpty()){
 			SuperUser rootUser = new SuperUser(drive);
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
+			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			additionalSetup();
+			//additionalSetup();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
