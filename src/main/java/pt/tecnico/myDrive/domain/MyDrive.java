@@ -55,22 +55,24 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
-	public File getFileByPathname(String pathname, boolean createMissingDir){
+	public File getFileByPathname(String pathname, boolean createMissingDir, User user){
 		if(pathBeginsWithSlash(pathname)){
-			return findAllDirInPathname(pathname, createMissingDir);
+			return findAllDirInPathname(pathname, createMissingDir, user);
 		}else{
 			throw new InvalidPathameException(pathname);
 		}
 	}
 
-	private File findAllDirInPathname(String pathname, boolean createMissingDir) {
+	private File findAllDirInPathname(String pathname, boolean createMissingDir, User user) {
 		File content = null;
 		int nextDirIndex = 1;
 		Dir previousDir;
 		String[] pathnameSplit;
 		int howManyLinks;
 		previousDir = getRootDir();
-		User rootUser = this.getUserByUsername(SuperUser.NAME);
+		if(user == null){
+			user = this.getUserByUsername(SuperUser.NAME);
+		}
 		if(pathname.length() == 1) return previousDir;
 		pathnameSplit = pathname.split(Dir.SLASH_NAME);
 		howManyLinks = pathnameSplit.length;
@@ -81,7 +83,7 @@ public class MyDrive extends MyDrive_Base {
 					break;						
 				}catch(NoDirException nde){
 					if(createMissingDir){
-						new Dir(this, rootUser, pathnameSplit[nextDirIndex], rootUser.getMask(), previousDir);						
+						new Dir(this, user, pathnameSplit[nextDirIndex], user.getMask(), previousDir);						
 					}
 					else{
 						throw nde;
@@ -146,7 +148,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public void removePlainFileOrEmptyDirectoryByPathname( String pathnameFileToFind ){
-		File fileToRemove = this.getFileByPathname( pathnameFileToFind, false );
+		File fileToRemove = this.getFileByPathname( pathnameFileToFind, false, null );
 		if ((isEmptyDirectory( fileToRemove ) ||
 				isPlainFile( fileToRemove ))){
 			fileToRemove.getFather().removeFile(fileToRemove);
@@ -197,7 +199,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public String readContent(String path){
-		File file = getFileByPathname(path, false);
+		File file = getFileByPathname(path, false, null);
 		if (file instanceof PlainFile){
 			return ((PlainFile)file).getContent();
 		}
@@ -207,7 +209,7 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public String listDirContent(String pathname){
-		File fileFound = this.getFileByPathname(pathname, false);
+		File fileFound = this.getFileByPathname(pathname, false, null);
 		if(fileFound instanceof Dir){
 			return ((Dir) fileFound).getContentNames();
 		}else{

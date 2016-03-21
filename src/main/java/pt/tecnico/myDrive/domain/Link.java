@@ -41,8 +41,8 @@ public class Link extends Link_Base {
 
     	maybeString = Optional.ofNullable(elm.getChildText("path"));
 		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n path is not optional and must be supplied.")));
-		drive.getFileByPathname(path, true);
-		Dir father = (Dir)drive.getFileByPathname(path, true);
+		drive.getFileByPathname(path, true, null);
+		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 
 		maybeString = Optional.ofNullable(elm.getChildText("owner"));

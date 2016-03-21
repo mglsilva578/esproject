@@ -107,8 +107,8 @@ public class Dir extends Dir_Base {
 
 		maybeString = Optional.ofNullable(elm.getChildText("path"));
 		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - path is not optional and must be supplied.")));
-		drive.getFileByPathname(path, true);
-		Dir father = (Dir)drive.getFileByPathname(path, true);
+		drive.getFileByPathname(path, true, null);
+		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 		maybeString = Optional.ofNullable(elm.getChildText("name"));
 		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));

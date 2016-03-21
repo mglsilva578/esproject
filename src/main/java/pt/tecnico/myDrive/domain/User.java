@@ -50,7 +50,7 @@ public class User extends User_Base {
 				homeDir = dir.getPath();
 			}
 			else{
-				this.getMydrive().getFileByPathname(homeDir, true);
+				this.getMydrive().getFileByPathname(homeDir, true, this);
 			}
 		}
 		setHomeDir(homeDir);	

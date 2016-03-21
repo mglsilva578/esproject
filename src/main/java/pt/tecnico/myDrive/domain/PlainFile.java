@@ -39,7 +39,7 @@ public class PlainFile extends PlainFile_Base {
 	}
 
 	public String readContent(String path){
-		File file = getMydrive().getFileByPathname(path, false);
+		File file = getMydrive().getFileByPathname(path, false, null);
 		if(file instanceof PlainFile){
 			return ((PlainFile)file).getContent();			
 		}else{
@@ -79,8 +79,8 @@ public class PlainFile extends PlainFile_Base {
 
 		maybeString = Optional.ofNullable(elm.getChildText("path"));
 		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - path is not optional and must be supplied.")));
-		drive.getFileByPathname(path, true);
-		Dir father = (Dir)drive.getFileByPathname(path, true);
+		drive.getFileByPathname(path, true, null);
+		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 		maybeString = Optional.ofNullable(elm.getChildText("name"));
 		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - name is not optional and must be supplied.")));
