@@ -42,7 +42,6 @@ public class Link extends Link_Base {
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
-
 		maybeString = Optional.ofNullable(elm.getChildText("owner"));
 		String ownerName = (maybeString.orElse(SuperUser.NAME));
 		User owner = drive.getUserByUsername(ownerName);
@@ -53,6 +52,5 @@ public class Link extends Link_Base {
 		String perm = owner.getMask();
 		
 		this.init(drive, owner, name, perm, contents, father);
-    
     }
 }
