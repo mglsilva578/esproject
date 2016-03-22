@@ -56,7 +56,7 @@ public class Main {
 			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			//additionalSetup();
+			additionalSetup();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");

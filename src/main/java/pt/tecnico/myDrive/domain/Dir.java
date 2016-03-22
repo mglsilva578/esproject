@@ -77,6 +77,7 @@ public class Dir extends Dir_Base {
 
 	public String getContentNames(){
 		String contentNames = "";
+		contentNames += " . | .. | ";
 		for (File file : this.getFileSet()) {
 			contentNames += file.getName() + " | ";
 		}
