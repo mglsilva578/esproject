@@ -1,5 +1,8 @@
 package pt.tecnico.myDrive.domain;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +14,8 @@ import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Dir extends Dir_Base {
 
+	private static final String CONTENT_SEPARATOR = " | ";
+	private static final String PATH_SEPARATOR = "/";
 	static final Logger log = LogManager.getRootLogger();
 	public static final String SLASH_NAME = "/";
 
@@ -77,11 +82,17 @@ public class Dir extends Dir_Base {
 
 	public String getContentNames(){
 		String contentNames = "";
-		contentNames += " . | .. | ";
-		for (File file : this.getFileSet()) {
-			contentNames += file.getName() + " | ";
+		contentNames += " . " + CONTENT_SEPARATOR +" .. " + CONTENT_SEPARATOR;
+		for (File file : this.sortFileSetById(getFileSet())) {
+			contentNames += file.getName() + CONTENT_SEPARATOR;
 		}
 		return contentNames;
+	}
+	
+	private ArrayList<File> sortFileSetById(Set<File> toSort){
+		ArrayList<File> sorted = new ArrayList<File>(toSort);
+		Collections.sort(sorted, (file1, file2) -> file1.getId().compareTo(file2.getId()) );
+		return sorted;
 	}
 
 	@Override
@@ -93,7 +104,7 @@ public class Dir extends Dir_Base {
 		description += " " + this.getId();
 		description += " " + this.getLast_modification();
 		description += " " + this.getName();
-		description += "\ncontent: " + this.getContentNames() + "\n";
+		description += "\n\tcontent: " + this.getContentNames() + "\n";
 		return description;
 	}
 
@@ -130,10 +141,10 @@ public class Dir extends Dir_Base {
 		Dir parent = this.getFather();
 		String path = "" + this.getName();
 		while(!directlyUnderSlashDir(parent)){
-			path = parent.getName() + "/" + path;
+			path = parent.getName() + PATH_SEPARATOR + path;
 			parent = parent.getFather();
 		}
-		path = "/" + path;
+		path = PATH_SEPARATOR + path;
 		return path;
 	}
 

@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.jdom2.Element;
 
-import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.CannotModifyLinkContentException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 
 public class Link extends Link_Base {
