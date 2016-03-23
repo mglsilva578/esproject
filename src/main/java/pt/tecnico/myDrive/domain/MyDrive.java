@@ -20,6 +20,7 @@ import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
+import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class MyDrive extends MyDrive_Base {
 	static final Logger log = LogManager.getRootLogger();
@@ -313,24 +314,17 @@ public class MyDrive extends MyDrive_Base {
 	@Override
 	public String toString(){
 		String description = "";
+		
 		description += "\n\t\tMyDrive files\n";
-		for (File file : sortFileSetById(this.getFileSet())) {
+		for (File file : SetOrderingHelper.sortFileSetById(this.getFileSet())) {
 			description += "\t" + file.toString() + "\n";
 		}
 		
 		description += "\n\t\tMyDrive users\n";
-		
-		
-		
 		for (User user : this.getUserSet()) {
 			description += "\t" + user.toString() + "\n";
 		}
+		
 		return description;
-	}
-	//TODO refactor into an utility method
-	private ArrayList<File> sortFileSetById(Set<File> toSort){
-		ArrayList<File> sorted = new ArrayList<File>(toSort);
-		Collections.sort(sorted, (file1, file2) -> file1.getId().compareTo(file2.getId()) );
-		return sorted;
 	}
 }

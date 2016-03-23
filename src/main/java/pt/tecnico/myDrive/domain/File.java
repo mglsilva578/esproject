@@ -3,8 +3,6 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
-import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidIdException;
 
@@ -43,13 +41,13 @@ public class File extends File_Base {
 		dir.addFile(this);
 	}
 	
-	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir){
+	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir, String lastModificationDate){
 		int parsedId;
 		try{
 			parsedId = Integer.parseInt(id);
 			setId(parsedId);
 			setName(name);
-			setLast_modification(new DateTime());
+			setLast_modification(new DateTime(lastModificationDate));
 			setPermissions(permissions);
 			this.setMydrive(drive);
 			this.setOwner(owner);
@@ -113,6 +111,7 @@ public class File extends File_Base {
 		element.setAttribute("name", this.getName());
 		element.setAttribute("owner", this.getOwner().getUsername());
 		element.setAttribute("perm", this.getPermissions());
+		element.setAttribute("last_modification", this.getLast_modification().toString());
 		return element;
 	}
 

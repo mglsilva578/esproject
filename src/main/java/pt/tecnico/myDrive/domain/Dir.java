@@ -11,6 +11,7 @@ import org.jdom2.Element;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class Dir extends Dir_Base {
 
@@ -78,20 +79,13 @@ public class Dir extends Dir_Base {
 		return this.getFileSet().size() + 2;
 	}
 
-
 	public String getContentNames(){
 		String contentNames = "";
 		contentNames += " . " + CONTENT_SEPARATOR +" .. " + CONTENT_SEPARATOR;
-		for (File file : this.sortFileSetById(getFileSet())) {
+		for (File file : SetOrderingHelper.sortFileSetById(getFileSet())) {
 			contentNames += file.getName() + CONTENT_SEPARATOR;
 		}
 		return contentNames;
-	}
-	
-	private ArrayList<File> sortFileSetById(Set<File> toSort){
-		ArrayList<File> sorted = new ArrayList<File>(toSort);
-		Collections.sort(sorted, (file1, file2) -> file1.getId().compareTo(file2.getId()) );
-		return sorted;
 	}
 
 	@Override
@@ -117,22 +111,27 @@ public class Dir extends Dir_Base {
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
 		
-		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
-		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - ID is not optional and must be supplied." + elm.toString())));
-		
-		maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
-		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - path is not optional and must be supplied." + elm.toString())));
-		drive.getFileByPathname(path, true, null);
-		Dir father = (Dir)drive.getFileByPathname(path, true, null);
-
 		maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
 		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));
+		
+		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
+		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> ID is not optional and must be supplied." + elm.toString())));
+		
+		maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> path is not optional and must be supplied." + elm.toString())));
+		drive.getFileByPathname(path, true, null);
+		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
 		String ownerName = (maybeString.orElse(SuperUser.NAME));
 		User owner = drive.getUserByUsername(ownerName);
+		
 		maybeString = Optional.ofNullable(elm.getAttributeValue("perm"));
-		String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - permission is not optional and must be supplied.")));
-		super.init(drive, id, owner, name, perm, father);
+		String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> permission is not optional and must be supplied.")));
+		
+		maybeString = Optional.ofNullable(elm.getAttributeValue("last_modification"));
+		String lastModifiedAt = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> date of last modification is not optional and must be supplied.")));
+		
+		super.init(drive, id, owner, name, perm, father, lastModifiedAt);
 	}
 }

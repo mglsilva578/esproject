@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <myDrive>
-  <user username="ist176544" password="76544" name="Daniel" homeDir="/home/ist176544" mask="rwxd----" />
-  <user username="joseluisvf" password="55816" name="JoseLuis" homeDir="/home/joseluisvf" mask="rwxd----" />
-  <user username="R3Moura" password="74005" name="Ricardo" homeDir="/home/R3Moura" mask="rwxd----" />
-  <user username="mglsilva578" password="68230" name="Miguel" homeDir="/home/mglsilva578" mask="rwxd----" />
   <user username="zttr" password="76534" name="Diogo" homeDir="/home/zttr" mask="rwxd----" />
-  <plain id="8" path="/home/joseluisvf" name="Lusty Tales" owner="ist176544" perm="rwxd----" contents="Lusty Argonian Maid" />
-  <link id="9" path="/home/zttr" name="link1" owner="ist176544" perm="rwxd----" contents="/home/home3/plainfile1" />
-  <app id="10" path="/home/zttr" name="app1" owner="ist176544" perm="rwxd----" contents="package.class.method" />
-  <app id="11" path="/home/R3Moura" name="Skyrim" owner="ist176544" perm="rwxd----" contents="package.class.method" />
-  <dir id="13" path="/home/joseluisvf" name="new folder id 12" owner="root" perm="rwxdr-x-" />
-  <dir id="12" path="/home/joseluisvf/new folder id 12" name="new dir in new folder" owner="joseluisvf" perm="--------" />
+  <user username="mglsilva578" password="68230" name="Miguel" homeDir="/home/mglsilva578" mask="rwxd----" />
+  <user username="R3Moura" password="74005" name="Ricardo" homeDir="/home/R3Moura" mask="rwxd----" />
+  <user username="joseluisvf" password="55816" name="JoseLuis" homeDir="/home/joseluisvf" mask="rwxd----" />
+  <user username="ist176544" password="76544" name="Daniel" homeDir="/home/ist176544" mask="rwxd----" />
+  <plain id="8" path="/home/joseluisvf" name="Lusty Tales" owner="ist176544" perm="rwxd----" last_modification="2016-03-23T10:01:31.070Z" contents="Lusty Argonian Maid" />
+  <link id="9" path="/home/zttr" name="link1" owner="ist176544" perm="rwxd----" last_modification="2016-03-23T10:01:31.070Z" contents="/home/home3/plainfile1" />
+  <app id="10" path="/home/zttr" name="app1" owner="ist176544" perm="rwxd----" last_modification="2016-03-23T10:01:31.071Z" contents="package.class.method" />
+  <app id="11" path="/home/R3Moura" name="Skyrim" owner="ist176544" perm="rwxd----" last_modification="2016-03-23T10:01:31.071Z" contents="package.class.method" />
 </myDrive>

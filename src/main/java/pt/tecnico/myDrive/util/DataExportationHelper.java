@@ -11,7 +11,7 @@ import org.jdom2.output.XMLOutputter;
 
 import pt.tecnico.myDrive.exception.CannotWriteExportedDataException;
 
-public class DataExportationHelper {
+public abstract class DataExportationHelper {
 	private static String exportedDataFileName = "exported_data.xml";
 	private static String locationOfExportedData = System.getProperty("user.dir") + "/info/" + exportedDataFileName;
 	

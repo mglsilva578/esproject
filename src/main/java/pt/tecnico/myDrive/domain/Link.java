@@ -34,11 +34,12 @@ public class Link extends Link_Base {
     public void importXML(MyDrive drive, Element elm){
     	Optional<String> maybeString = null;
 
-    	maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
-		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("APP - ID is not optional and must be supplied." + elm.toString())));
-    	
     	maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
     	String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Link \n name is not optional and must be supplied.")));
+    	
+    	maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
+		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> ID is not optional and must be supplied." + elm.toString())));
+    	
 
     	maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
 		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n path is not optional and must be supplied.")));
@@ -54,6 +55,9 @@ public class Link extends Link_Base {
 		
 		String perm = owner.getMask();
 		
-		this.init(drive, id, owner, name, perm, contents, father);
+		maybeString = Optional.ofNullable(elm.getAttributeValue("last_modification"));
+		String lastModifiedAt = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> date of last modification is not optional and must be supplied.")));
+		
+		this.init(drive, id, owner, name, perm, contents, father, lastModifiedAt);
     }
 }
