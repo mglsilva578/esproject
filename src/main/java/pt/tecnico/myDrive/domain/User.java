@@ -2,6 +2,8 @@ package pt.tecnico.myDrive.domain;
 
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 
@@ -9,7 +11,7 @@ import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class User extends User_Base {
-
+	static final Logger log = LogManager.getRootLogger();
 	protected User(){
 		super();
 	}
@@ -45,7 +47,6 @@ public class User extends User_Base {
 		setMydrive(drive);
 		if(!(username == "root")){
 			if(homeDir == null){
-
 				Dir dir = drive.createUserDir(this);
 				homeDir = dir.getPath();
 			}
@@ -86,6 +87,7 @@ public class User extends User_Base {
 		description += "\tusername: " + this.getUsername() + "\n";
 		description += "\tpassword: " + this.getPassword() + "\n";
 		description += "\tname: " + this.getName() + "\n";
+		description += "\thomeDir: " + this.getHomeDir() + "\n";
 		description += "\tmask: " + this.getMask() + "\n";
 		return description;
 	}
@@ -102,15 +104,43 @@ public class User extends User_Base {
 
 	protected void importXML(MyDrive drive, Element elm){
 		try{
-			String username = elm.getAttribute("username").getValue();
-			String name = elm.getChildText("name");
-			String password = elm.getChildText("password");
-			String mask = elm.getChildText("mask");
-			String homeDir = elm.getChildText("home");
+			String username = elm.getAttributeValue("username");
+			String name = elm.getAttributeValue("name");
+			String password = elm.getAttributeValue("password");
+			String mask = elm.getAttributeValue("mask");
+			String homeDir = elm.getAttributeValue("homeDir");
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			throw new ImportDocumentException("In User : " + e.getMessage());
 		}
+	}
+	/*
+	 * obrigatorio - username
+	 * opcional - password
+	 * 				nome - username
+	 * 				home - /home/username
+	 * 				mask - "rwxd----"
+	 */
+	protected void importXML2(MyDrive drive, Element elm){
+		Optional<String> maybeString = null;
+
+		maybeString = Optional.ofNullable(elm.getAttributeValue(("username")));
+		String username = (maybeString.orElseThrow(() -> new ImportDocumentException("User - username is not optional and must be supplied.")));
+
+		maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
+		String name = maybeString.orElse(username);
+
+
+		maybeString = Optional.ofNullable(elm.getAttributeValue("password"));
+		String password = maybeString.orElse(username);
+
+		maybeString = Optional.ofNullable(elm.getAttributeValue("home"));
+		String homeDir = maybeString.orElse("/home/" + username);
+
+		maybeString = Optional.ofNullable(elm.getAttributeValue("mask"));
+		String mask = maybeString.orElse("rwxd----");
+
+		init(drive, username, password, name, mask, homeDir);
 	}
 
 }

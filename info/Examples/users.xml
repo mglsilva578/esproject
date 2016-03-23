@@ -51,6 +51,7 @@
   <dir id="4">
     <owner>jtb</owner>
     <path>/home/jtb</path>
+    <perm>"rwxdr-x-"</perm>
     <name>documents</name>
   </dir>
   <link id="5">
@@ -58,6 +59,7 @@
     <owner>jtb</owner>
     <name>doc</name>
     <value>/home/jtb/documents</value>
+    <contents>coisas da vida</contents>
   </link>
   <app id="7">
     <path>/home/jtb/bin</path>

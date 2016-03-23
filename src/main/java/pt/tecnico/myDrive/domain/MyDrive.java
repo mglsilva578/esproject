@@ -1,7 +1,10 @@
 
 package pt.tecnico.myDrive.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -220,21 +223,56 @@ public class MyDrive extends MyDrive_Base {
 
 	public Document exportXML() {
 		Element element = new Element("myDrive");
-		Document doc = new Document(element); //
+		Document doc = new Document(element);
+		
 		for (User user: getUserSet()){
-			element.addContent(user.exportXML());
+			if(!(user instanceof SuperUser)){
+				element.addContent(user.exportXML());
+			}
 		}
-		for (File f: getFileSet()){
-			element.addContent(f.exportXML());
+		
+		for (File f: this.getFileSet()){
+			if(!(f.getName().equals("/") 
+					|| f.getName().equals("home")
+					|| f.getName().equals("root")
+					|| isUserHomeDir(f))){
+				element.addContent(f.exportXML());
+			}
 		}
 		return doc;
 	}
 
+	private boolean isUserHomeDir(File f) {
+		if(f == null) return false;
+		if(f.getPath().equals("/home")){
+			String fileName = f.getName();
+			for (User user : this.getUserSet()) {
+				if (fileName.equals(user.getUsername())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public void importXML(Element toImport){
-		//this.initBaseState();
+		this.initBaseState();
+		
+		Optional<String> maybeString = null;
+		int highestIdImported = -1;
+		int currentId;
+		
 		for(Element node : toImport.getChildren()){
+			log.trace("MyDrive importing " + node.getName());
+			maybeString = Optional.ofNullable(node.getAttributeValue("id"));
+			currentId = Integer.parseInt(maybeString.orElse("-1"));
+			if(highestIdImported < currentId ){
+				highestIdImported = currentId;
+				this.setFileIdCounter(highestIdImported + 1);
+			}
 			this.importElement(node);
 		} 
+		log.trace("Finished importing elements. Current next id is " + this.getFileIdCounter());
 	}
 
 	private void importElement(Element node) {
@@ -276,14 +314,23 @@ public class MyDrive extends MyDrive_Base {
 	public String toString(){
 		String description = "";
 		description += "\n\t\tMyDrive files\n";
-		for (File file : this.getFileSet()) {
+		for (File file : sortFileSetById(this.getFileSet())) {
 			description += "\t" + file.toString() + "\n";
 		}
-
+		
 		description += "\n\t\tMyDrive users\n";
+		
+		
+		
 		for (User user : this.getUserSet()) {
 			description += "\t" + user.toString() + "\n";
 		}
 		return description;
+	}
+	//TODO refactor into an utility method
+	private ArrayList<File> sortFileSetById(Set<File> toSort){
+		ArrayList<File> sorted = new ArrayList<File>(toSort);
+		Collections.sort(sorted, (file1, file2) -> file1.getId().compareTo(file2.getId()) );
+		return sorted;
 	}
 }

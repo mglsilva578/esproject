@@ -37,6 +37,12 @@ public class PlainFile extends PlainFile_Base {
 		super.init(drive, owner, name, permissions, dir);
 		setContent(content);
 	}
+	
+	protected void init(MyDrive drive, String id, User owner, String name, String permissions, String content, Dir dir){
+		super.init(drive, id, owner, name, permissions, dir);
+		setContent(content);
+	}
+	
 
 	public String readContent(String path){
 		File file = getMydrive().getFileByPathname(path, false, null);
@@ -77,24 +83,27 @@ public class PlainFile extends PlainFile_Base {
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
 
-		maybeString = Optional.ofNullable(elm.getChildText("path"));
+		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
+		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - ID is not optional and must be supplied." + elm.toString())));
+		
+		maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
 		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - path is not optional and must be supplied.")));
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
-		maybeString = Optional.ofNullable(elm.getChildText("name"));
+		maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
 		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - name is not optional and must be supplied.")));
 
-		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
 		String ownerName = (maybeString.orElse(SuperUser.NAME));
 		User owner = drive.getUserByUsername(ownerName);
 
-		maybeString = Optional.ofNullable(elm.getChildText("contents"));
+		maybeString = Optional.ofNullable(elm.getAttributeValue("contents"));
 		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("PlainFile - contents are not optional and must be supplied.")));
 
 		String perm = owner.getMask();
 
-		this.init(drive, owner, name, perm, contents, father);
+		this.init(drive, id, owner, name, perm, contents, father);
 	}
 
 }

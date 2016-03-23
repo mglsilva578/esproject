@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<myDrive>
+  <user username="zttr" password="76534" name="Diogo" homeDir="/home/zttr" mask="rwxd----" />
+  <user username="mglsilva578" password="68230" name="Miguel" homeDir="/home/mglsilva578" mask="rwxd----" />
+  <user username="R3Moura" password="74005" name="Ricardo" homeDir="/home/R3Moura" mask="rwxd----" />
+  <user username="joseluisvf" password="55816" name="JoseLuis" homeDir="/home/joseluisvf" mask="rwxd----" />
+  <user username="ist176544" password="76544" name="Daniel" homeDir="/home/ist176544" mask="rwxd----" />
+  <dir id="3" path="/home/zttr" name="novo ficheiro" owner="zttr" perm="rwxd----" />
+  <dir id="8" path="/home/zttr" name="outro novo ficheiro" owner="zttr" perm="rwxd----" />
+</myDrive>

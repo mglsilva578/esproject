@@ -22,6 +22,7 @@ import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.util.DataExportationHelper;
 
 public class Main {
 	static final Logger log = LogManager.getRootLogger();
@@ -29,10 +30,13 @@ public class Main {
 	public static void main(String [] args){
 		log.trace("Welcome to MyDrive Application");
 		try{
-			setup();
-		    for (String s: args) xmlScan(new File(s));
-			//Main.testMyDrive();
+			if(args.length == 0){
+				setup();
+			}else{
+				for (String s: args) xmlScan(new File(s));				
+			}
 			Main.printMyDrive();
+			Main.exportDataToFile();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
 		}catch(Exception e){
@@ -67,12 +71,6 @@ public class Main {
 	
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
-		SuperUser rootUser = (SuperUser)drive.getUserByUsername(SuperUser.NAME);
-		Dir slash = drive.getRootDir();
-		Dir home2 = new Dir(drive, rootUser, "home2", rootUser.getMask(), slash);    
-		Dir home3 = new Dir(drive, rootUser, "home3", rootUser.getMask(), slash);
-		Dir home4 = new Dir(drive, rootUser, "home4", rootUser.getMask(), home3);
-		Dir home5 = new Dir(drive, rootUser, "home5", rootUser.getMask(), home4);
 
 		User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
 		userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
@@ -80,14 +78,22 @@ public class Main {
 		userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
 		userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
 
-		PlainFile plainFile = new PlainFile(drive, userToAdd, "plainfile1", userToAdd.getMask(), "Lusty Argonian Maid", home3);
+		Dir whereToAdd = (Dir)drive.getFileByPathname("/home/joseluisvf", false, drive.getUserByUsername("joseluisvf"));
+		new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
 
-		Link link = new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", home4);
-
-		App app = new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", home5);
+		whereToAdd = (Dir)drive.getFileByPathname("/home/zttr", false, drive.getUserByUsername("zttr"));
+		new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", whereToAdd);
+		
+		new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", whereToAdd);
+		whereToAdd = (Dir)drive.getFileByPathname("/home/R3Moura", false, drive.getUserByUsername("R3Moura"));
+		new App(drive, userToAdd, "Skyrim", userToAdd.getMask(),"package.class.method", whereToAdd);
 	}
 	
-	
+	@Atomic
+	private static void exportDataToFile(){
+		MyDrive drive = MyDrive.getInstance();
+		DataExportationHelper.writeDocumentToLocalStorage(drive.exportXML());
+	}
 	@Atomic
 	private static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();

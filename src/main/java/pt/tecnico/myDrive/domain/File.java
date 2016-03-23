@@ -6,10 +6,12 @@ import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidIdException;
 
 public class File extends File_Base {
 	private static final int SLASH_DIR_0 = 0;
-
+	private static final String PATH_SEPARATOR = "/";
+	
 	protected File(){
 		super();
 	}
@@ -20,10 +22,6 @@ public class File extends File_Base {
 
 	public File(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		this.init(drive, owner, name, permissions, dir);
-	}
-
-	public File(MyDrive drive, Element xml){
-		this.importXML(drive, xml);
 	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions){
@@ -43,6 +41,22 @@ public class File extends File_Base {
 		this.setMydrive(drive);
 		this.setOwner(owner);
 		dir.addFile(this);
+	}
+	
+	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir){
+		int parsedId;
+		try{
+			parsedId = Integer.parseInt(id);
+			setId(parsedId);
+			setName(name);
+			setLast_modification(new DateTime());
+			setPermissions(permissions);
+			this.setMydrive(drive);
+			this.setOwner(owner);
+			dir.addFile(this);
+		}catch(NumberFormatException nfe){
+			throw new InvalidIdException(id);
+		}
 	}
 
 	@Override
@@ -95,40 +109,33 @@ public class File extends File_Base {
 	public Element exportXML() {
 		Element element = new Element("File");
 		element.setAttribute("id", this.getId().toString());
-		element.setAttribute("path", this.getFullyQualifiedPath());
+		element.setAttribute("path", this.getPath());
 		element.setAttribute("name", this.getName());
-		element.setAttribute("owner", this.getOwner().getName());
+		element.setAttribute("owner", this.getOwner().getUsername());
 		element.setAttribute("perm", this.getPermissions());
 		return element;
 	}
 
-	public void importXML(MyDrive drive, Element elm){
-		try{
-			int id = elm.getAttribute("id").getIntValue();
-			String path = new String(elm.getChild("path").getValue());
-			String name = new String(elm.getChild("name").getValue());
-			String owner = new String(elm.getChild("owner").getValue());
-			User u = drive.getUserByUsername(owner);
-			String perm = new String(elm.getChild("mask").getValue());
-			init(drive, u, name, perm);
-		}catch(Exception e){
-			e.printStackTrace();
-			throw new ImportDocumentException("In File");
-		}
-	}
+	public String getPath(){
+		if(this.getName().equals(Dir.SLASH_NAME)) return "";
 
-	private String getFullyQualifiedPath(){
-		if(this.getName().equals(Dir.SLASH_NAME)) return "/";
-		String path = "";
-		path = this.getFather().getFullyQualifiedPath();
-		path = path + "/" + this.getName();
+		Dir parent = this.getFather();
+		String path;
+		if(directlyUnderSlashDir(parent)){
+			path = PATH_SEPARATOR;
+			return path;
+		}else{
+			path = "";
+		}
+		
+		while(!directlyUnderSlashDir(parent)){
+			path = PATH_SEPARATOR + parent.getName() + path;
+			parent = parent.getFather();
+		}
 		return path;
 	}
 
-	public String getPath(){
-		if (!this.getName().equals("home"))
-			return getFather().getPath()+"/"+this.getName();
-		return "/"+this.getName();
+	private boolean directlyUnderSlashDir(Dir parent) {
+		return parent.getName().equals(Dir.SLASH_NAME);
 	}
-
 }
