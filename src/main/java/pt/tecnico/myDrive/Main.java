@@ -47,8 +47,10 @@ public class Main {
 	}
 
 	@Atomic
-	private static void init(){
-		//TODO clean MyDrive
+	public static void init() {
+		log.trace("Init: " + FenixFramework.getDomainRoot());
+		MyDrive.getInstance().cleanup();
+		setup();
 	}
 
 	@Atomic
@@ -60,15 +62,15 @@ public class Main {
 			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			additionalSetup();
+			//additionalSetup();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
 			return;
 		}
 	}
-	
-	
+
+
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
 
@@ -83,12 +85,12 @@ public class Main {
 
 		whereToAdd = (Dir)drive.getFileByPathname("/home/zttr", false, drive.getUserByUsername("zttr"));
 		new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", whereToAdd);
-		
+
 		new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", whereToAdd);
 		whereToAdd = (Dir)drive.getFileByPathname("/home/R3Moura", false, drive.getUserByUsername("R3Moura"));
 		new App(drive, userToAdd, "Skyrim", userToAdd.getMask(),"package.class.method", whereToAdd);
 	}
-	
+
 	@Atomic
 	private static void exportDataToFile(){
 		MyDrive drive = MyDrive.getInstance();
@@ -149,8 +151,8 @@ public class Main {
 			log.error(e.getMessage());
 		}
 	}
-	
-	
+
+
 	@Atomic
 	private static void printMyDrive(){
 		MyDrive drive = MyDrive.getInstance();

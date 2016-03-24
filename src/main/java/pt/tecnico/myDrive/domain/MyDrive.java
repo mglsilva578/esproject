@@ -225,13 +225,13 @@ public class MyDrive extends MyDrive_Base {
 	public Document exportXML() {
 		Element element = new Element("myDrive");
 		Document doc = new Document(element);
-		
+
 		for (User user: getUserSet()){
 			if(!(user instanceof SuperUser)){
 				element.addContent(user.exportXML());
 			}
 		}
-		
+
 		for (File f: this.getFileSet()){
 			if(!(f.getName().equals("/") 
 					|| f.getName().equals("home")
@@ -258,11 +258,11 @@ public class MyDrive extends MyDrive_Base {
 
 	public void importXML(Element toImport){
 		this.initBaseState();
-		
+
 		Optional<String> maybeString = null;
 		int highestIdImported = -1;
 		int currentId;
-		
+
 		for(Element node : toImport.getChildren()){
 			log.trace("MyDrive importing " + node.getName());
 			maybeString = Optional.ofNullable(node.getAttributeValue("id"));
@@ -314,17 +314,26 @@ public class MyDrive extends MyDrive_Base {
 	@Override
 	public String toString(){
 		String description = "";
-		
+
 		description += "\n\t\tMyDrive files\n";
 		for (File file : SetOrderingHelper.sortFileSetById(this.getFileSet())) {
 			description += "\t" + file.toString() + "\n";
 		}
-		
+
 		description += "\n\t\tMyDrive users\n";
 		for (User user : this.getUserSet()) {
 			description += "\t" + user.toString() + "\n";
 		}
-		
+
 		return description;
 	}
+
+	public void cleanup() {
+		for (User user: getUserSet())
+			user.remove();
+
+		for (File file: getFileSet())
+			file.remove();
+	}
+
 }
