@@ -44,7 +44,6 @@ public class Session extends Session_Base {
     	String description = "\n\tSession Description: \n";
     	description += "\tOwner - " + this.getOwner().toString() + "\n";
     	description += "\tCurrentDir - " + this.getCurrentDir() + "\n";
-    	description += "\tToken - " + super.getToken().toString() + "\n";
     	description += "\tLast Active At - " + this.getLastActiveAt().toString() + "\n";
     	description += "\tIs expired - " + this.isExpired() + "\n";
     	return description;
