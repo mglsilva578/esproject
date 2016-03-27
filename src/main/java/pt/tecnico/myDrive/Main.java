@@ -17,7 +17,6 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Link;
-import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
@@ -37,7 +36,6 @@ public class Main {
 				for (String s: args) xmlScan(new File(s));				
 			}
 			Main.printMyDrive();
-			//testLogin();
 			Main.exportDataToFile();
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
@@ -64,37 +62,11 @@ public class Main {
 			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
-			additionalSetup();
-			testLogin();
+			//additionalSetup();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
 			return;
-		}
-	}
-
-	private static void testLogin(){
-		try{
-			MyDrive myDrive = MyDrive.getInstance();
-			LoginManager login = myDrive.getLoginManager();
-
-			// Create sessions
-			login.createSession("joseluisvf", "55816");
-			login.createSession("zttr", "76534");
-			login.createSession("mglsilva578", "68230");
-			login.createSession("R3Moura", "74005");
-			
-			// List sessions
-			log.trace("LOGIN" + login.toString());
-						
-			// attempt to show sessions
-			log.trace(login.getSessionsSet());
-			
-			// List sessions
-			log.trace("LOGIN" + login.toString());
-			
-		}catch(MyDriveException mde){
-			log.error(mde.getMessage());
 		}
 	}
 

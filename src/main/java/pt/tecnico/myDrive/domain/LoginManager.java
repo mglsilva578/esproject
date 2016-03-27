@@ -3,13 +3,11 @@ package pt.tecnico.myDrive.domain;
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import pt.tecnico.myDrive.exception.CannotListSessionsException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.TokenDoesNotExistException;
 
@@ -30,6 +28,7 @@ public class LoginManager extends LoginManager_Base {
 			
 			this.addSessions(session);
 			this.removeInactiveSessions();
+			user.addToken(token);
 		}else{
 			throw new InvalidPasswordException(username, password);
 		}
@@ -42,11 +41,6 @@ public class LoginManager extends LoginManager_Base {
 		}catch(TokenDoesNotExistException tdnee){
 			log.warn("Warning : attempted to use non active token <" + token + ">");
 		}
-	}
-
-	@Override
-	public Set<Session> getSessionsSet(){
-		throw new CannotListSessionsException();
 	}
 
 	@Override
@@ -66,7 +60,6 @@ public class LoginManager extends LoginManager_Base {
 
 	private Long generateUniqueToken(){
 		Long token = generateToken();
-		// while token is not unique
 		while(!this.isTokenUniqueAmongSessions(token)){
 			token = generateToken();
 		}
@@ -79,7 +72,7 @@ public class LoginManager extends LoginManager_Base {
 
 	private boolean isTokenUniqueAmongSessions(Long token){
 		for (Session session : super.getSessionsSet()) {
-			if(token.equals(session.getToken())){
+			if(session.hasToken(token)){
 				return false;
 			}
 		}

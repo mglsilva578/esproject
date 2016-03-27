@@ -1,10 +1,10 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jdom2.Attribute;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -12,6 +12,7 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class User extends User_Base {
 	static final Logger log = LogManager.getRootLogger();
+	private ArrayList<Long> tokens;
 	protected User(){
 		super();
 	}
@@ -23,7 +24,22 @@ public class User extends User_Base {
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
-
+	
+	public void addToken(Long token){
+		this.tokens.add(token);
+	}
+	
+	//TODO isto não deveria ser assim. 
+	// Perguntar ao professor como devemos proceder para devolver
+	// o token do utilizador, visto este poder ter mais que um.
+	public Long getToken(){
+		Long result = null;
+		for (Long token : this.tokens) {
+			result = token;
+		}
+		return result;
+	}
+	
 	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
 		Optional<String> omission = null;
 		if(this.isUsernameValid(username)){
@@ -54,7 +70,8 @@ public class User extends User_Base {
 				this.getMydrive().getFileByPathname(homeDir, true, this);
 			}
 		}
-		setHomeDir(homeDir);	
+		setHomeDir(homeDir);
+		this.tokens = new ArrayList<Long>();
 	}
 
 	private boolean isUsernameValid(String username){
