@@ -34,6 +34,20 @@ class Link extends PlainFile {
 class App extends PlainFile {
 }
 
+class LoginManager{
+}
+
+class Session{
+  DateTime lastActiveAt;
+  Long token;
+}
+
+class EnvironmentVariable{
+  String name;
+  String value;
+}
+
+
 
 relation DomainRootHasMyDriveApplication {
   .pt.ist.fenixframework.DomainRoot playsRole root {multiplicity 0..1;}
@@ -46,22 +60,46 @@ relation MyDriveContainUsers {
 }
 
 relation MyDriveContainFiles {
-	MyDrive playsRole mydrive {multiplicity 1;}
-	File playsRole file {multiplicity *;}
+  MyDrive playsRole mydrive {multiplicity 1;}
+  File playsRole file {multiplicity *;}
 }
 
 relation UsersContainFiles {
-	User playsRole owner {multiplicity 1;}
-	File playsRole file {multiplicity 1..*;}
+  User playsRole owner {multiplicity 1;}
+  File playsRole file {multiplicity 1..*;}
 }
 
 relation DirContainFiles {
-	Dir playsRole father {multiplicity 1;}
-	File playsRole file {multiplicity 0..*;}
+  Dir playsRole father {multiplicity 1;}
+  File playsRole file {multiplicity 0..*;}
 }
 
 relation MyDriveContainsRootDir {
-	MyDrive playsRole MyDrive {multiplicity 1;}
-	Dir playsRole RootDir {multiplicity 0..1;}
+  MyDrive playsRole MyDrive {multiplicity 1;}
+  Dir playsRole RootDir {multiplicity 0..1;}
 }
 
+relation MyDriveContainsLoginManager{
+  MyDrive playsRole myDrive {multiplicity 1;}
+  LoginManager playsRole loginManager {multiplicity 1;}
+}
+
+relation LoginManagerContainsSessions{
+  LoginManager playsRole loginManager {multiplicity 1;}
+  Session playsRole sessions {multiplicity 0..*;}
+}
+
+relation LoginManagerContainsEnvironmentVariables{
+  LoginManager playsRole loginManager {multiplicity 1;}
+  EnvironmentVariable playsRole environmentVariables {multiplicity 0..*;}
+}
+
+relation UserHasMultipleSessions{
+  User playsRole owner {multiplicity 1;}
+  Session playsRole sessions {multiplicity 0..*;} 
+}
+
+relation SessionHasCurrentDir{
+  Session playsRole sessions {multiplicity 1;}
+  Dir playsRole currentDir {multiplicity 1;}
+}

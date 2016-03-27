@@ -1,8 +1,6 @@
 
 package pt.tecnico.myDrive.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -27,6 +25,7 @@ public class MyDrive extends MyDrive_Base {
 	private MyDrive() {
 		super();
 		setRoot(FenixFramework.getDomainRoot());
+		this.setLoginManager(new LoginManager());
 		this.setFileIdCounter( new Integer(0) );
 	}
 

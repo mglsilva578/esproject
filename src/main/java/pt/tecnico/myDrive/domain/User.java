@@ -114,33 +114,4 @@ public class User extends User_Base {
 			throw new ImportDocumentException("In User : " + e.getMessage());
 		}
 	}
-	/*
-	 * obrigatorio - username
-	 * opcional - password
-	 * 				nome - username
-	 * 				home - /home/username
-	 * 				mask - "rwxd----"
-	 */
-	protected void importXML2(MyDrive drive, Element elm){
-		Optional<String> maybeString = null;
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue(("username")));
-		String username = (maybeString.orElseThrow(() -> new ImportDocumentException("User - username is not optional and must be supplied.")));
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
-		String name = maybeString.orElse(username);
-
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("password"));
-		String password = maybeString.orElse(username);
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("home"));
-		String homeDir = maybeString.orElse("/home/" + username);
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("mask"));
-		String mask = maybeString.orElse("rwxd----");
-
-		init(drive, username, password, name, mask, homeDir);
-	}
-
 }
