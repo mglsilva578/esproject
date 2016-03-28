@@ -17,6 +17,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Link;
+import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
@@ -63,6 +64,7 @@ public class Main {
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
 			//additionalSetup();
+			//testLogin();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
@@ -70,6 +72,22 @@ public class Main {
 		}
 	}
 
+	private static void testLogin(){
+		MyDrive drive = MyDrive.getInstance();
+		LoginManager login = drive.getLoginManager();
+		Long token1, token2, token3;
+		// criar sessoes
+		token1 = login.createSession("joseluisvf", "55816");
+		token2 = login.createSession("joseluisvf", "55816");
+		token3 = login.createSession("R3Moura", "74005");
+		// usar sessoes 
+		login.getSessionByToken(token1);
+		login.getSessionByToken(token2);
+		
+		log.trace(token1 + "|" + token2 + "|" + token3 +"\n");
+		log.trace(login.toString());
+	}
+	
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
 

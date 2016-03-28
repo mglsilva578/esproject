@@ -25,7 +25,7 @@ public class MyDrive extends MyDrive_Base {
 	private MyDrive() {
 		super();
 		setRoot(FenixFramework.getDomainRoot());
-		this.setLoginManager(new LoginManager());
+		this.setLoginManager(LoginManager.getInstance());
 		this.setFileIdCounter( new Integer(0) );
 	}
 
@@ -285,8 +285,7 @@ public class MyDrive extends MyDrive_Base {
 		case "app" : new App(this, node); break;
 		case "link" : new Link(this, node); break;
 
-
-		default: log.error("Ainda nao sei fazer isto " + typeOfNode); return;
+		default: log.error("Impossivel importar tipo de elemento desconhecido <" + typeOfNode + ">"); return;
 		}
 
 	}

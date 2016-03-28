@@ -100,6 +100,6 @@ relation UserHasMultipleSessions{
 }
 
 relation SessionHasCurrentDir{
-  Session playsRole sessions {multiplicity 1;}
+  Session playsRole sessions {multiplicity 0..*;}
   Dir playsRole currentDir {multiplicity 1;}
 }

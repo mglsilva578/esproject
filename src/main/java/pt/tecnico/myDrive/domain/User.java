@@ -12,7 +12,6 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class User extends User_Base {
 	static final Logger log = LogManager.getRootLogger();
-	private ArrayList<Long> tokens;
 	protected User(){
 		super();
 	}
@@ -23,21 +22,6 @@ public class User extends User_Base {
 
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
-	}
-	
-	public void addToken(Long token){
-		this.tokens.add(token);
-	}
-	
-	//TODO isto não deveria ser assim. 
-	// Perguntar ao professor como devemos proceder para devolver
-	// o token do utilizador, visto este poder ter mais que um.
-	public Long getToken(){
-		Long result = null;
-		for (Long token : this.tokens) {
-			result = token;
-		}
-		return result;
 	}
 	
 	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
@@ -71,7 +55,6 @@ public class User extends User_Base {
 			}
 		}
 		setHomeDir(homeDir);
-		this.tokens = new ArrayList<Long>();
 	}
 
 	private boolean isUsernameValid(String username){

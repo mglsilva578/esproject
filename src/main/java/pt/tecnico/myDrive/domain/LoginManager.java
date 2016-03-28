@@ -3,22 +3,36 @@ package pt.tecnico.myDrive.domain;
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
-import pt.tecnico.myDrive.exception.TokenDoesNotExistException;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
 
 public class LoginManager extends LoginManager_Base {
 	static final Logger log = LogManager.getRootLogger();
 	
-	public LoginManager() {
+	private LoginManager() {
 		super();
 	}
+	
+	public static LoginManager getInstance(){
+		MyDrive myDrive = FenixFramework.getDomainRoot().getMydrive();
+		LoginManager loginManager = myDrive.getLoginManager();
+		if( loginManager != null ){
+			return loginManager;
+		}else{
+			return new LoginManager();
+		}
+	}
+	
 
-	public void createSession(String username, String password){
+	public Long createSession(String username, String password){
 		if(this.isPasswordCorrectForUsername(username, password)){
 			Long token = this.generateUniqueToken();
 			MyDrive myDrive = this.getMyDrive();
@@ -28,21 +42,30 @@ public class LoginManager extends LoginManager_Base {
 			
 			this.addSessions(session);
 			this.removeInactiveSessions();
-			user.addToken(token);
+			return token;
 		}else{
 			throw new InvalidPasswordException(username, password);
 		}
 	}
 	
-	public void useSession(Long token){
-		try{
-			Session session = this.getSessionByToken(token);
-			session.resetLastActive();
-		}catch(TokenDoesNotExistException tdnee){
-			log.warn("Warning : attempted to use non active token <" + token + ">");
+	public Session getSessionByToken(Long token){
+		for (Session session : super.getSessionsSet()) {
+			if(!session.isExpired()){
+				if(session.hasToken(token)){
+					session.resetLastActive();
+					return session;
+				}
+			}
 		}
+		log.warn("Warning : attempted to use non active token <" + token + ">");
+		throw new InvalidTokenException(token);
 	}
-
+	  
+    @Override
+    public Set<Session> getSessionsSet(){
+    	throw new CannotListTokenException();
+    }
+	
 	@Override
 	public String toString(){
 		String description = "Sessions : \n";
@@ -89,16 +112,5 @@ public class LoginManager extends LoginManager_Base {
 				sessions.remove(sessionToCheck);
 			}
 		}
-	}
-
-	private Session getSessionByToken(Long token){
-		for (Session session : super.getSessionsSet()) {
-			if(!session.isExpired()){
-				if(session.hasToken(token)){
-					return session;
-				}
-			}
-		}
-		throw new TokenDoesNotExistException(token);
 	}
 }

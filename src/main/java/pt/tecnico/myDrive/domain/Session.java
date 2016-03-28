@@ -3,8 +3,6 @@ package pt.tecnico.myDrive.domain;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
-import pt.tecnico.myDrive.exception.CannotListTokenException;
-
 public class Session extends Session_Base {
     private static final int MAX_INACTIVITY_TIME_IN_MINUTES = 120;
 
@@ -47,10 +45,5 @@ public class Session extends Session_Base {
     	description += "\tLast Active At - " + this.getLastActiveAt().toString() + "\n";
     	description += "\tIs expired - " + this.isExpired() + "\n";
     	return description;
-    }
-    
-    @Override
-    public Long getToken(){
-    	throw new CannotListTokenException();
     }
 }
