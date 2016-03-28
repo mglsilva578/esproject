@@ -37,6 +37,7 @@ public class Session extends Session_Base {
     	this.setLastActiveAt(new DateTime());
     }
     
+    //TODO apagar isto antes da entrega
     @Override
     public String toString(){
     	String description = "\n\tSession Description: \n";

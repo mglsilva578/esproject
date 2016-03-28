@@ -66,6 +66,7 @@ public class LoginManager extends LoginManager_Base {
     	throw new CannotListTokenException();
     }
 	
+    //TODO apagar isto antes da entrega
 	@Override
 	public String toString(){
 		String description = "Sessions : \n";
