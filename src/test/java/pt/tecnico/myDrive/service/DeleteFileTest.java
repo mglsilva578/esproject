@@ -10,7 +10,11 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
+import pt.tecnico.myDrive.exception.InvalidPasswordException;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class DeleteFileTest extends AbstractServiceTest{
 
@@ -61,4 +65,51 @@ public class DeleteFileTest extends AbstractServiceTest{
         assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
     }
 	
+	@Test(expected = NoDirException.class)
+    public void removeInvalidFile() {
+		String fileName = "I don't exist";
+		String username = "joseluisvf";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+
+		service.execute();
+    }
+	
+	@Test(expected = UsernameDoesNotExistException.class)
+    public void removeWithInvalidUsername() {
+		String fileName = "Lusty Tales";
+		String username = "jose_das_couves";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+
+		service.execute();
+    }
+	
+	@Test(expected = InvalidPasswordException.class)
+    public void removeWithInvalidPassword() {
+		String fileName = "Lusty Tales";
+		String username = "joseluisvf";
+		String password = "11111";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+		
+		service.execute();
+    }
+	
+	@Test(expected = InvalidTokenException.class)
+    public void removeWithInvalidToken() {
+		String fileName = "Lusty Tales";
+		Long token = new Long(1);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+
+		service.execute();
+    }
 }

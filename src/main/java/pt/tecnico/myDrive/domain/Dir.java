@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
@@ -88,13 +89,14 @@ public class Dir extends Dir_Base {
 	}
 
 	public void deleteFile(String fileName){
+		if(fileName.equals(Dir.SLASH_NAME)) throw new CannotDeleteSlashDirException();
 		File fileToDelete = this.getFileByName(fileName);
 		Dir dirToDelete = null;
 		if(fileToDelete instanceof Dir){
 			dirToDelete = (Dir)fileToDelete;
 			removeDir(dirToDelete);
 		}else{
-			this.removeFile(fileToDelete);
+			fileToDelete.getFather().removeFile(fileToDelete);
 			fileToDelete.remove();
 		}
 	}
@@ -111,7 +113,7 @@ public class Dir extends Dir_Base {
 			}
 		}
 		
-		this.removeFile(dirToDelete);
+		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
 	}
 
