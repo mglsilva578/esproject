@@ -16,8 +16,6 @@ public class DeleteFileTest extends AbstractServiceTest{
 
 	@Override
 	protected void populate() {
-		// recebe token e nome do ficheiro
-		// caso seja uma directoria, todos os ficheiros nela contidos deverao ser apagados recursivamente
 		MyDrive myDrive = MyDrive.getInstance();
 		User userToAdd = new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
@@ -25,7 +23,6 @@ public class DeleteFileTest extends AbstractServiceTest{
 		Dir newDir = new Dir(myDrive, "new_dir", userToAdd.getMask(), whereToAdd);
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
-		log.trace(myDrive.toString());
 	}
 
 	@Test
@@ -50,8 +47,6 @@ public class DeleteFileTest extends AbstractServiceTest{
         }
         assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
         
-        
-        // Try to remove a dir.
         String dirName = "new_dir";
         currentDirSizeBefore = currentDir.getSize();
         service = new DeleteFileService(token, dirName);
@@ -59,13 +54,11 @@ public class DeleteFileTest extends AbstractServiceTest{
         try{
         	currentDir.getFileByName(dirName);
         }catch(NoDirException nde){
+        	//TODO o que fazer aqui? Não temos um assert null porque o getFileByName lanca excepcao. Nao metemos nada ou e' preferivel como esta' ?
         	log.trace("DeleteFileTest - Success!\n dir <" + dirName + "> was not found in <" + currentDir.getName() +"> after removal.");
         }
         currentDirSizeAfter = currentDir.getSize();
         assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-        
-        log.trace(myDrive.toString());
     }
-	
 	
 }

@@ -87,65 +87,32 @@ public class Dir extends Dir_Base {
 		return contentNames;
 	}
 
-	public void removeFile2(String fileName){
-
-		// encontrar ficheiro
-		// se nao for uma directoria, apagar
-		// caso seja uma dir, apagar recursivamente os conteudos
-		File fileToDelete = this.getFileByName(fileName);
-		Dir dirToDelete = null;
-		if(fileToDelete instanceof Dir){
-			dirToDelete = (Dir)fileToDelete;
-			//fileToDelete.remove();
-			removeDir(dirToDelete);
-		}else{
-			log.trace("Trying to remove file <" + fileName + ">");
-			//fileToDelete.remove();
-
-			this.removeFile(fileToDelete);
-			log.trace("Removed file <" + fileName + ">");
-		}
-	}
-
 	public void deleteFile(String fileName){
-		// encontrar ficheiro
-		// se nao for uma directoria, apagar
-		// caso seja uma dir, apagar recursivamente os conteudos
 		File fileToDelete = this.getFileByName(fileName);
 		Dir dirToDelete = null;
 		if(fileToDelete instanceof Dir){
 			dirToDelete = (Dir)fileToDelete;
-			//fileToDelete.remove();
 			removeDir(dirToDelete);
 		}else{
-			log.trace("Trying to remove file <" + fileName + ">");
-			//fileToDelete.remove();
 			this.removeFile(fileToDelete);
 			fileToDelete.remove();
-			log.trace("Removed file <" + fileName + ">");
 		}
 	}
 
 	private void removeDir(Dir dirToDelete) {
-		log.trace("Dir - Trying to remove a dir with name <"+ dirToDelete.getName() +">");
-		File fileToDelete = null;
-		
 		if(!isEmpty(dirToDelete)){
 			CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(dirToDelete.getFileSet());
 			Iterator<File> it = files.iterator();
+			File fileToDelete = null;
 			while(it.hasNext()){
 				fileToDelete = it.next();
-				log.trace("Dir - Trying to delete a file with name <" + fileToDelete.getName() + ">");
 				dirToDelete.removeFile(fileToDelete);
 				fileToDelete.remove();
-				log.trace("Dir - success!");
 			}
 		}
 		
-		log.trace("Dir - dir <"+ dirToDelete.getName() +"> is now empty and will be deleted.");
 		this.removeFile(dirToDelete);
 		dirToDelete.remove();
-		log.trace("Dir - Removed dir");
 	}
 
 	private boolean isEmpty(Dir dirToDelete) {
