@@ -89,8 +89,8 @@ relation LoginManagerContainsSessions{
   Session playsRole sessions {multiplicity 0..*;}
 }
 
-relation LoginManagerContainsEnvironmentVariables{
-  LoginManager playsRole loginManager {multiplicity 1;}
+relation SessionContainsEnvironmentVariables{
+  Session playsRole session {multiplicity 1;}
   EnvironmentVariable playsRole environmentVariables {multiplicity 0..*;}
 }
 
