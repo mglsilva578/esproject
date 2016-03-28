@@ -38,7 +38,6 @@ public class DeleteFileTest extends AbstractServiceTest{
 		Long token = loginManager.createSession(username, password);
 		DeleteFileService service = new DeleteFileService(token, fileName);
 		Session session = loginManager.getSessionByToken(token);
-		
 		Dir currentDir = session.getCurrentDir();
 		int currentDirSizeBefore = currentDir.getSize();
 

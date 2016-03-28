@@ -19,5 +19,4 @@ public class DeleteFileService extends MyDriveService{
 		Dir currentDir = session.getCurrentDir();
 		currentDir.deleteFile(this.fileName);
 	}
-
 }

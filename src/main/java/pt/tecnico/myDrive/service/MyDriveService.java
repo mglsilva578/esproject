@@ -10,6 +10,7 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public abstract class MyDriveService {
+	
     protected static final Logger log = LogManager.getRootLogger();
 
     @Atomic
