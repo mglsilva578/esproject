@@ -25,10 +25,10 @@ public class User extends User_Base {
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
-	
+
 	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
 		Optional<String> omission = null;
-		if(this.isUsernameValid(username)){
+		if(this.isUsernameValid(username) && username.length() >= 3){
 			setUsername(username);    	
 		}
 		else{
@@ -84,10 +84,10 @@ public class User extends User_Base {
 	}
 
 	@Override
-    public Set<Session> getSessionsSet(){
-    	throw new CannotListTokenException();
-    }
-	
+	public Set<Session> getSessionsSet(){
+		throw new CannotListTokenException();
+	}
+
 	@Override
 	public String toString(){
 		String description = "\n";
