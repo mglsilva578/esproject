@@ -10,6 +10,7 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoDirException;
@@ -28,8 +29,8 @@ public class DeleteFileTest extends AbstractServiceTest{
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
 	}
 
-	@Test
-    public void success() {
+	@Test(expected = NoDirException.class)
+	public void deleteExistingFile() {
 		String fileName = "Lusty Tales";
 		String username = "joseluisvf";
 		String password = "55816";
@@ -42,30 +43,34 @@ public class DeleteFileTest extends AbstractServiceTest{
 		int currentDirSizeBefore = currentDir.getSize();
 
 		service.execute();
-        int currentDirSizeAfter = currentDir.getSize();
-        try{
-        	currentDir.getFileByName(fileName);
-        }catch(NoDirException nde){
-        	log.trace("DeleteFileTest - Success!\n file <" + fileName + "> was not found in <" + currentDir.getName() +"> after removal.");
-        }
-        assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-        
-        String dirName = "new_dir";
-        currentDirSizeBefore = currentDir.getSize();
-        service = new DeleteFileService(token, dirName);
-        service.execute();
-        try{
-        	currentDir.getFileByName(dirName);
-        }catch(NoDirException nde){
-        	//TODO o que fazer aqui? Não temos um assert null porque o getFileByName lanca excepcao. Nao metemos nada ou e' preferivel como esta' ?
-        	log.trace("DeleteFileTest - Success!\n dir <" + dirName + "> was not found in <" + currentDir.getName() +"> after removal.");
-        }
-        currentDirSizeAfter = currentDir.getSize();
-        assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-    }
-	
+		int currentDirSizeAfter = currentDir.getSize();
+		currentDir.getFileByName(fileName);
+		assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
+	}
+
 	@Test(expected = NoDirException.class)
-    public void removeInvalidFile() {
+	public void deleteExistingDir() {
+		String dirName = "new_dir";
+		String username = "joseluisvf";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, dirName);
+		Session session = loginManager.getSessionByToken(token);
+		Dir currentDir = session.getCurrentDir();
+		int currentDirSizeBefore = currentDir.getSize();
+
+		service = new DeleteFileService(token, dirName);
+		service.execute();
+		currentDir.getFileByName(dirName);
+		int currentDirSizeAfter = currentDir.getSize();
+		assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
+		log.trace("\n\nFINAL DO TEST\n\n");
+	}
+
+	@Test(expected = NoDirException.class)
+	public void deleteInvalidFile() {
 		String fileName = "I don't exist";
 		String username = "joseluisvf";
 		String password = "55816";
@@ -75,10 +80,36 @@ public class DeleteFileTest extends AbstractServiceTest{
 		DeleteFileService service = new DeleteFileService(token, fileName);
 
 		service.execute();
-    }
+	}
+
+	@Test(expected = CannotDeleteDotOrDotDotException.class)
+	public void deleteDot() {
+		String fileName = Dir.DOT_NAME;
+		String username = "joseluisvf";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+
+		service.execute();
+	}
+	
+	@Test(expected = CannotDeleteDotOrDotDotException.class)
+	public void deleteDotDot() {
+		String fileName = Dir.DOTDOT_NAME;
+		String username = "joseluisvf";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, fileName);
+
+		service.execute();
+	}
 	
 	@Test(expected = UsernameDoesNotExistException.class)
-    public void removeWithInvalidUsername() {
+	public void deleteWithInvalidUsername() {
 		String fileName = "Lusty Tales";
 		String username = "jose_das_couves";
 		String password = "55816";
@@ -88,10 +119,10 @@ public class DeleteFileTest extends AbstractServiceTest{
 		DeleteFileService service = new DeleteFileService(token, fileName);
 
 		service.execute();
-    }
-	
+	}
+
 	@Test(expected = InvalidPasswordException.class)
-    public void removeWithInvalidPassword() {
+	public void deleteWithInvalidPassword() {
 		String fileName = "Lusty Tales";
 		String username = "joseluisvf";
 		String password = "11111";
@@ -99,16 +130,16 @@ public class DeleteFileTest extends AbstractServiceTest{
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession(username, password);
 		DeleteFileService service = new DeleteFileService(token, fileName);
-		
+
 		service.execute();
-    }
-	
+	}
+
 	@Test(expected = InvalidTokenException.class)
-    public void removeWithInvalidToken() {
+	public void deleteWithInvalidToken() {
 		String fileName = "Lusty Tales";
 		Long token = new Long(1);
 		DeleteFileService service = new DeleteFileService(token, fileName);
 
 		service.execute();
-    }
+	}
 }

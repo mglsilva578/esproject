@@ -326,8 +326,9 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public void cleanup() {
-		for (User user: getUserSet())
+		for (User user: getUserSet()){
 			user.remove();
+		}
 
 		for (File file: getFileSet())
 			file.remove();

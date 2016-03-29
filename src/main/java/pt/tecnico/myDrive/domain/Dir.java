@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -18,6 +19,8 @@ public class Dir extends Dir_Base {
 	private static final String CONTENT_SEPARATOR = " | ";
 	static final Logger log = LogManager.getRootLogger();
 	public static final String SLASH_NAME = "/";
+	public static final String DOT_NAME = ".";
+	public static final String DOTDOT_NAME = "..";
 
 	public Dir(){
 		super();
@@ -44,9 +47,9 @@ public class Dir extends Dir_Base {
 	}
 
 	public File getFileByName(String nameToLook){
-		if(nameToLook.equals("."))
+		if(nameToLook.equals(Dir.DOT_NAME))
 			return this;
-		if(nameToLook.equals(".."))
+		if(nameToLook.equals(Dir.DOTDOT_NAME))
 			return this.getFather();
 
 		for (File file : this.getFileSet()){
@@ -90,6 +93,7 @@ public class Dir extends Dir_Base {
 
 	public void deleteFile(String fileName){
 		if(fileName.equals(Dir.SLASH_NAME)) throw new CannotDeleteSlashDirException();
+		if(fileName.equals(Dir.DOT_NAME) || fileName.equals(Dir.DOTDOT_NAME)) throw new CannotDeleteDotOrDotDotException();
 		File fileToDelete = this.getFileByName(fileName);
 		Dir dirToDelete = null;
 		if(fileToDelete instanceof Dir){

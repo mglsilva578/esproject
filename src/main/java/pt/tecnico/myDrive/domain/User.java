@@ -2,11 +2,13 @@ package pt.tecnico.myDrive.domain;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
@@ -81,6 +83,11 @@ public class User extends User_Base {
 		deleteDomainObject();
 	}
 
+	@Override
+    public Set<Session> getSessionsSet(){
+    	throw new CannotListTokenException();
+    }
+	
 	@Override
 	public String toString(){
 		String description = "\n";
