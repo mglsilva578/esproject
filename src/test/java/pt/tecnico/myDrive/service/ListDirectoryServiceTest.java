@@ -1,8 +1,11 @@
 package pt.tecnico.myDrive.service;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
@@ -34,6 +37,9 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		ListDirectoryService service = new ListDirectoryService(token);
 		Dir currentDir = loginManager.getSessionByToken(token).getCurrentDir();
 		service.execute();
+		List<File> returnService = service.result();
+		
+		
 			
 	}
 	

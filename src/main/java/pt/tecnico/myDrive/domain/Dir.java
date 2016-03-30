@@ -82,6 +82,7 @@ public class Dir extends Dir_Base {
 	public int getSize(){
 		return this.getFileSet().size() + 2;
 	}
+	
 
 	public String getContentNames(){
 		String contentNames = "";
@@ -92,6 +93,24 @@ public class Dir extends Dir_Base {
 		return contentNames;
 	}
 
+	public void createFile(User owner, String fileName, String type, String content){
+		switch(type){
+			case "link":
+				if(content != null)
+					this.addFile(new Link(this.getMyDrive().getInstance(),owner, fileName, owner.getMask(), content, this));
+				break;
+			case "dir":
+				this.addFile(new Dir(this.getMyDrive().getInstance(), owner, fileName, owner.getMask(), this));
+				break;
+			case "plainFile":
+				this.addFile(new PlainFile(this.getMyDrive().getInstance(), owner, fileName, owner.getMask(), content, this));
+				break;
+			case "app":
+				this.addFile(new App(this.getMyDrive().getInstance(), owner,fileName, owner.getMask(), content, this));
+				break;
+		}
+	}
+	
 	public void deleteFile(String fileName, User whoWantsToDelete){
 		if(fileName.equals(Dir.SLASH_NAME)) throw new CannotDeleteSlashDirException();
 		if(fileName.equals(Dir.DOT_NAME) || fileName.equals(Dir.DOTDOT_NAME)) throw new CannotDeleteDotOrDotDotException();
