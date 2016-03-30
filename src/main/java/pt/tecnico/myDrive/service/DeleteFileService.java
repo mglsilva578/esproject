@@ -2,6 +2,7 @@ package pt.tecnico.myDrive.service;
 
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class DeleteFileService extends MyDriveService{
@@ -17,6 +18,7 @@ public class DeleteFileService extends MyDriveService{
 	protected void dispatch() throws MyDriveException {
 		Session session = getMyDrive().getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
-		currentDir.deleteFile(this.fileName);
+		User whoWantsToDelete = session.getOwner();
+		currentDir.deleteFile(this.fileName, whoWantsToDelete);
 	}
 }

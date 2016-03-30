@@ -14,6 +14,7 @@ import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class DeleteFileTest extends AbstractServiceTest{
@@ -24,9 +25,15 @@ public class DeleteFileTest extends AbstractServiceTest{
 		User userToAdd = new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		Dir newDir = new Dir(myDrive, "new_dir", userToAdd.getMask(), whereToAdd);
+		Dir newDir = new Dir(myDrive, userToAdd, "new_dir", userToAdd.getMask(), whereToAdd);
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
+		
+		User anotherUser = new User(myDrive, "vfluisjose", "55816", "JoseLuis", "rwxd----", null);
+		Dir differentUserHome = (Dir)myDrive.getFileByPathname("/home/vfluisjose", false, anotherUser);
+		Dir dirCreatedByDifferentUser = new Dir(myDrive, userToAdd, "cannot_delete_this", userToAdd.getMask(), differentUserHome);
+		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either", userToAdd.getMask(), "permission should be denied", dirCreatedByDifferentUser);
+		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either_either", userToAdd.getMask(), "permission should be denied", differentUserHome);
 	}
 
 	@Test(expected = NoDirException.class)
@@ -66,7 +73,6 @@ public class DeleteFileTest extends AbstractServiceTest{
 		currentDir.getFileByName(dirName);
 		int currentDirSizeAfter = currentDir.getSize();
 		assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-		log.trace("\n\nFINAL DO TEST\n\n");
 	}
 
 	@Test(expected = NoDirException.class)
@@ -105,6 +111,34 @@ public class DeleteFileTest extends AbstractServiceTest{
 		Long token = loginManager.createSession(username, password);
 		DeleteFileService service = new DeleteFileService(token, fileName);
 
+		service.execute();
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void deleteDirWithoutHavingPermission() {
+		String dirName = "cannot_delete_this";
+		String username = "vfluisjose";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, dirName);
+
+		service = new DeleteFileService(token, dirName);
+		service.execute();
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void deleteFileWithoutHavingPermission() {
+		String dirName = "cannot_delete_this_either_either";
+		String username = "vfluisjose";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, dirName);
+
+		service = new DeleteFileService(token, dirName);
 		service.execute();
 	}
 	

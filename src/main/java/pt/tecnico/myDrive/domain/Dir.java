@@ -12,6 +12,7 @@ import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class Dir extends Dir_Base {
@@ -91,20 +92,28 @@ public class Dir extends Dir_Base {
 		return contentNames;
 	}
 
-	public void deleteFile(String fileName){
+	public void deleteFile(String fileName, User whoWantsToDelete){
 		if(fileName.equals(Dir.SLASH_NAME)) throw new CannotDeleteSlashDirException();
 		if(fileName.equals(Dir.DOT_NAME) || fileName.equals(Dir.DOTDOT_NAME)) throw new CannotDeleteDotOrDotDotException();
 		File fileToDelete = this.getFileByName(fileName);
 		Dir dirToDelete = null;
+		
+		if(!fileToDelete.hasPermissionsForDelete(whoWantsToDelete)){
+			throw new PermissionDeniedException(
+					whoWantsToDelete,
+					PermissionDeniedException.DELETE,
+					fileToDelete);
+		}
+		
 		if(fileToDelete instanceof Dir){
 			dirToDelete = (Dir)fileToDelete;
 			removeDir(dirToDelete);
 		}else{
-			fileToDelete.getFather().removeFile(fileToDelete);
-			fileToDelete.remove();
+				fileToDelete.getFather().removeFile(fileToDelete);
+				fileToDelete.remove();
 		}
 	}
-
+	
 	private void removeDir(Dir dirToDelete) {
 		if(!isEmpty(dirToDelete)){
 			CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(dirToDelete.getFileSet());
