@@ -74,7 +74,7 @@ public class MyDrive extends MyDrive_Base {
 		int howManyLinks;
 		previousDir = getRootDir();
 		if(user == null){
-			user = this.getUserByUsername(SuperUser.NAME);
+			user = this.getUserByUsername(SuperUser.USERNAME);
 		}
 		if(pathname.length() == 1) return previousDir;
 		pathnameSplit = pathname.split(Dir.SLASH_NAME);
@@ -335,7 +335,7 @@ public class MyDrive extends MyDrive_Base {
 		}
 		
 		for (User user: getUserSet()){
-			if(user.getUsername().equals(SuperUser.NAME)) continue;
+			if(user.getUsername().equals(SuperUser.USERNAME)) continue;
 			user.remove();
 		}
 	}

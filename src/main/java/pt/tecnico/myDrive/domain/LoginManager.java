@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.domain.LoginManager_Base;
 import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;

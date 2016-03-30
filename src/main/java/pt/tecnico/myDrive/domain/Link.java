@@ -47,7 +47,7 @@ public class Link extends Link_Base {
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
-		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		String ownerName = (maybeString.orElse(SuperUser.USERNAME));
 		User owner = drive.getUserByUsername(ownerName);
 
 		maybeString = Optional.ofNullable(elm.getAttributeValue("contents"));

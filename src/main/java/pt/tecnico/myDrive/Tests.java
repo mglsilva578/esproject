@@ -19,7 +19,7 @@ public class Tests {
 		File fileFound = drive.getFileByPathname("/home", false, null);
 		if(fileFound instanceof Dir){
 			Dir home = (Dir)fileFound;
-			User superUser = drive.getUserByUsername(SuperUser.NAME);
+			User superUser = drive.getUserByUsername(SuperUser.USERNAME);
 			new PlainFile(drive, superUser, "README", "rwxd----", "lista de utilizadores", home);
 			log.debug("createHomeReadmeWithUsersList SUCCESS!");			
 		}else{

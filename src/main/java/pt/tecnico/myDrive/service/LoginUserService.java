@@ -5,6 +5,7 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 public class LoginUserService extends MyDriveService{
 	private String username;
 	private String password;
+	private Long token;
 	
 	public LoginUserService(String username, String password){
 		//TODO 
@@ -14,5 +15,9 @@ public class LoginUserService extends MyDriveService{
 	protected void dispatch() throws MyDriveException {
 		//TODO
 		return;
+	}
+	
+	public Long getResult(){
+		return this.token;
 	}
 }

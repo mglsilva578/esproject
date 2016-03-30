@@ -1,6 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 

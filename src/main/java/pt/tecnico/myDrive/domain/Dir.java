@@ -38,7 +38,7 @@ public class Dir extends Dir_Base {
 	}
 
 	public Dir(MyDrive drive, String name, String permissions, Dir dir){
-		User owner = drive.getUserByUsername(SuperUser.NAME);
+		User owner = drive.getUserByUsername(SuperUser.USERNAME);
 		super.init(drive, owner, name, permissions, dir);
 	}
 
@@ -160,7 +160,7 @@ public class Dir extends Dir_Base {
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
 		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
-		String ownerName = (maybeString.orElse(SuperUser.NAME));
+		String ownerName = (maybeString.orElse(SuperUser.USERNAME));
 		User owner = drive.getUserByUsername(ownerName);
 
 		maybeString = Optional.ofNullable(elm.getAttributeValue("perm"));

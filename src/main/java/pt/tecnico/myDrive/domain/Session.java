@@ -3,6 +3,9 @@ package pt.tecnico.myDrive.domain;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
+import pt.tecnico.myDrive.domain.Session_Base;
+import pt.tecnico.myDrive.exception.CannotSetLastActiveDateOfSession;
+
 public class Session extends Session_Base {
     private static final int MAX_INACTIVITY_TIME_IN_MINUTES = 120;
 
@@ -11,7 +14,7 @@ public class Session extends Session_Base {
         this.setOwner(user);
         this.setToken(token);
         this.setCurrentDir(currentDir);
-        this.setLastActiveAt(new DateTime());
+        super.setLastActiveAt(new DateTime());
     }
     
     public boolean isExpired(){
@@ -19,7 +22,6 @@ public class Session extends Session_Base {
     	howManyMinutesHavePassed = Minutes.minutesBetween(this.getLastActiveAt(), new DateTime()).getMinutes();
     	return howManyMinutesHavePassed > MAX_INACTIVITY_TIME_IN_MINUTES;
     }
-    
     
     public boolean equals(Session anotherSession){
     	boolean sameLastActive = this.getLastActiveAt().equals(anotherSession.getLastActiveAt());
@@ -33,18 +35,12 @@ public class Session extends Session_Base {
     	return super.getToken().equals(token);
     }
     
-    public void resetLastActive(){
-    	this.setLastActiveAt(new DateTime());
+    protected void resetLastActive(){
+    	super.setLastActiveAt(new DateTime());
     }
     
-    //TODO apagar isto antes da entrega
     @Override
-    public String toString(){
-    	String description = "\n\tSession Description: \n";
-    	description += "\tOwner - " + this.getOwner().toString() + "\n";
-    	description += "\tCurrentDir - " + this.getCurrentDir() + "\n";
-    	description += "\tLast Active At - " + this.getLastActiveAt().toString() + "\n";
-    	description += "\tIs expired - " + this.isExpired() + "\n";
-    	return description;
+    public void setLastActiveAt(DateTime newDate){
+    	throw new CannotSetLastActiveDateOfSession();
     }
 }
