@@ -103,7 +103,7 @@ public class File extends File_Base {
 	@Override
 	public void setMydrive(MyDrive drive){
 		if (drive == null){
-			super.setMydrive(null);
+			this.remove();
 		}
 		else{
 			drive.addFile(this);
@@ -121,7 +121,8 @@ public class File extends File_Base {
 	}
 
 	public void remove(){
-		setMydrive(null);
+		super.setMydrive(null);
+		this.getOwner().removeFile(this);
 		setOwner(null);
 		deleteDomainObject();
 	}

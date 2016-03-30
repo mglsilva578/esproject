@@ -68,20 +68,18 @@ public class User extends User_Base {
 		String patternToMatch = "[a-zA-Z0-9]+";
 		return username.matches(patternToMatch);
 	}
-	
-
 
 	@Override
 	public void setMydrive(MyDrive drive) {
 		if (drive == null){
-			super.setMydrive(null);        	
+			this.remove();        	
 		}else{
 			drive.addUser(this);        	
 		}
 	}
 
 	public void remove(){
-		setMydrive(null);
+		super.setMydrive(null);
 		deleteDomainObject();
 	}
 

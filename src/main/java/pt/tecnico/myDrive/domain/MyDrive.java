@@ -325,7 +325,22 @@ public class MyDrive extends MyDrive_Base {
 		return description;
 	}
 
-	public boolean NotIsDirInit(File file){
+	
+
+	public void cleanup() {
+		for (File file: getFileSet()){
+			if(notIsDirInit(file)){
+				file.remove();
+			}
+		}
+		
+		for (User user: getUserSet()){
+			if(user.getUsername().equals(SuperUser.NAME)) continue;
+			user.remove();
+		}
+	}
+
+	private boolean notIsDirInit(File file){
 		if(file.getName().equals(Dir.SLASH_NAME) || 
 				(file.getPath().equals("/") && file.getName().equals("home")) || 
 				(file.getPath().equals("/home") && file.getName().equals("root"))){
@@ -335,25 +350,4 @@ public class MyDrive extends MyDrive_Base {
 			return true;
 		}
 	}
-
-	public void cleanup() {
-
-		for (File file: getFileSet()){
-			if(NotIsDirInit(file)){ 
-				if(file instanceof Dir){
-					((Dir) file).deleteFile(file.getName());
-				}
-			}
-			else{
-				file.remove();
-			}
-		}
-
-		for (User user: getUserSet()){
-			if(!user.getUsername().equals("root")){
-				user.remove();
-			}
-		}
-	}
-
 }
