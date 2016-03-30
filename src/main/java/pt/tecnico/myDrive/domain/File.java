@@ -9,7 +9,7 @@ import pt.tecnico.myDrive.exception.InvalidIdException;
 public class File extends File_Base {
 	private static final int SLASH_DIR_0 = 0;
 	private static final String PATH_SEPARATOR = "/";
-	
+
 	protected File(){
 		super();
 	}
@@ -40,7 +40,7 @@ public class File extends File_Base {
 		this.setOwner(owner);
 		dir.addFile(this);
 	}
-	
+
 	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir, String lastModificationDate){
 		int parsedId;
 		try{
@@ -56,6 +56,39 @@ public class File extends File_Base {
 			throw new InvalidIdException(id);
 		}
 	}
+
+	public  boolean hasPermissionsForRead(User u){
+		String s = this.getPermissions();
+		if (this.getOwner().equals(u))
+			return s.charAt(0)=='r';
+		else
+			return s.charAt(4)=='r';
+	}
+
+	public boolean hasPermissionsForWrite(User u){
+		String s = this.getPermissions();
+		if (this.getOwner().equals(u))
+			return s.charAt(1)=='w';
+		else
+			return s.charAt(5)=='w';
+	}
+
+	public boolean hasPermissionssForExecute(User u){
+		String s = this.getPermissions();
+		if (this.getOwner().equals(u))
+			return s.charAt(2)=='x';
+		else
+			return s.charAt(6)=='x';
+	}
+
+	public boolean hasPermissionsForDelete(User u){
+		String s = this.getPermissions();
+		if (this.getOwner().equals(u))
+			return s.charAt(3)=='d';
+		else
+			return s.charAt(7)=='d';
+	}
+
 
 	@Override
 	public void setName(String n){
@@ -126,7 +159,7 @@ public class File extends File_Base {
 		}else{
 			path = "";
 		}
-		
+
 		while(!directlyUnderSlashDir(parent)){
 			path = PATH_SEPARATOR + parent.getName() + path;
 			parent = parent.getFather();

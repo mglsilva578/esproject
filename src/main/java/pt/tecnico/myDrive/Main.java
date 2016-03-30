@@ -65,6 +65,7 @@ public class Main {
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
 			//additionalSetup();
 			//testLogin();
+			//testPermissions();
 		}
 		else{
 			log.trace("MyDrive is not empty for which reason no setup was done.");
@@ -87,6 +88,25 @@ public class Main {
 		log.trace(token1 + "|" + token2 + "|" + token3 +"\n");
 		log.trace(login.toString());
 	}
+	
+	private static void testPermissions(){
+		MyDrive drive = MyDrive.getInstance();
+		User userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
+		Dir whereToAdd = (Dir)drive.getFileByPathname("/home/ist176544", false, drive.getUserByUsername("ist176544"));
+		PlainFile file= new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
+		User userToAdd2 = new User(drive, "ist176", "7654", "Danel", "rwxd----", null);
+		log.trace(file.hasPermissionsForDelete(userToAdd2));
+		log.trace(file.hasPermissionsForRead(userToAdd2));
+		log.trace(file.hasPermissionsForWrite(userToAdd2));
+		log.trace(file.hasPermissionssForExecute(userToAdd2));
+		log.trace(file.hasPermissionsForDelete(userToAdd));
+		log.trace(file.hasPermissionsForRead(userToAdd));
+		log.trace(file.hasPermissionsForWrite(userToAdd));
+		log.trace(file.hasPermissionssForExecute(userToAdd));
+		
+		
+	}
+	
 	
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
