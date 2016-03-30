@@ -325,13 +325,35 @@ public class MyDrive extends MyDrive_Base {
 		return description;
 	}
 
+	public boolean NotIsDirInit(File file){
+		if(file.getName().equals(Dir.SLASH_NAME) || 
+				(file.getPath().equals("/") && file.getName().equals("home")) || 
+				(file.getPath().equals("/home") && file.getName().equals("root"))){
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
 	public void cleanup() {
-		for (User user: getUserSet()){
-			user.remove();
+
+		for (File file: getFileSet()){
+			if(NotIsDirInit(file)){ 
+				if(file instanceof Dir){
+					((Dir) file).deleteFile(file.getName());
+				}
+			}
+			else{
+				file.remove();
+			}
 		}
 
-		for (File file: getFileSet())
-			file.remove();
+		for (User user: getUserSet()){
+			if(!user.getUsername().equals("root")){
+				user.remove();
+			}
+		}
 	}
 
 }
