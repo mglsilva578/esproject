@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -29,63 +30,101 @@ public class LoginUserTest extends AbstractServiceTest{
 		new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
 		new User(myDrive, "ist176544", "76544", "Daniel", "rwxd----", null);
 	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void createSessionForOneUser() {
+		String username;
+		String password;
+		LoginUserService service;
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		int howManySessionsBefore = loginManager.getSessionsCount();
+		
+		username = "zttr";
+		password = "76534";
+		service = new LoginUserService(username, password);
+		service.execute();
+		
+		int howManySessionsAfter = loginManager.getSessionsCount();
+		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - 1);
+		
+		User sessionOwner = myDrive.getUserByUsername(username);
+		Long token = service.getResult();
+		Session session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, sessionOwner, token));
+	}
 
 	@SuppressWarnings("deprecation")
 	@Test
 	public void createSessionsForDifferentUsers() {
-		String username1, username2, username3, username4, username5,
-		password1, password2, password3, password4, password5;
+		String username, password;
 		LoginUserService service;
-		Long token1, token2, token3, token4, token5;
+		Long token;
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		
+		int howManySessionsCreated = 0;
 		int howManySessionsBefore = loginManager.getSessionsCount();
 		
-		username1 = "zttr";
-		password1 = "76534";
-		service = new LoginUserService(username1, password1);
+		username = "zttr";
+		password = "76534";
+		service = new LoginUserService(username, password);
 		service.execute();
-		token1 = service.getResult();
+		token = service.getResult();
+		User user = myDrive.getUserByUsername(username);
+		Session session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, user, token));
+		howManySessionsCreated++;
 		
-		username2 = "mglsilva578";
-		password2 = "68230";
-		service = new LoginUserService(username2, password2);
+		username = "mglsilva578";
+		password = "68230";
+		service = new LoginUserService(username, password);
 		service.execute();
-		token2 = service.getResult();
+		token = service.getResult();
+		user = myDrive.getUserByUsername(username);
+		session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, user, token));
+		howManySessionsCreated++;
 		
-		username3 = "R3Moura";
-		password3 = "74005";
-		service = new LoginUserService(username3, password3);
+		username = "R3Moura";
+		password = "74005";
+		service = new LoginUserService(username, password);
 		service.execute();
-		token3 = service.getResult();
+		token = service.getResult();
+		user = myDrive.getUserByUsername(username);
+		session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, user, token));
+		howManySessionsCreated++;
 		
-		username4 = "joseluisvf";
-		password4 = "55816";
-		service = new LoginUserService(username4, password4);
+		username = "joseluisvf";
+		password = "55816";
+		service = new LoginUserService(username, password);
 		service.execute();
-		token4 = service.getResult();
+		token = service.getResult();
+		user = myDrive.getUserByUsername(username);
+		session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, user, token));
+		howManySessionsCreated++;
 		
-		username5 = "ist176544";
-		password5 = "76544";
-		service = new LoginUserService(username5, password5);
+		username = "ist176544";
+		password = "76544";
+		service = new LoginUserService(username, password);
 		service.execute();
-		token5 = service.getResult();
+		token = service.getResult();
+		user = myDrive.getUserByUsername(username);
+		session = loginManager.getSessionByToken(token);
+		assertTrue("Session created is not consistent with credentials.",
+				this.isSessionConsistentWithCredentials(session, user, token));
+		howManySessionsCreated++;
 		
 		// Confirm everything went well
 		int howManySessionsAfter = loginManager.getSessionsCount();
-		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - 5);
-		
-		Session session = loginManager.getSessionByToken(token1);
-		assertEquals("Username of session's owner does not match that of its creator.",username1, session.getOwner().getUsername());
-		session = loginManager.getSessionByToken(token2);
-		assertEquals("Username of session's owner does not match that of its creator.",username2, session.getOwner().getUsername());
-		session = loginManager.getSessionByToken(token3);
-		assertEquals("Username of session's owner does not match that of its creator.",username3, session.getOwner().getUsername());
-		session = loginManager.getSessionByToken(token4);
-		assertEquals("Username of session's owner does not match that of its creator.",username4, session.getOwner().getUsername());
-		session = loginManager.getSessionByToken(token5);
-		assertEquals("Username of session's owner does not match that of its creator.",username5, session.getOwner().getUsername());
+		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - howManySessionsCreated);
 	}
 	
 	@Test
@@ -182,5 +221,12 @@ public class LoginUserTest extends AbstractServiceTest{
 		Session session = loginManager.getSessionByToken(token);
 		User owner = session.getOwner();
 		owner.getSessionsSet();
+	}
+	
+	private boolean isSessionConsistentWithCredentials(Session sessionToCheck, User expectedOwner, Long expectedToken){
+		boolean isSameUser = sessionToCheck.getOwner().equals(expectedOwner);
+		boolean isSameToken = sessionToCheck.getToken().equals(expectedToken);
+		
+		return isSameUser && isSameToken;
 	}
 }
