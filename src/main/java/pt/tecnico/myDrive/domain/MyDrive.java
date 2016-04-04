@@ -12,9 +12,10 @@ import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
-import pt.tecnico.myDrive.exception.InvalidPathameException;
+import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
@@ -62,7 +63,7 @@ public class MyDrive extends MyDrive_Base {
 		if(pathBeginsWithSlash(pathname)){
 			return findAllDirInPathname(pathname, createMissingDir, user);
 		}else{
-			throw new InvalidPathameException(pathname);
+			throw new InvalidPathnameException(pathname);
 		}
 	}
 
@@ -102,7 +103,7 @@ public class MyDrive extends MyDrive_Base {
 			}
 		}
 		if(content == null){
-			throw new InvalidPathameException(pathname);
+			throw new InvalidPathnameException(pathname);
 		}
 		else{
 			return content;				
@@ -200,16 +201,27 @@ public class MyDrive extends MyDrive_Base {
 		super.removeUser(user);		
 	}
 
-	public String readContent(String path){
-		File file = getFileByPathname(path, false, null);
-		if (file instanceof PlainFile){
-			return ((PlainFile)file).getContent();
-		}
-		else {
-			throw new NoPlainFileException(path);
+	public String readPlainFileContent(User whoWantsToRead, String path){
+		try{
+			File file = getFileByPathname(path, false, null);
+			if (file instanceof PlainFile){
+				if(file.hasPermissionsForRead(whoWantsToRead)){
+					return ((PlainFile)file).getContent();
+				}else{
+					throw new PermissionDeniedException(
+							whoWantsToRead,
+							PermissionDeniedException.READ,
+							file);
+				}
+			}
+			else {
+				throw new NoPlainFileException(path);
+			}
+		}catch(NoDirException nde){
+			throw new InvalidPathnameException(path);
 		}
 	}
-
+	
 	public String listDirContent(String pathname){
 		File fileFound = this.getFileByPathname(pathname, false, null);
 		if(fileFound instanceof Dir){

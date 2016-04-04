@@ -5,6 +5,7 @@ import pt.tecnico.myDrive.domain.User;
 
 public class PermissionDeniedException extends MyDriveException {
 	public static final String DELETE = "delete";
+	public static final String READ = "read";
 	private static final long serialVersionUID = 1L;
 	
 	public PermissionDeniedException(User user, String permission, File file){

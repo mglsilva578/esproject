@@ -97,16 +97,16 @@ public class Dir extends Dir_Base {
 		switch(type){
 			case "link":
 				if(content != null)
-					this.addFile(new Link(this.getMyDrive().getInstance(),owner, fileName, owner.getMask(), content, this));
+					this.addFile(new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this));
 				break;
 			case "dir":
-				this.addFile(new Dir(this.getMyDrive().getInstance(), owner, fileName, owner.getMask(), this));
+				this.addFile(new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this));
 				break;
 			case "plainFile":
-				this.addFile(new PlainFile(this.getMyDrive().getInstance(), owner, fileName, owner.getMask(), content, this));
+				this.addFile(new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this));
 				break;
 			case "app":
-				this.addFile(new App(this.getMyDrive().getInstance(), owner,fileName, owner.getMask(), content, this));
+				this.addFile(new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this));
 				break;
 		}
 	}

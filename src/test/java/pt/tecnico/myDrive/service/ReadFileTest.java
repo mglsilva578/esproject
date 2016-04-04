@@ -14,9 +14,8 @@ import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.InvalidPathameException;
+import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
-import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
@@ -31,12 +30,12 @@ public class ReadFileTest extends AbstractServiceTest{
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
 		User user1 = new User(myDrive, USERNAME1, PASS1, "name1", "rwxd----", null);
-		User user2 = new User(myDrive, USERNAME2, PASS2, "name2", "rwxd----", null);
+		new User(myDrive, USERNAME2, PASS2, "name2", "rwxd----", null);
 		Dir homeDir1 = (Dir)myDrive.getFileByPathname("/home/username1", false, user1);
-		PlainFile plain1 = new PlainFile(myDrive, user1, "plain1", user1.getMask(), "content1 (PlainFile)", homeDir1);
-		Link link1 = new Link(myDrive, user1, "link1", user1.getMask(), "/home/username1/plain1", homeDir1);
-		App app1 = new App(myDrive, user1, "app1", user1.getMask(), "package.class.method", homeDir1);
-		Dir dir1 = new Dir(myDrive, user1, "dir1", user1.getMask(), homeDir1);
+		new PlainFile(myDrive, user1, "plain1", user1.getMask(), "content1 (PlainFile)", homeDir1);
+		new Link(myDrive, user1, "link1", user1.getMask(), "/home/username1/plain1", homeDir1);
+		new App(myDrive, user1, "app1", user1.getMask(), "package.class.method", homeDir1);
+		new Dir(myDrive, user1, "dir1", user1.getMask(), homeDir1);
 	}
 
 	@Test
@@ -117,7 +116,7 @@ public class ReadFileTest extends AbstractServiceTest{
         assertEquals("package.class.method", content);
     }
 	
-	@Test(expected = InvalidPathameException.class)
+	@Test(expected = InvalidPathnameException.class)
     public void InvalidPathPlainFile() {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
@@ -126,7 +125,7 @@ public class ReadFileTest extends AbstractServiceTest{
         service.execute();
     }
 	
-	@Test(expected = InvalidPathameException.class)
+	@Test(expected = InvalidPathnameException.class)
     public void InvalidPathLink() {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
@@ -135,7 +134,7 @@ public class ReadFileTest extends AbstractServiceTest{
         service.execute();
     }
 	
-	@Test(expected = InvalidPathameException.class)
+	@Test(expected = InvalidPathnameException.class)
     public void InvalidPathApp() {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
