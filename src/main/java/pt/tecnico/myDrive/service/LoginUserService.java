@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.service;
 
+import pt.tecnico.myDrive.domain.LoginManager;
+import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class LoginUserService extends MyDriveService{
@@ -8,12 +10,15 @@ public class LoginUserService extends MyDriveService{
 	private Long token;
 	
 	public LoginUserService(String username, String password){
-		//TODO 
+		this.username = username;
+		this.password = password;
 	}
 	
 	@Override
 	protected void dispatch() throws MyDriveException {
-		//TODO
+		MyDrive myDrive =getMyDrive();
+		LoginManager loginManager = myDrive.getLoginManager();
+		token = loginManager.createSession(username, password);
 		return;
 	}
 	
