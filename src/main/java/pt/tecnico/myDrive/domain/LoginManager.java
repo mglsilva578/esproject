@@ -38,7 +38,7 @@ public class LoginManager extends LoginManager_Base {
 			Long token = this.generateUniqueToken();
 			MyDrive myDrive = this.getMyDrive();
 			User user = myDrive.getUserByUsername(username);
-			Dir currentDir = (Dir)myDrive.getFileByPathname(user.getHomeDir() + Dir.SLASH_NAME + user.getUsername(), false, null);
+			Dir currentDir = (Dir)myDrive.getFileByPathname(user.getHomeDir(), false, null);
 			Session session = new Session(user, token, currentDir);
 			
 			this.addSessions(session);
