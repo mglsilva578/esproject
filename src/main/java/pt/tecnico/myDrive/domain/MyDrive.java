@@ -11,6 +11,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.CannotDeleteRootException;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
 import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.NoDirException;
@@ -142,7 +143,6 @@ public class MyDrive extends MyDrive_Base {
 		super.removeUser(userToRemove);
 	}
 
-
 	public Set<String> getAllUsernames(){
 		Set<String> allUsernames = new HashSet<String>();
 		for(User user : this.getUserSet()){
@@ -197,8 +197,13 @@ public class MyDrive extends MyDrive_Base {
 
 	@Override
 	public void removeUser(User user){
-		user.remove();
-		super.removeUser(user);		
+		if(!user.getUsername().equals("root")){ 
+			user.remove();
+			super.removeUser(user);	
+		}
+		else{
+			throw new CannotDeleteRootException();
+		}	
 	}
 
 	public String readPlainFileContent(User whoWantsToRead, String path){
@@ -221,7 +226,7 @@ public class MyDrive extends MyDrive_Base {
 			throw new InvalidPathnameException(path);
 		}
 	}
-	
+
 	public String listDirContent(String pathname){
 		File fileFound = this.getFileByPathname(pathname, false, null);
 		if(fileFound instanceof Dir){
@@ -337,7 +342,7 @@ public class MyDrive extends MyDrive_Base {
 		return description;
 	}
 
-	
+
 
 	public void cleanup() {
 		for (File file: getFileSet()){
@@ -345,7 +350,7 @@ public class MyDrive extends MyDrive_Base {
 				file.remove();
 			}
 		}
-		
+
 		for (User user: getUserSet()){
 			if(user.getUsername().equals(SuperUser.USERNAME)) continue;
 			user.remove();
