@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.service;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -39,8 +41,12 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		service.execute();
 		List<File> returnService = service.result();
 		
-		
-			
+		//testing result parameters
+		assertEquals("Lusty Tales", returnService.get(0).getName());
+		assertEquals("More Lusty Tales", returnService.get(1).getName());
+		assertEquals("A cold shower", returnService.get(2).getName());
+		assertEquals(currentDir.getFileSet().size(), returnService.size());
+		assertEquals(returnService.get(0).getOwner().getName(), userToAdd.getName());
 	}
 	
 	@Test (expected = InvalidTokenException.class)
