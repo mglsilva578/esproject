@@ -41,7 +41,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		Dir currentDir = loginmanager.getSessionByToken(token).getCurrentDir();
 		String oldPath = currentDir.getPath();
 		changeDirectory.execute();
-		String resultService = changeDirectory.getresult();
+		String resultService = changeDirectory.Result();
 		assertEquals(oldPath, resultService);
 	}
 	
