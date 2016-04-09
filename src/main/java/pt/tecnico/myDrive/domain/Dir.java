@@ -14,6 +14,7 @@ import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TypeDoesNotExistException;
 import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class Dir extends Dir_Base {
@@ -95,7 +96,7 @@ public class Dir extends Dir_Base {
 	}
 
 	public void createFile(User owner, String fileName, String type, String content){
-		int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + fileName.length();
+		int size = this.getPath().length() + this.getName().length() + PATH_SEPARATOR.length() + fileName.length();
 		if(size <= 1024){
 
 			switch(type){
@@ -112,6 +113,8 @@ public class Dir extends Dir_Base {
 			case "app":
 				this.addFile(new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this));
 				break;
+			default:
+				throw new TypeDoesNotExistException();
 			}
 		}
 		else{
