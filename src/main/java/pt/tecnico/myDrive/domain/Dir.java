@@ -9,6 +9,7 @@ import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
+import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
@@ -82,7 +83,7 @@ public class Dir extends Dir_Base {
 	public int getSize(){
 		return this.getFileSet().size() + 2;
 	}
-	
+
 
 	public String getContentNames(){
 		String contentNames = "";
@@ -94,7 +95,10 @@ public class Dir extends Dir_Base {
 	}
 
 	public void createFile(User owner, String fileName, String type, String content){
-		switch(type){
+		int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + fileName.length();
+		if(size <= 1024){
+
+			switch(type){
 			case "link":
 				if(content != null)
 					this.addFile(new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this));
@@ -108,31 +112,35 @@ public class Dir extends Dir_Base {
 			case "app":
 				this.addFile(new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this));
 				break;
+			}
+		}
+		else{
+			throw new ExceedsLimitPathException();
 		}
 	}
-	
+
 	public void deleteFile(String fileName, User whoWantsToDelete){
 		if(fileName.equals(Dir.SLASH_NAME)) throw new CannotDeleteSlashDirException();
 		if(fileName.equals(Dir.DOT_NAME) || fileName.equals(Dir.DOTDOT_NAME)) throw new CannotDeleteDotOrDotDotException();
 		File fileToDelete = this.getFileByName(fileName);
 		Dir dirToDelete = null;
-		
+
 		if(!fileToDelete.hasPermissionsForDelete(whoWantsToDelete)){
 			throw new PermissionDeniedException(
 					whoWantsToDelete,
 					PermissionDeniedException.DELETE,
 					fileToDelete);
 		}
-		
+
 		if(fileToDelete instanceof Dir){
 			dirToDelete = (Dir)fileToDelete;
 			removeDir(dirToDelete);
 		}else{
-				fileToDelete.getFather().removeFile(fileToDelete);
-				fileToDelete.remove();
+			fileToDelete.getFather().removeFile(fileToDelete);
+			fileToDelete.remove();
 		}
 	}
-	
+
 	private void removeDir(Dir dirToDelete) {
 		if(!isEmpty(dirToDelete)){
 			CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(dirToDelete.getFileSet());
@@ -144,7 +152,7 @@ public class Dir extends Dir_Base {
 				fileToDelete.remove();
 			}
 		}
-		
+
 		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
 	}

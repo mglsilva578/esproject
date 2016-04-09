@@ -3,12 +3,13 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidIdException;
 
 public class File extends File_Base {
 	private static final int SLASH_DIR_0 = 0;
-	private static final String PATH_SEPARATOR = "/";
+	protected static final String PATH_SEPARATOR = "/";
 
 	protected File(){
 		super();
@@ -38,7 +39,13 @@ public class File extends File_Base {
 		setPermissions(permissions);
 		this.setMydrive(drive);
 		this.setOwner(owner);
-		dir.addFile(this);
+		int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
+		if(size <= 1024){ 
+			dir.addFile(this);
+		}
+		else{
+			throw new ExceedsLimitPathException();
+		}
 	}
 
 	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir, String lastModificationDate){
@@ -51,12 +58,21 @@ public class File extends File_Base {
 			setPermissions(permissions);
 			this.setMydrive(drive);
 			this.setOwner(owner);
-			dir.addFile(this);
+			int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			if(size <= 1024){ 
+				dir.addFile(this);
+			}
+			else{
+				throw new ExceedsLimitPathException();
+			}
 		}catch(NumberFormatException nfe){
 			throw new InvalidIdException(id);
 		}
 	}
 
+	
+	
 	public  boolean hasPermissionsForRead(User u){
 		String s = this.getPermissions();
 		if (this.getOwner().equals(u))
