@@ -50,6 +50,7 @@ public class User extends User_Base {
 			if(homeDir == null){
 				Dir dir = drive.createUserDir(this);
 				homeDir = dir.getPath();
+				return;
 			}
 			else{
 				this.getMydrive().getFileByPathname(homeDir, true, this);
