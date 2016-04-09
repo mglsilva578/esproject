@@ -13,8 +13,11 @@ import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TypeDoesNotExistException;
+import pt.tecnico.myDrive.exception.WrongContentException;
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class Dir extends Dir_Base {
@@ -137,7 +140,7 @@ public class Dir extends Dir_Base {
 
 		if(fileToDelete instanceof Dir){
 			dirToDelete = (Dir)fileToDelete;
-			removeDir(dirToDelete);
+			this.removeDir(dirToDelete);
 		}else{
 			fileToDelete.getFather().removeFile(fileToDelete);
 			fileToDelete.remove();
@@ -158,6 +161,55 @@ public class Dir extends Dir_Base {
 
 		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
+	}
+
+	/**
+	 * @throws NoPlainFileException
+	 * @throws PermissionDeniedException
+	 * @throws WrongContentException
+	 */
+	public void changePlainFileContent (String fileName, String newContent, User whoWantsToChange){
+		File fileToChange = null;
+		
+		fileToChange = this.confirmFileExists(fileName, fileToChange);
+		this.confirmFileIsPlainFile (fileToChange, fileName);
+		this.confirmUserHasPermissionToWrite (fileToChange, whoWantsToChange);
+		this.confirmContentIsValid (newContent, fileToChange);
+		
+		this.changePlainFileContent ((PlainFile)fileToChange, newContent);
+	}
+
+	private File confirmFileExists(String fileName, File fileToChange) {
+		try{
+			 return this.getFileByName(fileName);
+		} catch (NoDirException nde){
+			throw new NoPlainFileException(fileName);
+		}
+	}
+
+	private void confirmFileIsPlainFile (File fileToChange, String fileName){
+		if (!(fileToChange instanceof PlainFile)){
+			throw new WrongTypeOfFileFoundException(fileName, "PlainFile");
+		}
+	}
+
+	private void confirmUserHasPermissionToWrite (File fileToChange, User whoWantsToChange){
+		if(!fileToChange.hasPermissionsForWrite(whoWantsToChange)){
+			throw new PermissionDeniedException(
+					whoWantsToChange,
+					PermissionDeniedException.WRITE,
+					fileToChange);
+		}
+	}
+
+	private void confirmContentIsValid (String newContent, File fileToChange){
+		if (newContent == null){
+			throw new WrongContentException (newContent, fileToChange);
+		}
+	}
+
+	private void changePlainFileContent (PlainFile fileToChange, String newContent){
+		fileToChange.setContent (newContent);
 	}
 
 	private boolean isEmpty(Dir dirToDelete) {

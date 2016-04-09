@@ -312,6 +312,7 @@ public class MyDrive extends MyDrive_Base {
 		if (fileFound instanceof Dir){
 			Dir home = (Dir) fileFound;			
 			Dir userDir = new Dir( this, user, user.getUsername(), user.getMask(), home);
+			user.setHomeDir(userDir.getPath() + Dir.SLASH_NAME + userDir.getName());
 			return userDir;
 		}else{
 			throw new WrongTypeOfFileFoundException(fileFound.getName(), "dir");

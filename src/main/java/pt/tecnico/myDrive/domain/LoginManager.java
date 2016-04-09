@@ -61,7 +61,12 @@ public class LoginManager extends LoginManager_Base {
 		log.warn("Warning : attempted to use non active token <" + token + ">");
 		throw new InvalidTokenException(token);
 	}
-	  
+	
+	@Override
+	public int getSessionsCount(){
+		return super.getSessionsSet().size();
+	}
+	
     @Override
     public Set<Session> getSessionsSet(){
     	throw new CannotListTokenException();

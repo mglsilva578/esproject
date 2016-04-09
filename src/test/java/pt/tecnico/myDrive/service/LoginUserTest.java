@@ -18,6 +18,7 @@ import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class LoginUserTest extends AbstractServiceTest{
 
@@ -199,7 +200,7 @@ public class LoginUserTest extends AbstractServiceTest{
 		service.execute();
 	}
 	
-	@Test(expected = InvalidUsernameException.class)
+	@Test(expected = UsernameDoesNotExistException.class)
 	public void createSessionWithInvalidUsername(){
 		String username = "vfjoseluis";
 		String password = "55816";
