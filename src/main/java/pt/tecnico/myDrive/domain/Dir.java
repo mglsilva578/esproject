@@ -104,17 +104,18 @@ public class Dir extends Dir_Base {
 
 			switch(type){
 			case "Link":
-				if(content != null)
-					this.addFile(new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this));
+				if(!this.isPath(content)) throw new WrongContentException();
+				new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this);
 				break;
 			case "Dir":
-				this.addFile(new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this));
+				if(content != null)throw new WrongContentException();
+				new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this);
 				break;
 			case "Plain":
-				this.addFile(new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this));
+				new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this);
 				break;
 			case "App":
-				this.addFile(new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this));
+				new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this);
 				break;
 			default:
 				throw new TypeDoesNotExistException();

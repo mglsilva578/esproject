@@ -69,7 +69,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		PlainFile plainFile = (PlainFile) currentDir1.getFileByName("plain1");
 		assertEquals("plain1", plainFile.getName());
 		assertEquals(user1.getMask(), plainFile.getPermissions());
-		assertEquals("Content", plainFile.getContent());
+		assertEquals("Content plain", plainFile.getContent());
 	}
 
 	@Test
