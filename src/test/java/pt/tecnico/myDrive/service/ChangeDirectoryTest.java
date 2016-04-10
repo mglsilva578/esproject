@@ -16,7 +16,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 	private String username = "mglsilva578";
 	private String password = "68230";
 	private User userToAdd;
-	private String newPath = "/home/newPath/Added";
+	private String newPath = "/home/mglsilva578/added";
 	private String failPath = "NaoExiste";
 	
 	@Override
@@ -25,7 +25,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		Dir newDir = new Dir(myDrive, "new_dir", userToAdd.getMask(), whereToAdd);
+		Dir newDir = new Dir(myDrive, "added", userToAdd.getMask(), whereToAdd);
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
 		
@@ -39,10 +39,21 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		Long token = loginmanager.createSession(username, password);
 		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, newPath);
 		Dir currentDir = loginmanager.getSessionByToken(token).getCurrentDir();
-		String oldPath = currentDir.getPath();
 		changeDirectory.execute();
 		String resultService = changeDirectory.Result();
-		assertEquals(oldPath, resultService);
+		assertEquals(newPath, resultService);
+		assertEquals(newPath, currentDir.getPath());
+	}
+	
+	@Test
+	public void successCurrentDir(){
+		MyDrive mydrive = MyDrive.getInstance();
+		LoginManager loginmanager = mydrive.getLoginManager();
+		Long token = loginmanager.createSession(username, password);
+		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, ".");
+		changeDirectory.execute();
+		String curentdir = loginmanager.getSessionByToken(token).getCurrentDir().getPath();
+		assertEquals(curentdir, changeDirectory.Result());
 	}
 	
 	@Test(expected = InvalidTokenException.class)
