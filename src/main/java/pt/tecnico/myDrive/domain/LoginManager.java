@@ -49,6 +49,10 @@ public class LoginManager extends LoginManager_Base {
 		}
 	}
 	
+	public void makeSessionExpired (Long token){
+		Session sessionToExpire = this.getSessionByToken (token);
+		sessionToExpire.makeExpired();
+	}
 	public Session getSessionByToken(Long token){
 		for (Session session : super.getSessionsSet()) {
 			if(!session.isExpired()){

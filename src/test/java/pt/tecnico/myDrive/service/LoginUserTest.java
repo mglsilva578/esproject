@@ -127,6 +127,13 @@ public class LoginUserTest extends AbstractServiceTest{
 		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - howManySessionsCreated);
 	}
 	
+	private boolean isSessionConsistentWithCredentials(Session sessionToCheck, User expectedOwner, Long expectedToken){
+		boolean isSameUser = sessionToCheck.getOwner().equals(expectedOwner);
+		boolean isSameToken = sessionToCheck.getToken().equals(expectedToken);
+		
+		return isSameUser && isSameToken;
+	}
+	
 	@Test
 	public void confirmLastActiveAtChangedAfterUsingSession(){
 		String username = "joseluisvf";
@@ -147,7 +154,7 @@ public class LoginUserTest extends AbstractServiceTest{
 			loginManager.getSessionByToken(token);
 			DateTime lastActiveAfterCreation = session.getLastActiveAt();
 			int howManySecondsHavePassed = Seconds.secondsBetween(lastActiveAtCreation, lastActiveAfterCreation).getSeconds();
-			assertEquals("Inconsistent number of seconds have passed.", howManySecondsHavePassed, waitDurationInMillis);
+			assertEquals("Inconsistent number of seconds have passed.", howManySecondsHavePassed * 1000, waitDurationInMillis);
 		} catch(InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			log.warn("Thread was interrupted for which reason the failure of this test cannot be accounted for.");
@@ -227,10 +234,17 @@ public class LoginUserTest extends AbstractServiceTest{
 		owner.getSessionsSet();
 	}
 	
-	private boolean isSessionConsistentWithCredentials(Session sessionToCheck, User expectedOwner, Long expectedToken){
-		boolean isSameUser = sessionToCheck.getOwner().equals(expectedOwner);
-		boolean isSameToken = sessionToCheck.getToken().equals(expectedToken);
+	@Test(expected = InvalidTokenException.class)
+	public void tryToUseExpiredSession (){
+		String username = "joseluisvf";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance ();
+		LoginManager loginManager = myDrive.getLoginManager ();
 		
-		return isSameUser && isSameToken;
+		LoginUserService service = new LoginUserService (username, password);
+		service.execute ();
+		Long token = service.getResult ();
+		loginManager.makeSessionExpired (token);
+		loginManager.getSessionByToken (token);
 	}
 }

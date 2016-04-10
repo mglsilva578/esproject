@@ -43,4 +43,8 @@ public class Session extends Session_Base {
     public void setLastActiveAt(DateTime newDate){
     	throw new CannotSetLastActiveDateOfSession();
     }
+    
+    protected void makeExpired(){
+    	super.setLastActiveAt(super.getLastActiveAt().minusMinutes(MAX_INACTIVITY_TIME_IN_MINUTES * 2));
+    }
 }
