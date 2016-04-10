@@ -22,7 +22,6 @@ public class WriteFileService extends MyDriveService {
 		Session session = getMyDrive().getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
 		User whoWantsToChangeFile = session.getOwner();
-		//log.trace("SERVICE - \nuser" + whoWantsToChangeFile.toString() +"\n"+"In dir : \n" + currentDir.toString());
 		currentDir.changePlainFileContent(this.filename, this.newContent, whoWantsToChangeFile);
 	}
 	

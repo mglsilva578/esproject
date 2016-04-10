@@ -25,7 +25,9 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
 		new App(myDrive, userToAdd, "app",userToAdd.getMask(),null,whereToAdd);
-		
+		new Link(myDrive, userToAdd, "link",userToAdd.getMask(),null,whereToAdd);
+		Dir otherUserHome = (Dir)myDrive.getFileByPathname("/home/diogo", false, userToAdd);
+		new PlainFile(myDrive, userToAdd, "File created by different user.", userToAdd.getMask(), "File with no permissions for other users.", otherUserHome);
 	}
 
 	@Test
@@ -36,9 +38,9 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		WriteFileService service = new WriteFileService(token,"Lusty Tales","abcd");
 		service.execute();
 		Session session = loginManager.getSessionByToken(token);
-		assertEquals(myDrive.getFileByPathname("/home/joseluisvf/Lusty Tales",false, session.getOwner()),"abcd");
+		PlainFile existingFile = (PlainFile)myDrive.getFileByPathname("/home/joseluisvf/Lusty Tales",false, session.getOwner());
+		assertEquals("The content found <" + existingFile.getContent() + "> is not the same as what is expected <abcd>", existingFile.getContent(),"abcd");
 	}
-
 
 	@Test(expected = InvalidTokenException.class)
 	public void writeWithInvalidToken() {
@@ -78,7 +80,16 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession("joseluisvf", "55816");
-		WriteFileService service = new WriteFileService(token,"app","abcd");
+		WriteFileService service = new WriteFileService(token,"link","abcd");
+		service.execute();
+	}
+	
+	@Test
+	public void writeRightContent(){
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession("joseluisvf", "55816");
+		WriteFileService service = new WriteFileService(token,"link","/abcd/efgh");
 		service.execute();
 	}
 
@@ -87,7 +98,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession("diogo", "76534");
-		WriteFileService service = new WriteFileService(token,"Lusty Tales","abcd");
+		WriteFileService service = new WriteFileService(token,"File created by different user.","abcd");
 		service.execute();
 
 	}
