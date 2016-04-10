@@ -57,7 +57,6 @@ public class LoginUserTest extends AbstractServiceTest{
 				this.isSessionConsistentWithCredentials(session, sessionOwner, token));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void createSessionsForDifferentUsers() {
 		String username, password;
@@ -138,6 +137,7 @@ public class LoginUserTest extends AbstractServiceTest{
 		LoginManager loginManager = myDrive.getLoginManager();
 		
 		LoginUserService service = new LoginUserService(username, password);
+		service.execute();
 		token = service.getResult();
 		Session session = loginManager.getSessionByToken(token);
 
@@ -163,10 +163,12 @@ public class LoginUserTest extends AbstractServiceTest{
 		LoginManager loginManager = myDrive.getLoginManager();
 		
 		LoginUserService service = new LoginUserService(username, password);
+		service.execute();
 		token = service.getResult();
 		Session firstSession = loginManager.getSessionByToken(token);
 		
 		service = new LoginUserService(username, password);
+		service.execute();
 		token = service.getResult();
 		Session secondSession = loginManager.getSessionByToken(token);
 		
@@ -183,6 +185,7 @@ public class LoginUserTest extends AbstractServiceTest{
 		LoginManager loginManager = myDrive.getLoginManager();
 		
 		LoginUserService service = new LoginUserService(username, password);
+		service.execute();
 		token = service.getResult();
 
 		while(unexistentToken == token){

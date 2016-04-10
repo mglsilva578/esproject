@@ -216,7 +216,7 @@ public class Dir extends Dir_Base {
 	}
 
 	private boolean isPath(String newContent) {
-		// TODO que outros critérios tem um caminho que obedecer?
+		// TODO a que outros critérios tem um caminho que obedecer?
 		return Dir.SLASH_NAME.equals(""+newContent.charAt(0));
 	}
 
