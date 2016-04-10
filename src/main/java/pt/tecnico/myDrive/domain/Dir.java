@@ -103,17 +103,17 @@ public class Dir extends Dir_Base {
 		if(size <= 1024){
 
 			switch(type){
-			case "link":
+			case "Link":
 				if(content != null)
 					this.addFile(new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this));
 				break;
-			case "dir":
+			case "Dir":
 				this.addFile(new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this));
 				break;
-			case "plainFile":
+			case "Plain":
 				this.addFile(new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this));
 				break;
-			case "app":
+			case "App":
 				this.addFile(new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this));
 				break;
 			default:
