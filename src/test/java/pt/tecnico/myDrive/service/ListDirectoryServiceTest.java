@@ -13,6 +13,7 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.service.dto.FileDto;
 
 public class ListDirectoryServiceTest extends AbstractServiceTest {
 	private String username = "mglsilva578";
@@ -39,14 +40,14 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		ListDirectoryService service = new ListDirectoryService(token);
 		Dir currentDir = loginManager.getSessionByToken(token).getCurrentDir();
 		service.execute();
-		List<File> returnService = service.result();
+		List<FileDto> returnService = service.result();
 		
 		//testing result parameters
 		assertEquals("Lusty Tales", returnService.get(0).getName());
 		assertEquals("More Lusty Tales", returnService.get(1).getName());
 		assertEquals("A cold shower", returnService.get(2).getName());
 		assertEquals(currentDir.getFileSet().size(), returnService.size());
-		assertEquals(returnService.get(0).getOwner().getName(), userToAdd.getName());
+		assertEquals(returnService.get(0).getOwner(), userToAdd.getName());
 	}
 	
 	@Test (expected = InvalidTokenException.class)
