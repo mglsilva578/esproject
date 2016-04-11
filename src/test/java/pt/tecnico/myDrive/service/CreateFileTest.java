@@ -26,10 +26,12 @@ import pt.tecnico.myDrive.exception.WrongContentException;
 
 public class CreateFileTest extends AbstractServiceTest{
 
+	private static final String TYPE_APP = "app";
+	private static final String TYPE_LINK = "link";
+	private static final String TYPE_PLAINFILE = "plainFile";
+	private static final String TYPE_DIR = "dir";
 	private static final String USERNAME1 = "username1";
 	private static final String PASS1 = "pass1";
-	private static final String USERNAME2 = "username2";
-	private static final String PASS2 = "pass2";
 	private MyDrive myDrive;
 	private User user1;
 	private Long token1;
@@ -53,7 +55,7 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test
 	public void successDir() {
-		CreateFileService service = new CreateFileService(token1, "dir1", "Dir", null);
+		CreateFileService service = new CreateFileService(token1, "dir1", TYPE_DIR, null);
 		service.execute();
 
 		Dir dir = (Dir) currentDir1.getFileByName("dir1");
@@ -63,18 +65,18 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test
 	public void successPlainFile() {
-		CreateFileService service = new CreateFileService(token1, "plain1", "Plain", "Content plain");
+		CreateFileService service = new CreateFileService(token1, "plain1", TYPE_PLAINFILE, "Content plain");
 		service.execute();
 
 		PlainFile plainFile = (PlainFile) currentDir1.getFileByName("plain1");
 		assertEquals("plain1", plainFile.getName());
 		assertEquals(user1.getMask(), plainFile.getPermissions());
-		assertEquals("Content plain", plainFile.getContent());
+		assertEquals("Content", plainFile.getContent());
 	}
 
 	@Test
 	public void successLink() {
-		CreateFileService service = new CreateFileService(token1, "link1", "Link", "/home/AAA");
+		CreateFileService service = new CreateFileService(token1, "link1", TYPE_LINK, "/home/AAA");
 		service.execute();
 
 		Link link = (Link) currentDir1.getFileByName("link1");
@@ -85,7 +87,7 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test
 	public void successApp() {
-		CreateFileService service = new CreateFileService(token1, "app1", "App", "package.class.method");
+		CreateFileService service = new CreateFileService(token1, "app1", TYPE_APP, "package.class.method");
 		service.execute();
 
 		App app = (App) currentDir1.getFileByName("app1");
@@ -100,7 +102,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		while(token1 == wrongToken){
 			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
 		}
-		CreateFileService service = new CreateFileService(wrongToken, "dir1", "Dir", null);
+		CreateFileService service = new CreateFileService(wrongToken, "dir1", TYPE_DIR, null);
 		service.execute();
 
 	}
@@ -111,7 +113,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		while(token1 == wrongToken){
 			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
 		}
-		CreateFileService service = new CreateFileService(wrongToken, "plain1", "Plain", "Content plain");
+		CreateFileService service = new CreateFileService(wrongToken, "plain1", TYPE_PLAINFILE, "Content plain");
 		service.execute();
 	}
 
@@ -121,7 +123,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		while(token1 == wrongToken){
 			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
 		}
-		CreateFileService service = new CreateFileService(wrongToken, "link1", "Link", "/home/AAA");
+		CreateFileService service = new CreateFileService(wrongToken, "link1", TYPE_LINK, "/home/AAA");
 		service.execute();
 	}
 
@@ -131,31 +133,31 @@ public class CreateFileTest extends AbstractServiceTest{
 		while(token1 == wrongToken){
 			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
 		}
-		CreateFileService service = new CreateFileService(wrongToken, "app1", "App", "package.class.method");
+		CreateFileService service = new CreateFileService(wrongToken, "app1", TYPE_APP, "package.class.method");
 		service.execute();
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void InvalidExistingDir() {
-		CreateFileService service = new CreateFileService(token1, "dir", "Dir", null);
+		CreateFileService service = new CreateFileService(token1, "dir", TYPE_DIR, null);
 		service.execute();
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void InvalidExistingPlainFile() {
-		CreateFileService service = new CreateFileService(token1, "plain", "Plain", "Content plain");
+		CreateFileService service = new CreateFileService(token1, "plain", TYPE_PLAINFILE, "Content plain");
 		service.execute();
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void InvalidExistingLink() {
-		CreateFileService service = new CreateFileService(token1, "link", "Link", "/home/AAA");
+		CreateFileService service = new CreateFileService(token1, "link", TYPE_LINK, "/home/AAA");
 		service.execute();
 	}
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void InvalidExistingApp() {
-		CreateFileService service = new CreateFileService(token1, "app", "App", "package.class.method");
+		CreateFileService service = new CreateFileService(token1, "app", TYPE_APP, "package.class.method");
 		service.execute();
 	}
 
@@ -167,13 +169,14 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test(expected = WrongContentException.class)
 	public void InvalidContentOfDir() {
-		CreateFileService service = new CreateFileService(token1, "dir1", "Dir", "AAA");
+		CreateFileService service = new CreateFileService(token1, "dir1", TYPE_DIR, "AAA");
 		service.execute();
 	}
 
 	@Test(expected = WrongContentException.class)
 	public void InvalidContentofLink() {
-		CreateFileService service = new CreateFileService(token1, "link1", "Link", "AAA");
+		CreateFileService service = new CreateFileService(token1, "link1", TYPE_LINK, "AAA");
 		service.execute();
 	}
 }
+
