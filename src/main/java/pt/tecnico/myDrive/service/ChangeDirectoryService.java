@@ -15,7 +15,6 @@ public class ChangeDirectoryService extends MyDriveService {
 	public ChangeDirectoryService(Long token,String path){
 		this.token=token;
 		this.path=path;
-		
 	}
 	@Override
 	protected void dispatch() throws MyDriveException {
