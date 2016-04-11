@@ -110,22 +110,29 @@ public class Main {
 	
 	private static void additionalSetup(){
 		MyDrive drive = MyDrive.getInstance();
-
-		User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
-		userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
-		userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
-		userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
-		userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
-
-		Dir whereToAdd = (Dir)drive.getFileByPathname("/home/joseluisvf", false, drive.getUserByUsername("joseluisvf"));
-		new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-
-		whereToAdd = (Dir)drive.getFileByPathname("/home/zttr", false, drive.getUserByUsername("zttr"));
-		new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/home3/plainfile1", whereToAdd);
-
-		new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", whereToAdd);
-		whereToAdd = (Dir)drive.getFileByPathname("/home/R3Moura", false, drive.getUserByUsername("R3Moura"));
-		new App(drive, userToAdd, "Skyrim", userToAdd.getMask(),"package.class.method", whereToAdd);
+		try{
+			
+			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
+			
+			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
+			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
+			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
+			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
+			
+			Dir whereToAdd = (Dir)drive.getFileByPathname("/home/joseluisvf", false, drive.getUserByUsername("joseluisvf"));
+			new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
+			
+			whereToAdd = (Dir)drive.getFileByPathname("/home/zttr", false, drive.getUserByUsername("zttr"));
+			new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/joseluisvf/Lusty Tales", whereToAdd);
+			whereToAdd.changePlainFileContent("link1", "Even more lust", userToAdd);
+			
+			new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", whereToAdd);
+			whereToAdd = (Dir)drive.getFileByPathname("/home/R3Moura", false, drive.getUserByUsername("R3Moura"));
+			new App(drive, userToAdd, "Skyrim", userToAdd.getMask(),"package.class.method", whereToAdd);
+			new Dir(drive, userToAdd, "TestePermissoes", "--xd--x-", whereToAdd);
+		}catch ( Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	@Atomic

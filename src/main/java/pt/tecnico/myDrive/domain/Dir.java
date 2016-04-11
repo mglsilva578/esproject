@@ -204,20 +204,12 @@ public class Dir extends Dir_Base {
 	}
 
 	private void confirmContentIsValid (String newContent, File fileToChange){
-		if (!(newContent == null)){
-			if ((fileToChange instanceof Link)){
-				if(isPath (newContent)){
-					return;
-				}
-			}else{
-				return;
-			}
+		if ((newContent == null)){
+			throw new WrongContentException (newContent, fileToChange);
 		} 
-		throw new WrongContentException (newContent, fileToChange);
 	}
 
 	private boolean isPath(String newContent) {
-		// TODO a que outros critérios tem um caminho que obedecer?
 		return Dir.SLASH_NAME.equals(""+newContent.charAt(0));
 	}
 

@@ -30,17 +30,17 @@ public class PlainFile extends PlainFile_Base {
 
 	protected void init(MyDrive drive, User owner, String name, String permissions, String content){
 		super.init(drive, owner, name, permissions);
-		setContent(content);
+		super.setContent(content);
 	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
-		setContent(content);
+		super.setContent(content);
 	}
 	
 	protected void init(MyDrive drive, String id, User owner, String name, String permissions, String content, Dir dir, String lastModifiedAt){
 		super.init(drive, id, owner, name, permissions, dir, lastModifiedAt);
-		setContent(content);
+		super.setContent(content);
 	}
 	
 

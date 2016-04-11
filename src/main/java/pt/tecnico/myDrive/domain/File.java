@@ -6,10 +6,13 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidIdException;
+import pt.tecnico.myDrive.exception.InvalidPermissionsException;
 
 public class File extends File_Base {
 	private static final int SLASH_DIR_0 = 0;
 	protected static final String PATH_SEPARATOR = "/";
+	private final int PERMISSION_LENGTH = 8;
+	private static final String ACCEPTABLE_CHARACTERS_FOR_PERMISSION = "rwxd-";
 
 	protected File(){
 		super();
@@ -27,7 +30,7 @@ public class File extends File_Base {
 		setId(drive.getNewFileId());
 		setName(name);
 		setLast_modification(new DateTime());
-		setPermissions(permissions);
+		setPermissions(this.filterPermissionsThroughUserMask(permissions, owner));
 		this.setMydrive(drive);
 		this.setOwner(owner);
 	}
@@ -36,7 +39,7 @@ public class File extends File_Base {
 		setId(drive.getNewFileId());
 		setName(name);
 		setLast_modification(new DateTime());
-		setPermissions(permissions);
+		setPermissions(this.filterPermissionsThroughUserMask(permissions, owner));
 		this.setMydrive(drive);
 		this.setOwner(owner);
 		int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
@@ -55,11 +58,10 @@ public class File extends File_Base {
 			setId(parsedId);
 			setName(name);
 			setLast_modification(new DateTime(lastModificationDate));
-			setPermissions(permissions);
+			setPermissions(this.filterPermissionsThroughUserMask(permissions, owner));
 			this.setMydrive(drive);
 			this.setOwner(owner);
 			int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
-			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 			if(size <= 1024){ 
 				dir.addFile(this);
 			}
@@ -70,8 +72,6 @@ public class File extends File_Base {
 			throw new InvalidIdException(id);
 		}
 	}
-
-	
 	
 	public  boolean hasPermissionsForRead(User u){
 		String s = this.getPermissions();
@@ -186,5 +186,46 @@ public class File extends File_Base {
 
 	private boolean directlyUnderSlashDir(Dir parent) {
 		return parent.getName().equals(Dir.SLASH_NAME);
+	}
+	
+	
+	private String filterPermissionsThroughUserMask (String permissions, User owner){
+		// confirmar se string é aceitavel
+		// ir posicao a posicao confirmando o que fica
+		String ownerMask = owner.getMask ();
+		
+		this.checkValidityPermission (permissions);
+		this.checkValidityPermission (ownerMask);
+		
+		char[] filteredPermissions = {'-', '-', '-', '-', '-', '-', '-', '-'};
+		for (int index = 0; index < permissions.length (); index++){
+			filteredPermissions [index] = filterPermission (permissions.charAt (index), ownerMask.charAt (index));
+		}
+		return new String(filteredPermissions);
+	}
+	
+	private char filterPermission (char filePermission, char ownerPermission){
+		return filePermission == ownerPermission ? filePermission : '-';
+	}
+	
+	private void checkValidityPermission (String permission){
+		if (!(this.isPermissionValid(permission))){
+			throw new InvalidPermissionsException(permission);
+		}
+	}
+	
+	private boolean isPermissionValid (String permissionToValidate){
+		boolean isNull = (permissionToValidate == null);
+		boolean isComposedOfAcceptableCharacters = true;
+		boolean hasRightLength = ((permissionToValidate.length () == this.PERMISSION_LENGTH));
+		
+		for (int i = 0; i < permissionToValidate.length (); i++){
+			if (!(File.ACCEPTABLE_CHARACTERS_FOR_PERMISSION.contains("" + permissionToValidate.charAt (i)))){
+				isComposedOfAcceptableCharacters = false;
+				System.out.println("\n\nENCONTRAMOS UM CHAR NAO VALIDO : " + permissionToValidate.charAt (i) + "\n\n");
+			}
+		}
+		
+		return !isNull && isComposedOfAcceptableCharacters && hasRightLength;
 	}
 }

@@ -20,6 +20,21 @@ public class Link extends Link_Base {
 		this.importXML(drive, xml);
 	}
     
+    @Override
+    public void setContent (String newContent){
+    	MyDrive myDrive = this.getMydrive ();
+    	System.out.println("\n\nLINK - Attempting to change contents of a file supposedly in <" + super.getContent() + ">\n\n");
+    	PlainFile fileToChange = (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
+    	fileToChange.setContent (newContent);
+    }
+    
+    @Override
+    public String getContent (){
+    	MyDrive myDrive = this.getMydrive ();
+    	PlainFile fileToRead = (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
+    	return fileToRead.getContent ();
+    }
+    
     public String toString(){
 		String description = super.toString("link");
 		return description;

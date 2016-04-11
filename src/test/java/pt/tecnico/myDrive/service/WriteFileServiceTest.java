@@ -25,7 +25,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
 		new App(myDrive, userToAdd, "app",userToAdd.getMask(),null,whereToAdd);
-		new Link(myDrive, userToAdd, "link",userToAdd.getMask(),null,whereToAdd);
+		new Link(myDrive, userToAdd, "link",userToAdd.getMask(),"/home/joseluisvf/app",whereToAdd);
 		Dir otherUserHome = (Dir)myDrive.getFileByPathname("/home/diogo", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "File created by different user.", userToAdd.getMask(), "File with no permissions for other users.", otherUserHome);
 	}
