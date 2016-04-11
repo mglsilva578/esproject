@@ -222,7 +222,6 @@ public class File extends File_Base {
 		for (int i = 0; i < permissionToValidate.length (); i++){
 			if (!(File.ACCEPTABLE_CHARACTERS_FOR_PERMISSION.contains("" + permissionToValidate.charAt (i)))){
 				isComposedOfAcceptableCharacters = false;
-				System.out.println("\n\nENCONTRAMOS UM CHAR NAO VALIDO : " + permissionToValidate.charAt (i) + "\n\n");
 			}
 		}
 		

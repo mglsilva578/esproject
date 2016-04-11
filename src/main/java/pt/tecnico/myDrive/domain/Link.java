@@ -23,7 +23,6 @@ public class Link extends Link_Base {
     @Override
     public void setContent (String newContent){
     	MyDrive myDrive = this.getMydrive ();
-    	System.out.println("\n\nLINK - Attempting to change contents of a file supposedly in <" + super.getContent() + ">\n\n");
     	PlainFile fileToChange = (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
     	fileToChange.setContent (newContent);
     }
