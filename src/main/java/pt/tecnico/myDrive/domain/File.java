@@ -89,7 +89,7 @@ public class File extends File_Base {
 			return s.charAt(5)=='w';
 	}
 
-	public boolean hasPermissionssForExecute(User u){
+	public boolean hasPermissionsForExecute(User u){
 		String s = this.getPermissions();
 		if (this.getOwner().equals(u))
 			return s.charAt(2)=='x';
