@@ -60,7 +60,11 @@ public class Dir extends Dir_Base {
 
 		for (File file : this.getFileSet()){
 			if(file.getName().equals(nameToLook)){
-				return file;
+				if (file instanceof Link){
+					return ((Link) file).getLinkedFile();
+				} else {
+					return file;
+				}
 			}
 		}
 		throw new NoDirException(nameToLook, this.getName());
@@ -172,7 +176,7 @@ public class Dir extends Dir_Base {
 	public void changePlainFileContent (String fileName, String newContent, User whoWantsToChange){
 		File fileToChange = null;
 		
-		fileToChange = this.confirmFileExists(fileName, fileToChange);
+		fileToChange = this.confirmFileExists (fileName, fileToChange);
 		this.confirmFileIsPlainFile (fileToChange, fileName);
 		this.confirmUserHasPermissionToWrite (fileToChange, whoWantsToChange);
 		this.confirmContentIsValid (newContent, fileToChange);
