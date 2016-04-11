@@ -107,18 +107,18 @@ public class Dir extends Dir_Base {
 		if(size <= 1024){
 
 			switch(type){
-			case "Link":
+			case "link":
 				if(!this.isPath(content)) throw new WrongContentException();
 				new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this);
 				break;
-			case "Dir":
+			case "dir":
 				if(content != null)throw new WrongContentException();
 				new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this);
 				break;
-			case "Plain":
+			case "plainFile":
 				new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this);
 				break;
-			case "App":
+			case "app":
 				new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this);
 				break;
 			default:

@@ -18,16 +18,15 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 	private User userToAdd;
 	private String newPath = "/home/mglsilva578/added";
 	private String failPath = "NaoExiste";
+	private Dir path;
+	
 	
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
-		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		Dir newDir = new Dir(myDrive, "added", userToAdd.getMask(), whereToAdd);
-		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
-		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
+		path = new Dir(myDrive, "added", userToAdd.getMask(), whereToAdd);
 		
 		
 	}
@@ -39,10 +38,11 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		Long token = loginmanager.createSession(username, password);
 		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, newPath);
 		Dir currentDir = loginmanager.getSessionByToken(token).getCurrentDir();
+		assertEquals("/home", currentDir.getPath());
 		changeDirectory.execute();
+		currentDir = loginmanager.getSessionByToken(token).getCurrentDir();
 		String resultService = changeDirectory.Result();
-		assertEquals(newPath, resultService);
-		assertEquals(newPath, currentDir.getPath());
+		assertEquals(path.getPath(), resultService);
 	}
 	
 	@Test

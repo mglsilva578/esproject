@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -71,7 +72,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		PlainFile plainFile = (PlainFile) currentDir1.getFileByName("plain1");
 		assertEquals("plain1", plainFile.getName());
 		assertEquals(user1.getMask(), plainFile.getPermissions());
-		assertEquals("Content", plainFile.getContent());
+		assertEquals("Content plain", plainFile.getContent());
 	}
 
 	@Test
@@ -79,10 +80,10 @@ public class CreateFileTest extends AbstractServiceTest{
 		CreateFileService service = new CreateFileService(token1, "link1", TYPE_LINK, "/home/AAA");
 		service.execute();
 
-		Link link = (Link) currentDir1.getFileByName("link1");
-		assertEquals("link1", link.getName());
+		PlainFile link = (PlainFile)currentDir1.getFileByName("link1");
+		assertEquals("AAA", link.getName());
 		assertEquals(user1.getMask(), link.getPermissions());
-		assertEquals("/home/AAA", link.getContent());
+		assertEquals("content1 (PlainFile)", link.getContent());
 	}
 
 	@Test
