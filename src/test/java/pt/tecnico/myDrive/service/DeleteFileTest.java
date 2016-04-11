@@ -37,6 +37,7 @@ public class DeleteFileTest extends AbstractServiceTest{
 		Dir dirCreatedByDifferentUser = new Dir(myDrive, userToAdd, "cannot_delete_this", userToAdd.getMask(), differentUserHome);
 		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either", userToAdd.getMask(), "permission should be denied", dirCreatedByDifferentUser);
 		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either_either", userToAdd.getMask(), "permission should be denied", differentUserHome);
+		new Link(myDrive, anotherUser, "Link to Lusty Tales belonging to other user", "rw------", "/home/joseluisvf/Lusty Tales", differentUserHome);
 	}
 
 	@Test(expected = NoDirException.class)
@@ -156,6 +157,20 @@ public class DeleteFileTest extends AbstractServiceTest{
 		DeleteFileService service = new DeleteFileService(token, dirName);
 
 		service = new DeleteFileService(token, dirName);
+		service.execute();
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void deleteLinkWithoutHavingPermission() {
+		String linkName = "Link to Lusty Tales belonging to other user";
+		String username = "vfluisjose";
+		String password = "55816";
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		DeleteFileService service = new DeleteFileService(token, linkName);
+
+		service = new DeleteFileService(token, linkName);
 		service.execute();
 	}
 	
