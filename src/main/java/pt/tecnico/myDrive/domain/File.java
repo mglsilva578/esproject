@@ -89,7 +89,7 @@ public class File extends File_Base {
 			return s.charAt(5)=='w';
 	}
 
-	public boolean hasPermissionssForExecute(User u){
+	public boolean hasPermissionsForExecute(User u){
 		String s = this.getPermissions();
 		if (this.getOwner().equals(u))
 			return s.charAt(2)=='x';
@@ -190,8 +190,6 @@ public class File extends File_Base {
 	
 	
 	private String filterPermissionsThroughUserMask (String permissions, User owner){
-		// confirmar se string é aceitavel
-		// ir posicao a posicao confirmando o que fica
 		String ownerMask = owner.getMask ();
 		
 		this.checkValidityPermission (permissions);

@@ -21,17 +21,40 @@ public class Link extends Link_Base {
 	}
     
     @Override
+    public  boolean hasPermissionsForRead (User u){
+    	return this.getLinkedFile ().hasPermissionsForRead (u);
+    }
+    
+    @Override
+    public  boolean hasPermissionsForWrite (User u){
+    	return this.getLinkedFile ().hasPermissionsForWrite (u);
+    }
+    
+    @Override
+    public boolean hasPermissionsForExecute (User u){
+    	return this.getLinkedFile ().hasPermissionsForExecute (u);
+    }
+    
+    @Override
+    public  boolean hasPermissionsForDelete (User u){
+    	return this.getLinkedFile ().hasPermissionsForDelete (u);
+    }
+    
+    @Override
     public void setContent (String newContent){
-    	MyDrive myDrive = this.getMydrive ();
-    	PlainFile fileToChange = (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
+    	PlainFile fileToChange = this.getLinkedFile();
     	fileToChange.setContent (newContent);
     }
     
     @Override
     public String getContent (){
-    	MyDrive myDrive = this.getMydrive ();
-    	PlainFile fileToRead = (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
+    	PlainFile fileToRead = this.getLinkedFile();
     	return fileToRead.getContent ();
+    }
+    
+    public PlainFile getLinkedFile (){
+    	MyDrive myDrive = this.getMydrive ();
+    	return (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
     }
     
     public String toString(){

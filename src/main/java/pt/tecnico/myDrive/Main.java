@@ -98,11 +98,11 @@ public class Main {
 		log.trace(file.hasPermissionsForDelete(userToAdd2));
 		log.trace(file.hasPermissionsForRead(userToAdd2));
 		log.trace(file.hasPermissionsForWrite(userToAdd2));
-		log.trace(file.hasPermissionssForExecute(userToAdd2));
+		log.trace(file.hasPermissionsForExecute(userToAdd2));
 		log.trace(file.hasPermissionsForDelete(userToAdd));
 		log.trace(file.hasPermissionsForRead(userToAdd));
 		log.trace(file.hasPermissionsForWrite(userToAdd));
-		log.trace(file.hasPermissionssForExecute(userToAdd));
+		log.trace(file.hasPermissionsForExecute(userToAdd));
 		
 		
 	}
