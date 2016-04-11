@@ -22,10 +22,12 @@ public class ChangeDirectoryService extends MyDriveService {
 		if(path==Dir.DOT_NAME){
 			currentDir= session.getCurrentDir();
 		}
-		currentDir= (Dir)getMyDrive().getFileByPathname(path, false, getMyDrive().getLoginManager().getSessionByToken(token).getOwner());
-		session.setCurrentDir(currentDir);
+		else{
+			currentDir= (Dir)getMyDrive().getFileByPathname(path, false, getMyDrive().getLoginManager().getSessionByToken(token).getOwner());
+			session.setCurrentDir(currentDir);
+		}
 	}
-	
+
 	protected String Result(){
 		return currentDir.getPath();
 	}
