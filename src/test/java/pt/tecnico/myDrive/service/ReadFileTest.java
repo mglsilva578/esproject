@@ -57,7 +57,7 @@ public class ReadFileTest extends AbstractServiceTest{
 		ReadFileService service = new ReadFileService(token, "/home/username1/link1");
         service.execute();
         String content = service.getResult();
-        assertEquals("/home/username1/plain1",content);
+        assertEquals("content1 (PlainFile)",content);
     }
 	
 	@Test
