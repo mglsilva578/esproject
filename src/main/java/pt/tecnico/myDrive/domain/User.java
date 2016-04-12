@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,27 +104,28 @@ public class User extends User_Base {
 		Element element = new Element("user");
 		element.setAttribute("username", getUsername());
 		Element elementPassword = new Element("password");
-		elementPassword.setAttribute("password", getPassword());
+		elementPassword.setText(this.getPassword());
 		element.addContent(elementPassword);
 		Element elementName = new Element("name");
-		elementName.setAttribute("name", getName());
+		elementName.setText(this.getName());
 		element.addContent(elementName);
 		Element elementHomeDir = new Element("homeDir");
-		elementHomeDir.setAttribute("homeDir", "/home/" + getUsername());
+		elementHomeDir.setText("/home/" + this.getUsername());
 		element.addContent(elementHomeDir);
 		Element elementMask = new Element("mask");
-		elementMask.setAttribute("mask", getMask());
+		elementMask.setText(this.getMask());
 		element.addContent(elementMask);
 		return element;
 	}
 
 	protected void importXML(MyDrive drive, Element elm){
 		try{
+			List<Element> children = elm.getChildren();
 			String username = elm.getAttributeValue("username");
-			String name = elm.getAttributeValue("name");
-			String password = elm.getAttributeValue("password");
-			String mask = elm.getAttributeValue("mask");
-			String homeDir = elm.getAttributeValue("homeDir");
+			String name = children.get(1).getText();
+			String password = children.get(0).getText();
+			String mask = children.get(3).getText();
+			String homeDir = children.get(2).getText();
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			throw new ImportDocumentException("In User : " + e.getMessage());

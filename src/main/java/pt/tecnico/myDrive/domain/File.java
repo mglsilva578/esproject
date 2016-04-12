@@ -158,19 +158,19 @@ public class File extends File_Base {
 		Element element = new Element("File");
 		element.setAttribute("id", this.getId().toString());
 		Element elementPath = new Element("path");
-		elementPath.setAttribute("path", this.getPath());
+		elementPath.setText(this.getPath());
 		element.addContent(elementPath);
 		Element elementName = new Element("name");
-		elementName.setAttribute("name", this.getName());
+		elementName.setText(this.getName());
 		element.addContent(elementName);
 		Element elementOwner = new Element("owner");
-		elementOwner.setAttribute("owner", this.getOwner().getUsername());
+		elementOwner.setText(this.getOwner().getUsername());
 		element.addContent(elementOwner);
 		Element elementPerm = new Element("perm");
-		elementPerm.setAttribute("perm", this.getPermissions());
+		elementPerm.setText(this.getPermissions());
 		element.addContent(elementPerm);
 		Element elementLastModification = new Element("last_modification");
-		elementLastModification.setAttribute("last_modification", this.getLast_modification().toString());
+		elementLastModification.setText(this.getLast_modification().toString());
 		element.addContent(elementLastModification);
 		return element;
 	}

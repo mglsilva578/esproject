@@ -70,31 +70,50 @@ public class Link extends Link_Base {
 
     public void importXML(MyDrive drive, Element elm){
     	Optional<String> maybeString = null;
-
-    	maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
-    	String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Link \n name is not optional and must be supplied.")));
+		String name = null;
+    	String path = null;
+    	String owner = null;
+    	String contents = null;
+    	String last_modification = null;
+    	String id;
+    	User _owner;
+    
+    	for(Element element : elm.getChildren()){
+    		switch(element.getName()){
+    			case "name":
+    				name = element.getText();
+    				break;
+    			case "path":
+    				path = element.getText();
+    				break;
+    			case "owner":
+    				owner = element.getText();
+    				break;
+    			case "contents":
+    				contents = element.getText();
+    				break;
+    			case "last_modification":
+    				last_modification = element.getText();
+    				break;
+    		}
+    	}
+    	if(name == null) throw new ImportDocumentException("Link \n name is not optional and must be supplied.");
     	
+    	String _name = name;
     	maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
-		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> ID is not optional and must be supplied." + elm.toString())));
-    	
-
-    	maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
-		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n path is not optional and must be supplied.")));
+		id = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ _name +"> ID is not optional and must be supplied." + elm.toString())));
+		
+		if(path == null) throw new ImportDocumentException("Link <"+ name +"> \n path is not optional and must be supplied.");
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
-		String ownerName = (maybeString.orElse(SuperUser.USERNAME));
-		User owner = drive.getUserByUsername(ownerName);
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("contents"));
-		String contents = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> \n contents are not optional and must be supplied.")));
 		
-		String perm = owner.getMask();
+		if(owner == null) owner = SuperUser.USERNAME;
+		_owner = drive.getUserByUsername(owner);
 		
-		maybeString = Optional.ofNullable(elm.getAttributeValue("last_modification"));
-		String lastModifiedAt = (maybeString.orElseThrow(() -> new ImportDocumentException("Link <"+ name +"> date of last modification is not optional and must be supplied.")));
+		if(contents == null) throw new ImportDocumentException("Link <"+ name +"> contents are not optional and must be supplied.");
+		String perm = _owner.getMask();
 		
-		this.init(drive, id, owner, name, perm, contents, father, lastModifiedAt);
+		if(last_modification == null) throw new ImportDocumentException("Link <"+ name +"> date of last modification is not optional and must be supplied.");
+		this.init(drive, id, _owner, name, perm, contents, father, last_modification);
     }
 }

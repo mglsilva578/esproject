@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 import java.util.Iterator;
+
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -247,28 +248,46 @@ public class Dir extends Dir_Base {
 
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("name"));
-		String name = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir - name is not optional and must be supplied.")));
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
-		String id = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> ID is not optional and must be supplied." + elm.toString())));
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("path"));
-		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> path is not optional and must be supplied." + elm.toString())));
+		String name = null;
+    	String path = null;
+    	String owner = null;
+    	String last_modification = null;
+    	String id;
+    	User _owner;
+    
+    	for(Element element : elm.getChildren()){
+    		switch(element.getName()){
+    			case "name":
+    				name = element.getText();
+    				break;
+    			case "path":
+    				path = element.getText();
+    				break;
+    			case "owner":
+    				owner = element.getText();
+    				break;
+    			case "last_modification":
+    				last_modification = element.getText();
+    				break;
+    		}
+    	}
+    	if(name == null) throw new ImportDocumentException("Dir - name is not optional and must be supplied.");
+    	
+    	String _name = name;
+    	maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
+		id = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ _name +"> ID is not optional and must be supplied." + elm.toString())));
+		
+		if(path == null) throw new ImportDocumentException("Dir <"+ name +"> \n path is not optional and must be supplied.");
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
+		
+		if(owner == null) owner = SuperUser.USERNAME;
+		_owner = drive.getUserByUsername(owner);
+		
+		String perm = _owner.getMask();
+		
+		if(last_modification == null) throw new ImportDocumentException("Dir <"+ name +"> date of last modification is not optional and must be supplied.");
+		this.init(drive, id, _owner, name, perm, father, last_modification);
 
-		maybeString = Optional.ofNullable(elm.getAttributeValue("owner"));
-		String ownerName = (maybeString.orElse(SuperUser.USERNAME));
-		User owner = drive.getUserByUsername(ownerName);
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("perm"));
-		String perm = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> permission is not optional and must be supplied.")));
-
-		maybeString = Optional.ofNullable(elm.getAttributeValue("last_modification"));
-		String lastModifiedAt = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ name +"> date of last modification is not optional and must be supplied.")));
-
-		super.init(drive, id, owner, name, perm, father, lastModifiedAt);
 	}
 }
