@@ -75,7 +75,9 @@ public class PlainFile extends PlainFile_Base {
 		Element element;		
 		element = super.exportXML();
 		element.setName("plain");
-		element.setAttribute("contents", this.getContent());
+		Element elementContent = new Element("contents");
+		elementContent.setAttribute("contents", this.getContent());
+		element.addContent(elementContent);
 		return element;
 	}
 

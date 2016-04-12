@@ -102,10 +102,18 @@ public class User extends User_Base {
 	public Element exportXML() {
 		Element element = new Element("user");
 		element.setAttribute("username", getUsername());
-		element.setAttribute("password", getPassword());
-		element.setAttribute("name", getName());
-		element.setAttribute("homeDir", "/home/" + getUsername());
-		element.setAttribute("mask", getMask());
+		Element elementPassword = new Element("password");
+		elementPassword.setAttribute("password", getPassword());
+		element.addContent(elementPassword);
+		Element elementName = new Element("name");
+		elementName.setAttribute("name", getName());
+		element.addContent(elementName);
+		Element elementHomeDir = new Element("homeDir");
+		elementHomeDir.setAttribute("homeDir", "/home/" + getUsername());
+		element.addContent(elementHomeDir);
+		Element elementMask = new Element("mask");
+		elementMask.setAttribute("mask", getMask());
+		element.addContent(elementMask);
 		return element;
 	}
 
