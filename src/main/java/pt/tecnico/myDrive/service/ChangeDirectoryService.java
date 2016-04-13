@@ -11,6 +11,7 @@ public class ChangeDirectoryService extends MyDriveService {
 	private Long token;
 	private String path;
 	private Dir currentDir;
+	private String result;
 
 	public ChangeDirectoryService(Long token,String path){
 		this.token=token;
@@ -21,15 +22,17 @@ public class ChangeDirectoryService extends MyDriveService {
 		Session session = getMyDrive().getLoginManager().getSessionByToken(this.token);
 		if(path==Dir.DOT_NAME){
 			currentDir= session.getCurrentDir();
+			result = currentDir.getPath();
 		}
 		else{
 			currentDir= (Dir)getMyDrive().getFileByPathname(path, false, getMyDrive().getLoginManager().getSessionByToken(token).getOwner());
 			session.setCurrentDir(currentDir);
+			result = currentDir.getPath() + "/" + currentDir.getName();
 		}
 	}
 
 	protected String Result(){
-		return currentDir.getPath();
+		return result;
 	}
 
 }

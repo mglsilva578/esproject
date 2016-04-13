@@ -7,7 +7,6 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
@@ -18,17 +17,15 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 	private User userToAdd;
 	private String newPath = "/home/mglsilva578/added";
 	private String failPath = "NaoExiste";
-	private Dir path;
+
 	
 	
 	@Override
-	protected void populate() {
+	protected void populate(){
 		MyDrive myDrive = MyDrive.getInstance();
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
-		path = new Dir(myDrive, "added", userToAdd.getMask(), whereToAdd);
-		
-		
+		new Dir(myDrive, "added", userToAdd.getMask(), whereToAdd);
 	}
 	
 	@Test
@@ -42,7 +39,8 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		changeDirectory.execute();
 		currentDir = loginmanager.getSessionByToken(token).getCurrentDir();
 		String resultService = changeDirectory.Result();
-		assertEquals(path.getPath(), resultService);
+		assertEquals(newPath, resultService);
+		assertEquals("added", currentDir.getName());
 	}
 	
 	@Test
