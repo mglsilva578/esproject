@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<myDrive>
-  <user username="ist176" password="7654" name="Danel" homeDir="/home/ist176" mask="rwxd----" />
-  <user username="ist176544" password="76544" name="Daniel" homeDir="/home/ist176544" mask="rwxd----" />
-  <plain id="4" path="/home/ist176544" name="Lusty Tales" owner="ist176544" perm="rwxd----" last_modification="2016-03-30T11:45:51.000+01:00" contents="Lusty Argonian Maid" />
-</myDrive>
+<myDrive />

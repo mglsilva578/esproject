@@ -126,8 +126,10 @@ public class User extends User_Base {
 			String password = children.get(0).getText();
 			String mask = children.get(3).getText();
 			String homeDir = children.get(2).getText();
+			System.out.println("\n\nAAAAAAA\n\n" + username + password + mask + homeDir);
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new ImportDocumentException("In User : " + e.getMessage());
 		}
 	}

@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
@@ -29,6 +31,10 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", whereToAdd);
+		
+		Dir dir = new Dir(myDrive, userToAdd, "dir", userToAdd.getMask(), whereToAdd);
+		new Link(myDrive, userToAdd, "link", userToAdd.getMask(), "/home/mglsilva578/Lusty Tales", whereToAdd);
+		new App(myDrive, userToAdd, "app", userToAdd.getMask(), "package.class.method", whereToAdd);
 	}
 	@Test
 	public void success(){
@@ -40,23 +46,32 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		session.setCurrentDir(whereToAdd);
 		service.execute();
 		List<FileDto> returnService = service.result();
-		 
+
 		//testing result parameters
-		assertEquals("Lusty Tales", returnService.get(0).getName());
-		assertEquals("More Lusty Tales", returnService.get(1).getName());
-		assertEquals("A cold shower", returnService.get(2).getName());
+		for (FileDto f : returnService) {
+
+			if(f.getType().equals("dir")){ 
+				f.toStringforDir();
+			}
+			else{
+				f.toStringforPlainFile();
+			}
+		}
+		assertEquals("Lusty Tales", returnService.get(5).getName());
+		assertEquals("More Lusty Tales", returnService.get(4).getName());
+		assertEquals("A cold shower", returnService.get(3).getName());
 		assertEquals(whereToAdd.getFileSet().size(), returnService.size());
-		assertEquals(returnService.get(0).getOwner(), userToAdd.getName());
+		//assertEquals(returnService.get(0).getOwner(), userToAdd.getUsername());
 	}
-	
+
 	@Test (expected = InvalidTokenException.class)
 	public void TokenFail(){
 		Long token = (long) 123123123;
 		ListDirectoryService service = new ListDirectoryService(token);
 		service.execute();
-		
+
 	}
-	
-	
+
+
 
 }
