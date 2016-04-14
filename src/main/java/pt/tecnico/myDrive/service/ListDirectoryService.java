@@ -47,10 +47,11 @@ public class ListDirectoryService extends MyDriveService {
 					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
 							file.getId(), file.getLast_modification(), file.getName()));
 				}
-				else
+				else{
 					this.type = "plainFile";
 					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
 							file.getId(), file.getLast_modification(), file.getName()));
+				}
 			}
 
 		}

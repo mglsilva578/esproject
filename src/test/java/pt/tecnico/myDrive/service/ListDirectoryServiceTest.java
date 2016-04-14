@@ -60,7 +60,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		assertEquals("Lusty Tales", returnService.get(1).getName());
 		assertEquals("More Lusty Tales", returnService.get(2).getName());
 		assertEquals("A cold shower", returnService.get(0).getName());
-		//assertEquals(whereToAdd.getFileSet().size(), returnService.size());
+		assertEquals(whereToAdd.getFileSet().size(), returnService.size());
 	}
 
 	@Test (expected = InvalidTokenException.class)
