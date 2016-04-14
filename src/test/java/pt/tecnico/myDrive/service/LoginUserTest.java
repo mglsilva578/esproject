@@ -1,13 +1,12 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
 import java.math.BigInteger;
 import java.util.Random;
 
 import org.joda.time.DateTime;
-import org.joda.time.Seconds;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.LoginManager;
@@ -17,234 +16,222 @@ import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class LoginUserTest extends AbstractServiceTest{
 
+	private static final String EXISTING_USERNAME1 = "zttr";
+	private static final String EXISTING_USERNAME1_PASSWORD = "76534";
+	private static final String EXISTING_USERNAME2 = "mglsilva578";
+	private static final String EXISTING_USERNAME2_PASSWORD = "68230";
+	private static final String EXISTING_USERNAME3 = "R3Moura";
+	private static final String EXISTING_USERNAME3_PASSWORD = "74005";
+	private static final String EXISTING_USERNAME4 = "joseluisvf";
+	private static final String EXISTING_USERNAME4_PASSWORD = "55816";
+	private static final String NON_EXISTING_USERNAME = "Someone Who Clearly Does Not Exist";
+	
+	private MyDrive myDrive;
+	private LoginManager loginManager;
+	
+	private Long tokenUser1;
+	private Long tokenUser2;
+	private Long tokenUser3;
+
 	@Override
 	protected void populate() {
-		MyDrive myDrive = MyDrive.getInstance();
-		new User(myDrive, "zttr", "76534", "Diogo", "rwxd----", null);
-		new User(myDrive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
-		new User(myDrive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
-		new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
-		new User(myDrive, "ist176544", "76544", "Daniel", "rwxd----", null);
+		this.myDrive = MyDrive.getInstance();
+		this.loginManager = myDrive.getLoginManager();
+		new User(this.myDrive, EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD, "Diogo", "rwxd----", null);
+		new User(this.myDrive, EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD, "Miguel", "rwxd----", null);
+		new User(this.myDrive, EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD, "Ricardo", "rwxd----", null);
+		new User(this.myDrive, EXISTING_USERNAME4, EXISTING_USERNAME4_PASSWORD, "JoseLuis", "rwxd----", null);
+		
+		this.resetTokens();
 	}
 	
-	@SuppressWarnings("deprecation")
-	@Test
-	public void createSessionForOneUser() {
-		String username;
-		String password;
-		LoginUserService service;
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		int howManySessionsBefore = loginManager.getSessionsCount();
-		
-		username = "zttr";
-		password = "76534";
-		service = new LoginUserService(username, password);
-		service.execute();
-		
-		int howManySessionsAfter = loginManager.getSessionsCount();
-		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - 1);
-		
-		User sessionOwner = myDrive.getUserByUsername(username);
-		Long token = service.getResult();
-		Session session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, sessionOwner, token));
+	private void resetTokens() {
+		this.tokenUser1 = null;
+		this.tokenUser2 = null;
+		this.tokenUser3 = null;
 	}
 
 	@Test
-	public void createSessionsForDifferentUsers() {
-		String username, password;
-		LoginUserService service;
-		Long token;
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		int howManySessionsCreated = 0;
-		int howManySessionsBefore = loginManager.getSessionsCount();
+	public void confirmCreatedSessionHasCorrectOwner() {
+		whenSessionCreatedForUser1();
 		
-		username = "zttr";
-		password = "76534";
-		service = new LoginUserService(username, password);
+		thenSessionOwnerShouldBeUser1();
+	}
+
+	private void whenSessionCreatedForUser1() {
+		LoginUserService service = new LoginUserService(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
 		service.execute();
-		token = service.getResult();
-		User user = myDrive.getUserByUsername(username);
-		Session session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, user, token));
-		howManySessionsCreated++;
+		this.tokenUser1 = service.getResult();
+	}
+
+	private void thenSessionOwnerShouldBeUser1() {
+		Session session = this.loginManager.getSessionByToken(this.tokenUser1);
+		User user1 = this.myDrive.getUserByUsername(EXISTING_USERNAME1);
+		assertEquals(user1, session.getOwner());
 		
-		username = "mglsilva578";
-		password = "68230";
-		service = new LoginUserService(username, password);
-		service.execute();
-		token = service.getResult();
-		user = myDrive.getUserByUsername(username);
-		session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, user, token));
-		howManySessionsCreated++;
-		
-		username = "R3Moura";
-		password = "74005";
-		service = new LoginUserService(username, password);
-		service.execute();
-		token = service.getResult();
-		user = myDrive.getUserByUsername(username);
-		session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, user, token));
-		howManySessionsCreated++;
-		
-		username = "joseluisvf";
-		password = "55816";
-		service = new LoginUserService(username, password);
-		service.execute();
-		token = service.getResult();
-		user = myDrive.getUserByUsername(username);
-		session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, user, token));
-		howManySessionsCreated++;
-		
-		username = "ist176544";
-		password = "76544";
-		service = new LoginUserService(username, password);
-		service.execute();
-		token = service.getResult();
-		user = myDrive.getUserByUsername(username);
-		session = loginManager.getSessionByToken(token);
-		assertTrue("Session created is not consistent with credentials.",
-				this.isSessionConsistentWithCredentials(session, user, token));
-		howManySessionsCreated++;
-		
-		// Confirm everything went well
-		int howManySessionsAfter = loginManager.getSessionsCount();
-		assertEquals("Number of sessions before and after creation is not consistent.", howManySessionsBefore, howManySessionsAfter - howManySessionsCreated);
 	}
 	
-	private boolean isSessionConsistentWithCredentials(Session sessionToCheck, User expectedOwner, Long expectedToken){
-		boolean isSameUser = sessionToCheck.getOwner().equals(expectedOwner);
-		boolean isSameToken = sessionToCheck.getToken().equals(expectedToken);
+	@Test
+	public void confirmCreatedSessionsAffectsSessionCount() {
+		int sessionCountBefore = givenCurrentSessionCount();
 		
-		return isSameUser && isSameToken;
+		whenSessionsCreatedForDifferentUsers();
+		
+		thenSessionCountShouldHaveChanged(sessionCountBefore);
+	}
+	
+	private int givenCurrentSessionCount() {
+		return this.loginManager.getSessionsCount();
+	}
+	
+	private void whenSessionsCreatedForDifferentUsers() {
+		LoginUserService service = new LoginUserService(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
+		service.execute();
+		service = new LoginUserService(EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD);
+		service.execute();
+	}
+	
+	private void thenSessionCountShouldHaveChanged(int sessionCountBefore) {
+		assertEquals(sessionCountBefore + 2, givenCurrentSessionCount());
+		
 	}
 	
 	@Test
 	public void confirmLastActiveAtChangedAfterUsingSession(){
-		String username = "joseluisvf";
-		String password = "55816";
-		Long token = null;
-		long waitDurationInMillis = 5000;
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
+		DateTime lastActiveAtBefore = givenLastActiveDateOfCreatedSession();
 		
-		LoginUserService service = new LoginUserService(username, password);
+		whenSomeTimeHasPassed();
+		
+		thenCurrentLastActiveDateShouldHaveChanged(lastActiveAtBefore);
+	}
+	
+	private DateTime givenLastActiveDateOfCreatedSession() {
+		givenSessionCreatedUser3();
+		Session session = this.loginManager.getSessionByToken(this.tokenUser3);
+		return session.getLastActiveAt();
+	}
+	
+	private void givenSessionCreatedUser3() {
+		LoginUserService service = new LoginUserService(EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD);
 		service.execute();
-		token = service.getResult();
-		Session session = loginManager.getSessionByToken(token);
+		this.tokenUser3 = service.getResult();
+	}
 
-		DateTime lastActiveAtCreation = session.getLastActiveAt();
+	private void whenSomeTimeHasPassed() {
+		long someTimeInMilliseconds = 3000;
 		try {
-			Thread.sleep(waitDurationInMillis);
-			loginManager.getSessionByToken(token);
-			DateTime lastActiveAfterCreation = session.getLastActiveAt();
-			int howManySecondsHavePassed = Seconds.secondsBetween(lastActiveAtCreation, lastActiveAfterCreation).getSeconds();
-			assertEquals("Inconsistent number of seconds have passed.", howManySecondsHavePassed * 1000, waitDurationInMillis);
+			Thread.sleep(someTimeInMilliseconds);
 		} catch(InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			log.warn("Thread was interrupted for which reason the failure of this test cannot be accounted for.");
 		}
 	}
 	
+	private void thenCurrentLastActiveDateShouldHaveChanged(DateTime lastActiveAtBefore) {
+		Session session = this.loginManager.getSessionByToken(this.tokenUser3);
+		DateTime lastActiveAtAfter = session.getLastActiveAt();
+		assertNotEquals(lastActiveAtBefore, lastActiveAtAfter);
+	}
+	
 	@Test
-	public void createTwoSessionsForSameUser(){
-		String username = "joseluisvf";
-		String password = "55816";
-		Long token = null;
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
+	public void confirmCanCreateMoreThanOneSessionsForSameUser() {
+		whenSessionsCreatedForSameUser();
 		
-		LoginUserService service = new LoginUserService(username, password);
+		thenSessionsShouldHaveSameOwner();
+	}
+	
+
+	private void whenSessionsCreatedForSameUser() {
+		LoginUserService service = new LoginUserService(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
 		service.execute();
-		token = service.getResult();
-		Session firstSession = loginManager.getSessionByToken(token);
+		this.tokenUser1 = service.getResult();
 		
-		service = new LoginUserService(username, password);
+		service = new LoginUserService(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
 		service.execute();
-		token = service.getResult();
-		Session secondSession = loginManager.getSessionByToken(token);
-		
-		assertEquals("Owners should be the same but aren't.",firstSession.getOwner(), secondSession.getOwner());
+		this.tokenUser2 = service.getResult();
+	}
+	
+	private void thenSessionsShouldHaveSameOwner() {
+		Session session1 = this.loginManager.getSessionByToken(tokenUser1);
+		Session session2 = this.loginManager.getSessionByToken(tokenUser2);
+		assertEquals(session1.getOwner(), session2.getOwner());
 	}
 	
 	@Test(expected = InvalidTokenException.class)
-	public void useInvalidToken(){
-		String username = "joseluisvf";
-		String password = "55816";
-		Long token = null;
-		Long unexistentToken = new Long(1);
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
+	public void shouldThrowOnUsingInvalidToken(){
+		givenSessionCreatedUser3();
+		Long invalidToken = givenInvalidToken();
 		
-		LoginUserService service = new LoginUserService(username, password);
-		service.execute();
-		token = service.getResult();
-
-		while(unexistentToken == token){
-			unexistentToken = new Long(new BigInteger(64, new Random()).longValue());
-		}
-		loginManager.getSessionByToken(unexistentToken);
+		whenTryToUseInvalidToken(invalidToken);
 	}
 	
-	@Test(expected = InvalidPasswordException.class)
-	public void createSessionWithInvalidPassword(){
-		String username = "joseluisvf";
-		String password = "00000";
+
+	private Long givenInvalidToken() {
+		Long invalidToken = new Long(new BigInteger(64, new Random()).longValue());
 		
-		LoginUserService service = new LoginUserService(username, password);
+		while (invalidTokenIsNotSameAsExistingTokens(invalidToken)) {
+			invalidToken = new Long(new BigInteger(64, new Random()).longValue());
+		}
+		
+		return invalidToken;
+	}
+
+	private boolean invalidTokenIsNotSameAsExistingTokens(Long invalidToken) {
+		return (invalidToken == this.tokenUser1) ||
+				(invalidToken == this.tokenUser2) ||
+				(invalidToken == this.tokenUser3);
+	}
+	
+	private void whenTryToUseInvalidToken(Long invalidToken) {
+		this.loginManager.getSessionByToken(invalidToken);
+	}
+
+	@Test(expected = InvalidPasswordException.class)
+	public void shouldThrowOnCreateSessionWithInvalidPassword(){
+		whenTryToCreateSessionWithInvalidPassword();
+	}
+	
+	private void whenTryToCreateSessionWithInvalidPassword() {
+		LoginUserService service = new LoginUserService(EXISTING_USERNAME1, EXISTING_USERNAME3_PASSWORD);
 		service.execute();
 	}
 	
 	@Test(expected = UsernameDoesNotExistException.class)
-	public void createSessionWithInvalidUsername(){
-		String username = "vfjoseluis";
-		String password = "55816";
-		
-		LoginUserService service = new LoginUserService(username, password);
+	public void shouldThrowOnCreateSessionWithInvalidUsername(){
+		whenTryToCreateSessionWithInvalidUsername();
+	}
+	
+	private void whenTryToCreateSessionWithInvalidUsername() {
+		LoginUserService service = new LoginUserService(NON_EXISTING_USERNAME, EXISTING_USERNAME3_PASSWORD);
 		service.execute();
 	}
 	
 	@Test(expected = CannotListTokenException.class)
-	public void tryToListTokens(){
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		
-		LoginUserService service = new LoginUserService(username, password);
-		service.execute();
-		Long token = service.getResult();
-		Session session = loginManager.getSessionByToken(token);
+	public void shouldThrowOnTryToListTokens(){
+		givenSessionCreatedUser3();
+
+		whenTryToListTokensOfUser3();
+	}
+	
+	private void whenTryToListTokensOfUser3() {
+		Session session = this.loginManager.getSessionByToken(this.tokenUser3);
 		User owner = session.getOwner();
 		owner.getSessionsSet();
 	}
 	
 	@Test(expected = InvalidTokenException.class)
-	public void tryToUseExpiredSession (){
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance ();
-		LoginManager loginManager = myDrive.getLoginManager ();
+	public void shouldThrowOnTryToUseExpiredSession (){
+		givenSessionCreatedUser3();
 		
-		LoginUserService service = new LoginUserService (username, password);
-		service.execute ();
-		Long token = service.getResult ();
-		loginManager.makeSessionExpired (token);
-		loginManager.getSessionByToken (token);
+		whenTryUseSessionAfterExpired();
+	}
+
+	private void whenTryUseSessionAfterExpired() {
+		this.loginManager.makeSessionExpired(tokenUser3);
+		this.loginManager.getSessionByToken(tokenUser3);
 	}
 }
