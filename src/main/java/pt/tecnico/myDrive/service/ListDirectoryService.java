@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -53,6 +54,7 @@ public class ListDirectoryService extends MyDriveService {
 			}
 
 		}
+		Collections.sort(filesInCurrentDir);
 	}
 	public List<FileDto> result() {
 		return filesInCurrentDir;
