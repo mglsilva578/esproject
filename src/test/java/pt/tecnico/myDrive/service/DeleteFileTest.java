@@ -2,210 +2,175 @@ package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigInteger;
+import java.util.Random;
+
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.Dir;
-import pt.tecnico.myDrive.domain.File;
-import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
-import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
-import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
-import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 
 public class DeleteFileTest extends AbstractServiceTest{
 
+	private static final String EXISTING_USERNAME1 = "joseluisvf";
+	private static final String EXISTING_USERNAME1_PASSWORD = "55816";
+	private static final String EXISTING_USER1_EXISTING_DIR = "new_dir";
+	private static final String EXISTING_USER1_EXISTING_FILE1 = "Lusty Tales";
+	private static final String EXISTING_USERNAME2 = "vfluisjose";
+	private static final String EXISTING_USERNAME2_PASSWORD = "55816";
+	private static final String EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER = "Os Lusiadas";
+	private static final String EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER = "cannot_delete_this";
+	private static final String NON_EXISTING_FILE = "I don't exist.";
+	private static final Long INVALID_TOKEN = new Long(-111);
+
+	private Long existingUser1Token;
+	private Long existingUser2Token;
+	private Dir existingUser1CurrentDir;
+	
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
-		User userToAdd = new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
-		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
-		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		new Link(myDrive, userToAdd, "Link to Lusty Tales", "rw------", "/home/joseluisvf/Lusty Tales", whereToAdd);
-		Dir newDir = new Dir(myDrive, userToAdd, "new_dir", userToAdd.getMask(), whereToAdd);
-		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
-		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
+		User existingUser1 = new User(myDrive, EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD, "JoseLuis", "rwxd----", null);
+		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, existingUser1);
+		new PlainFile(myDrive, existingUser1, EXISTING_USER1_EXISTING_FILE1, existingUser1.getMask(), "Lusty Argonian Maid", whereToAdd);
+		Dir newDir = new Dir(myDrive, existingUser1, EXISTING_USER1_EXISTING_DIR, existingUser1.getMask(), whereToAdd);
+		new PlainFile(myDrive, existingUser1, "More Lusty Tales", existingUser1.getMask(), "Lusty Argonian Maid", newDir);
+		new PlainFile(myDrive, existingUser1, "A cold shower", existingUser1.getMask(), "When the heater is off, there is no salvation.", newDir);
 		
-		User anotherUser = new User(myDrive, "vfluisjose", "55816", "JoseLuis", "rwxd----", null);
+		User anotherUser = new User(myDrive, EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD, "JoseLuis", "rwxd----", null);
 		Dir differentUserHome = (Dir)myDrive.getFileByPathname("/home/vfluisjose", false, anotherUser);
-		Dir dirCreatedByDifferentUser = new Dir(myDrive, userToAdd, "cannot_delete_this", userToAdd.getMask(), differentUserHome);
-		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either", userToAdd.getMask(), "permission should be denied", dirCreatedByDifferentUser);
-		new PlainFile(myDrive, userToAdd, "cannot_delete_this_either_either", userToAdd.getMask(), "permission should be denied", differentUserHome);
-		new Link(myDrive, anotherUser, "Link to Lusty Tales belonging to other user", "rw------", "/home/joseluisvf/Lusty Tales", differentUserHome);
+		new Dir(myDrive, existingUser1, EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER, existingUser1.getMask(), differentUserHome);
+		new PlainFile(myDrive, existingUser1, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER, existingUser1.getMask(), "As armas e os baroes assinalados, que da ocidental ...", differentUserHome);
+		
+		loginUsers();
+	}
+	
+	private void loginUsers() {
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		this.existingUser1Token = loginManager.createSession(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
+		this.existingUser2Token = loginManager.createSession(EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD);
+		this.existingUser1CurrentDir = loginManager.getSessionByToken(existingUser1Token).getCurrentDir();
 	}
 
 	@Test(expected = NoDirException.class)
-	public void deleteExistingFile() {
-		String fileName = "Lusty Tales";
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-		Session session = loginManager.getSessionByToken(token);
-		Dir currentDir = session.getCurrentDir();
-		int currentDirSizeBefore = currentDir.getSize();
+	public void shouldThrowOnDeleteExistingFile() {
+		int currentDirSizeBefore = givenSizeCurrentDirExistingUser1();
 
+		whenExistingFileIsDeleted();
+		
+		thenCurrentDirShouldBeAsExpected(currentDirSizeBefore, EXISTING_USER1_EXISTING_FILE1);
+	}
+
+	private int givenSizeCurrentDirExistingUser1() {
+		return this.existingUser1CurrentDir.getSize();
+	}
+	
+	private void whenExistingFileIsDeleted() {
+		DeleteFileService service = new DeleteFileService(existingUser1Token, EXISTING_USER1_EXISTING_FILE1);
 		service.execute();
-		int currentDirSizeAfter = currentDir.getSize();
-		currentDir.getFileByName(fileName);
+	}
+
+	private void thenCurrentDirShouldBeAsExpected(int currentDirSizeBefore, String filenameToCheck) {
+		int currentDirSizeAfter = this.existingUser1CurrentDir.getSize();
 		assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-	}
-
-	@Test(expected = NoDirException.class)
-	public void deleteExistingDir() {
-		String dirName = "new_dir";
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, dirName);
-		Session session = loginManager.getSessionByToken(token);
-		Dir currentDir = session.getCurrentDir();
-		int currentDirSizeBefore = currentDir.getSize();
-
-		service = new DeleteFileService(token, dirName);
-		service.execute();
-		currentDir.getFileByName(dirName);
-		int currentDirSizeAfter = currentDir.getSize();
-		assertEquals("Invalid number of files in dir", currentDirSizeBefore - 1, currentDirSizeAfter);
-	}
-
-	@Test(expected = NoDirException.class)
-	public void deleteInvalidFile() {
-		String fileName = "I don't exist";
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
-		service.execute();
+		this.existingUser1CurrentDir.getFileByName(filenameToCheck);
 	}
 	
 	@Test(expected = NoDirException.class)
-	public void deleteExistingLink () {
-		String fileName = "Link to Lusty Tales";
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
+	public void shouldThrowOnDeleteExistingDir() {
+		int currentDirSizeBefore = givenSizeCurrentDirExistingUser1();
+		
+		whenExistingDirIsDeleted();
+		
+		thenCurrentDirShouldBeAsExpected(currentDirSizeBefore, EXISTING_USER1_EXISTING_DIR);
+	}
+	
+	private void whenExistingDirIsDeleted() {
+		DeleteFileService service = new DeleteFileService(existingUser1Token, EXISTING_USER1_EXISTING_DIR);
 		service.execute();
-		myDrive.getFileByPathname("/home/joseluisvf/Lusty Tales", false, null);
 	}
 
-	@Test(expected = CannotDeleteDotOrDotDotException.class)
-	public void deleteDot() {
-		String fileName = Dir.DOT_NAME;
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
+	@Test(expected = NoDirException.class)
+	public void shouldThrowOnDeleteNonExistingFile() {
+		whenTryToDeleteNonExistentFile();
+	}
+	
+	private void whenTryToDeleteNonExistentFile() {
+		DeleteFileService service = new DeleteFileService(existingUser1Token, NON_EXISTING_FILE);
 		service.execute();
 	}
 	
 	@Test(expected = CannotDeleteDotOrDotDotException.class)
-	public void deleteDotDot() {
-		String fileName = Dir.DOTDOT_NAME;
-		String username = "joseluisvf";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
+	public void shouldThrowOnDeleteDot() {
+		whenTryToDeleteDot();
+	}
+	
+	private void whenTryToDeleteDot() {
+		DeleteFileService service = new DeleteFileService(existingUser1Token, Dir.DOT_NAME);
+		service.execute();
+	}
+	
+	@Test(expected = CannotDeleteDotOrDotDotException.class)
+	public void shouldThrowOnDeleteDotDot() {
+		whenTryToDeleteDotDot();
+	}
+	
+	private void whenTryToDeleteDotDot() {
+		DeleteFileService service = new DeleteFileService(existingUser1Token, Dir.DOTDOT_NAME);
 		service.execute();
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
-	public void deleteDirWithoutHavingPermission() {
-		String dirName = "cannot_delete_this";
-		String username = "vfluisjose";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, dirName);
-
-		service = new DeleteFileService(token, dirName);
+	public void shouldThrowOnDeleteDirWithoutHavingPermission() {
+		whenTryToDeleteDirWithoutHavingPermissions();
+	}
+	
+	private void whenTryToDeleteDirWithoutHavingPermissions() {
+		DeleteFileService service = new DeleteFileService(existingUser2Token, EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER);
 		service.execute();
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
-	public void deleteFileWithoutHavingPermission() {
-		String dirName = "cannot_delete_this_either_either";
-		String username = "vfluisjose";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, dirName);
-
-		service = new DeleteFileService(token, dirName);
-		service.execute();
+	public void shouldThrowOnDeleteFileWithoutHavingPermission() {
+		whenTryToDeleteFileWithoutHavingPermissions();
 	}
 	
-	@Test(expected = PermissionDeniedException.class)
-	public void deleteLinkWithoutHavingPermission() {
-		String linkName = "Link to Lusty Tales belonging to other user";
-		String username = "vfluisjose";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, linkName);
-
-		service = new DeleteFileService(token, linkName);
-		service.execute();
-	}
-	
-	@Test(expected = UsernameDoesNotExistException.class)
-	public void deleteWithInvalidUsername() {
-		String fileName = "Lusty Tales";
-		String username = "jose_das_couves";
-		String password = "55816";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
-		service.execute();
-	}
-
-	@Test(expected = InvalidPasswordException.class)
-	public void deleteWithInvalidPassword() {
-		String fileName = "Lusty Tales";
-		String username = "joseluisvf";
-		String password = "11111";
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession(username, password);
-		DeleteFileService service = new DeleteFileService(token, fileName);
-
+	private void whenTryToDeleteFileWithoutHavingPermissions() {
+		DeleteFileService service = new DeleteFileService(existingUser2Token, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER);
 		service.execute();
 	}
 
 	@Test(expected = InvalidTokenException.class)
 	public void deleteWithInvalidToken() {
-		String fileName = "Lusty Tales";
-		Long token = new Long(1);
-		DeleteFileService service = new DeleteFileService(token, fileName);
+		Long invalidToken = givenInvalidToken();
+		whenTryToDeleteFileUsingInvalidToken(invalidToken);
+	}
+	
+	private Long givenInvalidToken() {
+		Long invalidToken = new Long(new BigInteger(64, new Random()).longValue());
+		
+		while (invalidTokenIsNotSameAsExistingTokens(invalidToken)) {
+			invalidToken = new Long(new BigInteger(64, new Random()).longValue());
+		}
+		
+		return invalidToken;
+	}
 
+	private boolean invalidTokenIsNotSameAsExistingTokens(Long invalidToken) {
+		return (invalidToken == this.existingUser1Token) ||
+				(invalidToken == this.existingUser2Token);
+	}
+	
+	private void whenTryToDeleteFileUsingInvalidToken(Long invalidToken) {
+		DeleteFileService service = new DeleteFileService(invalidToken, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER);
 		service.execute();
 	}
 }

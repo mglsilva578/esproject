@@ -13,11 +13,8 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 
 	@Override
 	protected void populate() {
-		//user jose
-		//Dir wheretoadd tem ficheiro lusty tales tem dir newdir
-		//Dir newDir tem ficheiro More Lusty Tales e cold shower
 		MyDrive myDrive = MyDrive.getInstance();
-		User userToAdd1 = new User(myDrive, "diogo", "76534", "DiogoFer", "rwxd----", null);
+		new User(myDrive, "diogo", "76534", "DiogoFer", "rwxd----", null);
 		User userToAdd = new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
@@ -75,12 +72,13 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		service.execute();
 
 	}
+	
 	@Test(expected=WrongContentException.class)
 	public void writeWrongContent(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession("joseluisvf", "55816");
-		WriteFileService service = new WriteFileService(token,"link","abcd");
+		WriteFileService service = new WriteFileService(token,"link", null);
 		service.execute();
 	}
 	
