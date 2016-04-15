@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
@@ -220,6 +221,7 @@ public class Dir extends Dir_Base {
 
 	private void changePlainFileContent (PlainFile fileToChange, String newContent){
 		fileToChange.setContent (newContent);
+		fileToChange.setLast_modification(new DateTime());
 	}
 
 	private boolean isEmpty(Dir dirToDelete) {
