@@ -12,6 +12,7 @@ import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CannotDeleteDirInUseBySessionException;
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoDirException;
@@ -27,13 +28,15 @@ public class DeleteFileTest extends AbstractServiceTest{
 	private static final String EXISTING_USERNAME2_PASSWORD = "55816";
 	private static final String EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER = "Os Lusiadas";
 	private static final String EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER = "cannot_delete_this";
+	private static final String EXISTING_USERNAME3 = "Careless";
+	private static final String EXISTING_USERNAME3_PASSWORD = "Guy";
 	private static final String NON_EXISTING_FILE = "I don't exist.";
-	private static final Long INVALID_TOKEN = new Long(-111);
 
 	private Long existingUser1Token;
 	private Long existingUser2Token;
+	private Long existingUser3Token;
 	private Dir existingUser1CurrentDir;
-	
+	private Dir existingUser3CurrentDir;
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
@@ -49,6 +52,8 @@ public class DeleteFileTest extends AbstractServiceTest{
 		new Dir(myDrive, existingUser1, EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER, existingUser1.getMask(), differentUserHome);
 		new PlainFile(myDrive, existingUser1, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER, existingUser1.getMask(), "As armas e os baroes assinalados, que da ocidental ...", differentUserHome);
 		
+		new User(myDrive, EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD, "Careless Guy", "rwxd---d", "/home/joseluisvf/careless_guy_home");
+		
 		loginUsers();
 	}
 	
@@ -57,7 +62,9 @@ public class DeleteFileTest extends AbstractServiceTest{
 		LoginManager loginManager = myDrive.getLoginManager();
 		this.existingUser1Token = loginManager.createSession(EXISTING_USERNAME1, EXISTING_USERNAME1_PASSWORD);
 		this.existingUser2Token = loginManager.createSession(EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD);
+		this.existingUser3Token = loginManager.createSession(EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD);
 		this.existingUser1CurrentDir = loginManager.getSessionByToken(existingUser1Token).getCurrentDir();
+		this.existingUser3CurrentDir = loginManager.getSessionByToken(existingUser3Token).getCurrentDir();
 	}
 
 	@Test(expected = NoDirException.class)
@@ -171,6 +178,16 @@ public class DeleteFileTest extends AbstractServiceTest{
 	
 	private void whenTryToDeleteFileUsingInvalidToken(Long invalidToken) {
 		DeleteFileService service = new DeleteFileService(invalidToken, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER);
+		service.execute();
+	}
+	
+	@Test(expected = CannotDeleteDirInUseBySessionException.class)
+	public void shouldThrowOnDeleteAnotherCurrentDir() {
+		whenTryToDeleteAnotherCurrentDir();
+	}
+	
+	private void whenTryToDeleteAnotherCurrentDir() {
+		DeleteFileService service = new DeleteFileService(this.existingUser1Token, this.existingUser3CurrentDir.getName());
 		service.execute();
 	}
 }

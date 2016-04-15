@@ -4,11 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
-import pt.tecnico.myDrive.domain.App;
-import pt.tecnico.myDrive.domain.Dir;
-import pt.tecnico.myDrive.domain.Link;
-import pt.tecnico.myDrive.domain.PlainFile;
-
 public class FileDto implements Comparable<FileDto> {
 	static final Logger log = LogManager.getRootLogger();
 	private String type;

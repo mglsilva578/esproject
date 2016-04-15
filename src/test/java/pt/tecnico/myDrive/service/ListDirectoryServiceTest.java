@@ -24,7 +24,6 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 	private Dir whereToAdd;
 	@Override
 	protected void populate() {
-		// TODO Auto-generated method stub
 		MyDrive myDrive = MyDrive.getInstance();
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
 		whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
@@ -34,7 +33,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		new Link(myDrive, userToAdd, "link", userToAdd.getMask(), "/home/mglsilva578/Lusty Tales", whereToAdd);
 		new App(myDrive, userToAdd, "app", userToAdd.getMask(), "package.class.method", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "plain", userToAdd.getMask(), "plainfile1", whereToAdd);
-		Dir dir = new Dir(myDrive, userToAdd, "dir", userToAdd.getMask(), whereToAdd);
+		new Dir(myDrive, userToAdd, "dir", userToAdd.getMask(), whereToAdd);
 	}
 	@Test
 	public void success(){
@@ -47,16 +46,6 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		service.execute();
 		List<FileDto> returnService = service.result();
 
-		//testing result parameters
-		for (FileDto f : returnService) {
-
-			if(f.getType().equals("dir")){ 
-				f.toStringforDir();
-			}
-			else{
-				f.toStringforPlainFile();
-			}
-		}
 		assertEquals("Lusty Tales", returnService.get(1).getName());
 		assertEquals("More Lusty Tales", returnService.get(2).getName());
 		assertEquals("A cold shower", returnService.get(0).getName());
