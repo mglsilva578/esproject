@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.CannotDeleteDirInUseBySessionException;
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
@@ -154,6 +155,8 @@ public class Dir extends Dir_Base {
 	}
 
 	private void removeDir(Dir dirToDelete) {
+		checkDirNotInUseByAnotherSession(dirToDelete);
+		
 		if(!isEmpty(dirToDelete)){
 			CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(dirToDelete.getFileSet());
 			Iterator<File> it = files.iterator();
@@ -167,6 +170,17 @@ public class Dir extends Dir_Base {
 
 		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
+	}
+
+	private void checkDirNotInUseByAnotherSession(Dir dirToDelete) {
+		if (isDirInUseByAnotherSession(dirToDelete)) {
+			throw new CannotDeleteDirInUseBySessionException(dirToDelete);
+		}
+	}
+
+	private boolean isDirInUseByAnotherSession(Dir dirToDelete) {
+		LoginManager loginManager = this.getMydrive().getLoginManager();
+		return loginManager.isDirInUseByAnySession(dirToDelete);
 	}
 
 	/**
@@ -288,6 +302,15 @@ public class Dir extends Dir_Base {
 		
 		if(last_modification == null) throw new ImportDocumentException("Dir <"+ name +"> date of last modification is not optional and must be supplied.");
 		this.init(drive, id, _owner, name, perm, father, last_modification);
-
+	}
+	
+	public boolean isTheSameAs(Object anotherObject) {
+		if (!(anotherObject instanceof Dir)) {
+			return false;
+		} else {
+			Dir anotherDir = (Dir)anotherObject;
+			return this.getName().equals(anotherDir.getName()) &&
+					this.getPath().equals(anotherDir.getPath());
+		}
 	}
 }

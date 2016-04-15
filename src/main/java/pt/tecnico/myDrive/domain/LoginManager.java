@@ -76,16 +76,16 @@ public class LoginManager extends LoginManager_Base {
     	throw new CannotListTokenException();
     }
 	
-    //TODO apagar isto antes da entrega
-	@Override
-	public String toString(){
-		String description = "Sessions : \n";
-		for (Session session : super.getSessionsSet()) {
-			description += "\t" + session.toString();
+    public boolean isDirInUseByAnySession(Dir dirToCheck) {
+    	for (Session session : super.getSessionsSet()) {
+    		Dir currentDir = session.getCurrentDir();
+    		if (dirToCheck.equals(currentDir)) {
+    			return true;
+    		}
 		}
-		return description;
-	}
-	
+    	return false;
+    }
+    
 	private boolean isPasswordCorrectForUsername(String username, String password){
 		MyDrive myDrive = this.getMyDrive();
 		User user = myDrive.getUserByUsername(username);
