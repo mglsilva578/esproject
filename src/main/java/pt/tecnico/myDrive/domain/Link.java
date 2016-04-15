@@ -36,11 +36,6 @@ public class Link extends Link_Base {
     }
     
     @Override
-    public  boolean hasPermissionsForDelete (User u){
-    	return this.getLinkedFile ().hasPermissionsForDelete (u);
-    }
-    
-    @Override
     public void setContent (String newContent){
     	PlainFile fileToChange = this.getLinkedFile();
     	fileToChange.setContent (newContent);
