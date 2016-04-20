@@ -36,7 +36,9 @@ public class User extends User_Base {
 		}
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
-		setPassword(password);
+		if(!this.getUsername().equals("nobody")){
+			setPassword(password);
+		}
 
 		omission = Optional.ofNullable(name);
 		name = omission.orElse(username);
