@@ -1,7 +1,6 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -10,18 +9,13 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
-import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.Link;
-import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
-import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
-import pt.tecnico.myDrive.exception.NoPlainFileException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TypeDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 

@@ -1,4 +1,3 @@
-
 package pt.tecnico.myDrive.domain;
 
 import java.util.HashSet;
