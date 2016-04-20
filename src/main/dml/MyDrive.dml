@@ -51,8 +51,13 @@ class EnvironmentVariable{
   String value;
 }
 
+class Extensions{
+}
 
-
+class Extension{
+  String fileExtension;
+  String fileName;
+}
 
 relation DomainRootHasMyDriveApplication {
   .pt.ist.fenixframework.DomainRoot playsRole root {multiplicity 0..1;}
@@ -107,4 +112,14 @@ relation UserHasMultipleSessions{
 relation SessionHasCurrentDir{
   Session playsRole sessions {multiplicity 0..*;}
   Dir playsRole currentDir {multiplicity 1;}
+}
+
+relation UserHasExtensions{
+  User playsRole owner {multiplicity 1;}
+  Extensions playsRole extensions {multiplicity 1;}
+}
+
+relation ExtensionsHasExtension{
+  Extensions playsRole owner {multiplicity 1;}
+  Extension playsRole extensions {multiplicity 0..*;}
 }
