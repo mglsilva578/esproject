@@ -7,6 +7,9 @@ import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CannotFindFileException;
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -15,9 +18,9 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 //Execute a text file. 
 //This service receives a token, the file path and a list of arguments (strings).
 	private static final String USERNAME1 = "username1";
-	private static final String PASS1 = "pass1";
+	private static final String PASS1 = "password1";
 	private static final String USERNAME2 = "username2";
-	private static final String PASS2 = "pass2";
+	private static final String PASS2 = "password2";
 	private User user1;
 	private Dir homeDir1;
 
@@ -38,7 +41,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = ExecuteFileService(token,"/home/username1/plain1","args");
+		ExecuteFileService service = new ExecuteFileService(token,"/home/username1/plain1","args");
 		service.execute();
 		PlainFile plain1 = (PlainFile) myDrive.getFileByPathname("/home/username1/plain1", false,user1);
 		String content = plain1.getContent();
@@ -50,16 +53,16 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		MyDrive myDrive=MyDrive.getInstance();
 		LoginManager loginmanager = myDrive.getLoginManager();
 		Long token = loginmanager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = ExecuteFileService(token,"/local/invalid","args");
+		ExecuteFileService service = new ExecuteFileService(token,"/local/invalid","args");
 		service.execute();
 	}
 	
-	@Test(expected=WrongTypeOfFileException.class)
+	@Test(expected=WrongTypeOfFileFoundException.class)
 	public void wrongTypeOfFile(){
 		MyDrive myDrive=MyDrive.getInstance();
 		LoginManager loginmanager = myDrive.getLoginManager();
 		Long token = loginmanager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = ExecuteFileService(token,"/home/username1","args");
+		ExecuteFileService service = new ExecuteFileService(token,"/home/username1","args");
 		service.execute();
 	}
 
