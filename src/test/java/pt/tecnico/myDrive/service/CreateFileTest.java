@@ -19,6 +19,7 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.TypeDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 
+
 public class CreateFileTest extends AbstractServiceTest{
 
 	private static final String TYPE_APP = "app";
@@ -26,7 +27,7 @@ public class CreateFileTest extends AbstractServiceTest{
 	private static final String TYPE_PLAINFILE = "plainFile";
 	private static final String TYPE_DIR = "dir";
 	private static final String USERNAME1 = "username1";
-	private static final String PASS1 = "pass1";
+	private static final String PASS1 = "password1";
 	private MyDrive myDrive;
 	private User user1;
 	private Long token1;

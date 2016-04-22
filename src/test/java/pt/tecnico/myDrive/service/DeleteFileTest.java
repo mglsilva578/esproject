@@ -21,15 +21,15 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 public class DeleteFileTest extends AbstractServiceTest{
 
 	private static final String EXISTING_USERNAME1 = "joseluisvf";
-	private static final String EXISTING_USERNAME1_PASSWORD = "55816";
+	private static final String EXISTING_USERNAME1_PASSWORD = "password";
 	private static final String EXISTING_USER1_EXISTING_DIR = "new_dir";
 	private static final String EXISTING_USER1_EXISTING_FILE1 = "Lusty Tales";
 	private static final String EXISTING_USERNAME2 = "vfluisjose";
-	private static final String EXISTING_USERNAME2_PASSWORD = "55816";
+	private static final String EXISTING_USERNAME2_PASSWORD = "password";
 	private static final String EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER = "Os Lusiadas";
 	private static final String EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER = "cannot_delete_this";
 	private static final String EXISTING_USERNAME3 = "Careless";
-	private static final String EXISTING_USERNAME3_PASSWORD = "Guy";
+	private static final String EXISTING_USERNAME3_PASSWORD = "password";
 	private static final String NON_EXISTING_FILE = "I don't exist.";
 
 	private Long existingUser1Token;

@@ -21,13 +21,13 @@ import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 public class LoginUserTest extends AbstractServiceTest{
 
 	private static final String EXISTING_USERNAME1 = "zttr";
-	private static final String EXISTING_USERNAME1_PASSWORD = "76534";
+	private static final String EXISTING_USERNAME1_PASSWORD = "password1";
 	private static final String EXISTING_USERNAME2 = "mglsilva578";
-	private static final String EXISTING_USERNAME2_PASSWORD = "68230";
+	private static final String EXISTING_USERNAME2_PASSWORD = "passwork2";
 	private static final String EXISTING_USERNAME3 = "R3Moura";
-	private static final String EXISTING_USERNAME3_PASSWORD = "74005";
+	private static final String EXISTING_USERNAME3_PASSWORD = "password3";
 	private static final String EXISTING_USERNAME4 = "joseluisvf";
-	private static final String EXISTING_USERNAME4_PASSWORD = "55816";
+	private static final String EXISTING_USERNAME4_PASSWORD = "password4";
 	private static final String NON_EXISTING_USERNAME = "Someone Who Clearly Does Not Exist";
 	
 	private MyDrive myDrive;

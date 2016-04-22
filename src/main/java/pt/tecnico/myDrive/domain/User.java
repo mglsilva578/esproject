@@ -10,6 +10,7 @@ import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
+import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class User extends User_Base {
@@ -36,10 +37,15 @@ public class User extends User_Base {
 		}
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
-		if(!this.getUsername().equals("nobody")){
-			setPassword(password);
+		if(password.length() >= 8){
+			if(!this.getUsername().equals("nobody")){
+				setPassword(password);
+			}
 		}
-
+		else{
+			throw new InvalidPasswordException(username, password);
+		}
+		
 		omission = Optional.ofNullable(name);
 		name = omission.orElse(username);
 		setName(name);

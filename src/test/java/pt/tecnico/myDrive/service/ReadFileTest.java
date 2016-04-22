@@ -22,9 +22,9 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 public class ReadFileTest extends AbstractServiceTest{
 
 	private static final String USERNAME1 = "username1";
-	private static final String PASS1 = "pass1";
+	private static final String PASS1 = "passwoord1";
 	private static final String USERNAME2 = "username2";
-	private static final String PASS2 = "pass2";
+	private static final String PASS2 = "password2";
 
 	@Override
 	protected void populate() {

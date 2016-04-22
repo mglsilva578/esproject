@@ -11,11 +11,14 @@ import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
 public class WriteFileServiceTest extends AbstractServiceTest {
 
+	private static final String PASSWORD_2 = "pass76534";
+	private static final String PASSWORD_1 = "pass55816";
+
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
-		new User(myDrive, "diogo", "76534", "DiogoFer", "rwxd----", null);
-		User userToAdd = new User(myDrive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
+		new User(myDrive, "diogo", PASSWORD_2, "DiogoFer", "rwxd----", null);
+		User userToAdd = new User(myDrive, "joseluisvf", PASSWORD_1, "JoseLuis", "rwxd----", null);
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
 		Dir newDir = new Dir(myDrive, "new_dir", userToAdd.getMask(), whereToAdd);
@@ -31,7 +34,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeExistingFile(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		WriteFileService service = new WriteFileService(token,"Lusty Tales","abcd");
 		service.execute();
 		Session session = loginManager.getSessionByToken(token);
@@ -43,7 +46,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeWithInvalidToken() {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		Long wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
 		while(token == wrongToken){
 			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
@@ -58,7 +61,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeUnexistingFile(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		WriteFileService service = new WriteFileService(token,"Unexisting File","abcd");
 		service.execute();
 	}
@@ -67,7 +70,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeOnInvalidFile(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		WriteFileService service = new WriteFileService(token,"new_dir","abcd");
 		service.execute();
 
@@ -77,7 +80,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeWrongContent(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		WriteFileService service = new WriteFileService(token,"link", null);
 		service.execute();
 	}
@@ -86,7 +89,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeRightContent(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", "55816");
+		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
 		WriteFileService service = new WriteFileService(token,"link","/abcd/efgh");
 		service.execute();
 	}
@@ -95,7 +98,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 	public void writeWithWrongPermission(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("diogo", "76534");
+		Long token = loginManager.createSession("diogo", PASSWORD_2);
 		WriteFileService service = new WriteFileService(token,"File created by different user.","abcd");
 		service.execute();
 

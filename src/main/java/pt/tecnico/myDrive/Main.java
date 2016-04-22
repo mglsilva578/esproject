@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
@@ -19,6 +20,7 @@ import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Nobody;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
@@ -63,6 +65,7 @@ public class Main {
 			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
 			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
+			Nobody nobody = new Nobody(drive);
 			//additionalSetup();
 			//testLogin();
 			//testPermissions();

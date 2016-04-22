@@ -13,7 +13,7 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 
 public class ChangeDirectoryTest extends AbstractServiceTest{
 	private String username = "mglsilva578";
-	private String password = "68230";
+	private String password = "password";
 	private User userToAdd;
 	private String newPath = "/home/mglsilva578/added";
 	private String failPath = "NaoExiste";

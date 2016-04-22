@@ -19,7 +19,7 @@ import pt.tecnico.myDrive.service.dto.FileDto;
 
 public class ListDirectoryServiceTest extends AbstractServiceTest {
 	private String username = "mglsilva578";
-	private String password = "68230";
+	private String password = "password";
 	private User userToAdd;
 	private Dir whereToAdd;
 	@Override
