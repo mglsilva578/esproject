@@ -7,13 +7,16 @@ import pt.tecnico.myDrive.exception.CannotSetNullDriveForSuperUserException;
 public class SuperUser extends SuperUser_Base {
 	
     public static final String USERNAME = "root";
+    private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = 10;
 
 	public SuperUser(MyDrive drive) {
     	super.init( drive, USERNAME, "***", "Super User", "rwxdr-x-", "/home/root");
+    	super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
     }
 	
 	public SuperUser(MyDrive drive, Element xml){
 		super.importXML(drive, xml);
+		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
 	
 	public Element exportXML() {

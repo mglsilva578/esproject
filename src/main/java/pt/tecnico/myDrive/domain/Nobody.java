@@ -10,17 +10,21 @@ public class Nobody extends Nobody_Base {
     
 	public static final String USERNAME = "nobody";
 	public static final String NAME = "Guest";
+	private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = Integer.MAX_VALUE;
 
 	public Nobody() {
         super();
+        super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
     }
 
    	public Nobody(MyDrive drive) {
        	super.init(drive, USERNAME, null, NAME, "rxwdr-x-", null);
+       	super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
        }
    	
    	public Nobody(MyDrive drive, Element xml){
    		super.importXML(drive, xml);
+   		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
    	}
    	
    	public Element exportXML() {

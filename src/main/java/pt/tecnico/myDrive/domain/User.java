@@ -14,17 +14,21 @@ import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class User extends User_Base {
+	private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = 120;
 	static final Logger log = LogManager.getRootLogger();
 	protected User(){
 		super();
+		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
 
 	public User(MyDrive drive, String username, String password, String name, String mask, String homeDir){
 		this.init(drive, username, password, name, mask, homeDir);
+		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
 
 	public User(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
+		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
 
 	protected void init(MyDrive drive, String username, String password, String name, String mask, String homeDir){
@@ -66,8 +70,9 @@ public class User extends User_Base {
 			}
 		}
 		setHomeDir(homeDir);
+		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
-
+	
 	private boolean isUsernameValid(String username){
 		if(username == null) return false;
 		return isComposedOnlyLettersDigits(username);
@@ -134,7 +139,6 @@ public class User extends User_Base {
 			String password = children.get(0).getText();
 			String mask = children.get(3).getText();
 			String homeDir = children.get(2).getText();
-			System.out.println("\n\nAAAAAAA\n\n" + username + password + mask + homeDir);
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			e.printStackTrace();

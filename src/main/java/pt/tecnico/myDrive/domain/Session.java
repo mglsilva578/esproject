@@ -8,7 +8,6 @@ import pt.tecnico.myDrive.exception.CannotSetLastActiveDateOfSession;
 import pt.tecnico.myDrive.exception.CannotSetOwnerOfSession;
 
 public class Session extends Session_Base {
-    private static final int MAX_INACTIVITY_TIME_IN_MINUTES = 120;
 
 	public Session(User user, Long token, Dir currentDir) {
         super();
@@ -21,7 +20,11 @@ public class Session extends Session_Base {
     public boolean isExpired(){
     	int howManyMinutesHavePassed;
     	howManyMinutesHavePassed = Minutes.minutesBetween(this.getLastActiveAt(), new DateTime()).getMinutes();
-    	return howManyMinutesHavePassed > MAX_INACTIVITY_TIME_IN_MINUTES;
+    	return howManyMinutesHavePassed > this.getMaxInactivityTimeInMinutes();
+    }
+    
+    private int getMaxInactivityTimeInMinutes() {
+    	return super.getOwner().getMaxInactivityTimeOfSession();
     }
     
     public boolean equals(Session anotherSession){
@@ -51,6 +54,8 @@ public class Session extends Session_Base {
     }
     
     protected void makeExpired(){
-    	super.setLastActiveAt(super.getLastActiveAt().minusMinutes(MAX_INACTIVITY_TIME_IN_MINUTES * 2));
+    	int maxInactivityTimeInMinutes = this.getMaxInactivityTimeInMinutes();
+    	DateTime lateDate = super.getLastActiveAt().minusMinutes(maxInactivityTimeInMinutes * 2);
+    	super.setLastActiveAt(lateDate);
     }
 }
