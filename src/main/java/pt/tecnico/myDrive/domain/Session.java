@@ -5,6 +5,7 @@ import org.joda.time.Minutes;
 
 import pt.tecnico.myDrive.domain.Session_Base;
 import pt.tecnico.myDrive.exception.CannotSetLastActiveDateOfSession;
+import pt.tecnico.myDrive.exception.CannotSetOwnerOfSession;
 
 public class Session extends Session_Base {
     private static final int MAX_INACTIVITY_TIME_IN_MINUTES = 120;
@@ -37,6 +38,11 @@ public class Session extends Session_Base {
     
     protected void resetLastActive(){
     	super.setLastActiveAt(new DateTime());
+    }
+    
+    @Override
+    public void setOwner(User newOwner) {
+    	throw new CannotSetOwnerOfSession();
     }
     
     @Override
