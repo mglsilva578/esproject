@@ -12,7 +12,7 @@ public class Session extends Session_Base {
 
 	public Session(User user, Long token, Dir currentDir) {
         super();
-        this.setOwner(user);
+        super.setOwner(user);
         this.setToken(token);
         this.setCurrentDir(currentDir);
         super.setLastActiveAt(new DateTime());
