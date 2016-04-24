@@ -41,15 +41,16 @@ public class User extends User_Base {
 		}
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
-		if(password.length() >= 8){
-			if(!this.getUsername().equals("nobody")){
+
+		if(!this.getUsername().equals(Nobody.USERNAME)){
+			if(password.length() >= 8){
 				setPassword(password);
 			}
+			else{
+				throw new InvalidPasswordException(username, password);
+			}
 		}
-		else{
-			throw new InvalidPasswordException(username, password);
-		}
-		
+
 		omission = Optional.ofNullable(name);
 		name = omission.orElse(username);
 		setName(name);
@@ -72,7 +73,7 @@ public class User extends User_Base {
 		setHomeDir(homeDir);
 		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
-	
+
 	private boolean isUsernameValid(String username){
 		if(username == null) return false;
 		return isComposedOnlyLettersDigits(username);

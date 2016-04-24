@@ -24,7 +24,6 @@ public class Nobody extends Nobody_Base {
    	
    	public Nobody(MyDrive drive, Element xml){
    		super.importXML(drive, xml);
-   		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
    	}
    	
    	public Element exportXML() {

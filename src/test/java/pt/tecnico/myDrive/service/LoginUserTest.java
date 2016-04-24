@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Nobody;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.CannotListTokenException;
@@ -45,6 +46,7 @@ public class LoginUserTest extends AbstractServiceTest{
 		new User(this.myDrive, EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD, "Miguel", "rwxd----", null);
 		new User(this.myDrive, EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD, "Ricardo", "rwxd----", null);
 		new User(this.myDrive, EXISTING_USERNAME4, EXISTING_USERNAME4_PASSWORD, "JoseLuis", "rwxd----", null);
+		new Nobody(this.myDrive);
 		
 		this.resetTokens();
 	}
@@ -233,5 +235,18 @@ public class LoginUserTest extends AbstractServiceTest{
 	private void whenTryUseSessionAfterExpired() {
 		this.loginManager.makeSessionExpired(tokenUser3);
 		this.loginManager.getSessionByToken(tokenUser3);
+	}
+	
+	@Test
+	public void shouldNotThrowOnTryToUseExpiredSessionForNobody (){
+		givenSessionCreatedForNobody();
+		
+		whenTryUseSessionAfterExpired();
+	}
+	
+	private void givenSessionCreatedForNobody() {
+		LoginUserService service = new LoginUserService(Nobody.USERNAME, null);
+		service.execute();
+		this.tokenUser3 = service.getResult();
 	}
 }

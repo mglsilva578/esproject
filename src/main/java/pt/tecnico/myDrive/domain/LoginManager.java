@@ -87,6 +87,9 @@ public class LoginManager extends LoginManager_Base {
     }
     
 	private boolean isPasswordCorrectForUsername(String username, String password){
+		if(username.equals(Nobody.USERNAME)) {
+			return true;
+		}
 		MyDrive myDrive = this.getMyDrive();
 		User user = myDrive.getUserByUsername(username);
 		return user.getPassword().equals(password);
