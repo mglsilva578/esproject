@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -23,7 +24,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 	@Override
 	protected void dispatch() throws MyDriveException {
 		//TODO implement service logic.
-		this.existingEnvironmentVariables = null;
+		this.existingEnvironmentVariables = new ArrayList<EnvironmentVariableDto>();
 	}
 	
 	public List<EnvironmentVariableDto> getResult() {
