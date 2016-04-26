@@ -6,10 +6,12 @@ import java.util.*;
 import java.lang.reflect.*;
 
 public abstract class Shell {
+	
 	protected static final Logger log = LogManager.getRootLogger();
 	private Map<String,Command> coms = new TreeMap<String,Command>();
 	private PrintWriter out;
 	private String name;
+	private Long tokenActiveSession;
 
 	public Shell(String n){ 
 		this(n, new PrintWriter(System.out, true), true);
@@ -67,6 +69,10 @@ public abstract class Shell {
 				}
 			}
 		};
+	}
+	
+	public Long getTokenActiveSession() {
+		return this.tokenActiveSession;
 	}
 
 	public void print(String s){ 

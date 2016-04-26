@@ -15,8 +15,6 @@ import org.junit.Test;
 
 
 public class ExecuteFileServiceTest extends AbstractServiceTest {
-//Execute a text file. 
-//This service receives a token, the file path and a list of arguments (strings).
 	private static final String USERNAME1 = "username1";
 	private static final String PASS1 = "password1";
 	private static final String USERNAME2 = "username2";

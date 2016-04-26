@@ -68,8 +68,8 @@ public class AddEnvironmentVariableTest extends AbstractServiceTest{
 			String environmentVariableName,
 			String environmentVariableValue) {
 		EnvironmentVariable toAdd = new EnvironmentVariable();
-		toAdd.setName(existingUser1FirstVariableName);
-		toAdd.setValue(existingUser1FirstVariableValue);
+		toAdd.setName(environmentVariableName);
+		toAdd.setValue(environmentVariableValue);
 		user1Session.addEnvironmentVariables(toAdd);
 	}
 	

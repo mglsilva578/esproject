@@ -42,7 +42,7 @@ public class User extends User_Base {
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
 
-		if(!this.getUsername().equals(Nobody.USERNAME)){
+		if(!isDefaultUser()){
 			if(password.length() >= 8){
 				setPassword(password);
 			}
@@ -72,6 +72,11 @@ public class User extends User_Base {
 		}
 		setHomeDir(homeDir);
 		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
+	}
+
+	private boolean isDefaultUser() {
+		return this.getUsername().equals(Nobody.USERNAME) ||
+				this.getUsername().equals(SuperUser.USERNAME);
 	}
 
 	private boolean isUsernameValid(String username){

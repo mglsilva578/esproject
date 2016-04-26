@@ -31,8 +31,7 @@ public class ChangeDirectoryService extends MyDriveService {
 		}
 	}
 
-	protected String Result(){
+	public String Result(){
 		return result;
 	}
-
 }
