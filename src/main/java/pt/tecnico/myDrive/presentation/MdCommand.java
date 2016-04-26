@@ -1,6 +1,9 @@
 package pt.tecnico.myDrive.presentation;
 
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.LoginManager;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Session;
 
 public abstract class MdCommand extends Command {
 	private static final int MAXIMUM_LENGTH_PATH = 1024;
@@ -22,5 +25,21 @@ public abstract class MdCommand extends Command {
 			
 			return startsWithSlash && hasValidLength;
 		}
+	}
+	
+	
+	protected Session getSessionByToken() {
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		
+		Long token = this.getTokenActiveSession();
+		
+		Session session = loginManager.getSessionByToken(token);
+		return session;
+	}
+	
+	protected Long getTokenActiveSession() {
+		Shell shell = super.shell();
+		return shell.getTokenActiveSession();
 	}
 }

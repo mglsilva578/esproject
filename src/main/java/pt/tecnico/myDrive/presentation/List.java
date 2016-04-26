@@ -29,6 +29,8 @@ public class List extends MdCommand{
 		String pathToList = maybePath.orElse(this.getPathToCurrentDirOfSession());
 		//TODO como invocar o servico com o pathToList?
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+		//TODO imprimir os resultados
 	}
 
 
@@ -37,8 +39,8 @@ public class List extends MdCommand{
 			throw new RuntimeException("ChangeWorkingDirectory usage: " + name() + " <path to new working dir>");
 		}
 		
-		if (args.length == 1) {
-			String path = args[0];
+		if (args.length == 2) {
+			String path = args[1];
 			if (!super.isPathValid(path)) {
 				throw new RuntimeException("ChangeWorkingDirectory path is not valid <" + path + " >");
 			} else {
@@ -49,25 +51,9 @@ public class List extends MdCommand{
 		}
 	}
 	
-	private Long getTokenActiveSession() {
-		Shell shell = super.shell();
-		return shell.getTokenActiveSession();
-	}
-	
 	private String getPathToCurrentDirOfSession() {
-		Session session = this.getSessionByToken();
+		Session session = super.getSessionByToken();
 		Dir currentDir = session.getCurrentDir();
 		return currentDir.getPath() +Dir.SLASH_NAME + currentDir.getName();
 	}
-
-	private Session getSessionByToken() {
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		
-		Long token = this.getTokenActiveSession();
-		
-		Session session = loginManager.getSessionByToken(token);
-		return session;
-	}
-	
 }
