@@ -67,6 +67,19 @@ public class FileDto implements Comparable<FileDto> {
 		return getName().compareTo(other.getName());
 	}
 	
+	@Override
+	public String toString() {
+		String description = "";
+		description += "Type - " + this.type + "\n";
+		description += "Permissions - " + this.permissions + "\n";
+		description += "Size - " + this.size + "\n";
+		description += "Owner - " + this.owner + "\n";
+		description += "Id - " + this.id + "\n";
+		description += "DateMod - " + this.dateMod + "\n";
+		description += "Name - " + this.name + "\n";
+		
+		return description;
+	}
 	
 	public void toStringforDir(){
 		log.trace(this.getType() + " " + this.getPermissions() + " " + this.getSize() + " " + 

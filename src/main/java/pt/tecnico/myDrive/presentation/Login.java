@@ -4,46 +4,43 @@ import pt.tecnico.myDrive.service.LoginUserService;
 
 public class Login extends MdCommand{
 	private static final String DEFAULT_HELP = "Logs the user with username / password pair provided as arguments.";
+	private static final String DEFAULT_NAME = "login";
+	private static final int MAX_ARGUMENTS = 2;
+	
 	private Long token;
 	
-	public Login(Shell shell, String name) {
-		super(shell, name, DEFAULT_HELP);
+	public Login(Shell shell) {
+		super(shell, DEFAULT_NAME, DEFAULT_HELP, MAX_ARGUMENTS);
 	}
 
 	public Login(Shell shell, String name, String help) {
-		super(shell, name, help);
+		super(shell, name, help, MAX_ARGUMENTS);
+	}
+	
+	public Long getToken() {
+		return this.token;
 	}
 
 	@Override
 	void execute(String[] args) {
-		this.validateArguments(args);
-		this.token = this.executeService(args);
+		this.checkArgumentsAreValid(args);
+		this.executeService(args);
 	}
 
-	private void validateArguments(String[] args) {
-		if (!(args.length == 2)) {
-			throw new RuntimeException("Login usage: " + name() + " <username> <password>");
-		}
-		
-		if (args[1] == null) {
-			throw new RuntimeException("Login username cannot be null");
-		}
-		
-		if (args[2] == null) {
-			throw new RuntimeException("Login password cannot be null");
+	@Override
+	protected void checkArgumentsAreValid(String[] args) {
+		if ((args.length != MAX_ARGUMENTS)) {
+			throw new RuntimeException(this.name() + " usage: " + this.name() + " <username> <password>.");
 		}
 	}
 	
-	private Long executeService(String[] args) {
+	@Override
+	protected void executeService(String[] args) {
 		String username = args[1];
 		String password = args[2];
 		
 		LoginUserService service = new LoginUserService(username, password);
 		service.execute();
-		return service.getResult();
-	}
-	
-	public Long getToken() {
-		return this.token;
+		this.token = service.getResult();
 	}
 }
