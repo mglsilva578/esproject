@@ -39,7 +39,7 @@ public class List extends MdCommand{
 			throw new RuntimeException("ChangeWorkingDirectory usage: " + name() + " <path to new working dir>");
 		}
 		
-		if (args.length == 2) {
+		if (args.length == 1) {
 			String path = args[1];
 			if (!super.isPathValid(path)) {
 				throw new RuntimeException("ChangeWorkingDirectory path is not valid <" + path + " >");
