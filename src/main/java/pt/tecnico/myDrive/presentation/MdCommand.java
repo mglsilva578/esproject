@@ -2,14 +2,14 @@ package pt.tecnico.myDrive.presentation;
 
 import pt.tecnico.myDrive.domain.Dir;
 
-public abstract class PbCommand extends Command {
+public abstract class MdCommand extends Command {
 	private static final int MAXIMUM_LENGTH_PATH = 1024;
 	
-	public PbCommand(Shell sh, String n){ 
+	public MdCommand(Shell sh, String n){ 
 		super(sh, n); 
 	}
 
-	public PbCommand(Shell sh, String n, String h){ 
+	public MdCommand(Shell sh, String n, String h){ 
 		super(sh, n, h);
 	}
 	

@@ -2,7 +2,7 @@ package pt.tecnico.myDrive.presentation;
 
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 
-public class ChangeWorkingDirectory extends PbCommand{
+public class ChangeWorkingDirectory extends MdCommand{
 	private static final String DEFAULT_HELP = "Changes the current working dir to the path given and prints the path of the new working dir.";
 
 	public ChangeWorkingDirectory(Shell shell, String name) {

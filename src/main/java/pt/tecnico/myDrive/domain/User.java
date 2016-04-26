@@ -42,7 +42,7 @@ public class User extends User_Base {
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
 
-		if(!isDefaultUser()){
+		if(!(drive.isDefaultUser(username))){
 			if(password.length() >= 8){
 				setPassword(password);
 			}
@@ -60,7 +60,7 @@ public class User extends User_Base {
 		setMask(mask);
 
 		setMydrive(drive);
-		if(!(username == "root")){
+		if(!(drive.isDefaultUser(username))){
 			if(homeDir == null){
 				Dir dir = drive.createUserDir(this);
 				homeDir = dir.getPath();
@@ -72,11 +72,6 @@ public class User extends User_Base {
 		}
 		setHomeDir(homeDir);
 		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
-	}
-
-	private boolean isDefaultUser() {
-		return this.getUsername().equals(Nobody.USERNAME) ||
-				this.getUsername().equals(SuperUser.USERNAME);
 	}
 
 	private boolean isUsernameValid(String username){

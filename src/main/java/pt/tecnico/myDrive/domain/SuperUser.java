@@ -7,6 +7,7 @@ import pt.tecnico.myDrive.exception.CannotSetNullDriveForSuperUserException;
 public class SuperUser extends SuperUser_Base {
 	
     public static final String USERNAME = "root";
+    public static final String HOME_DIR = "root";
     private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = 10;
 
 	public SuperUser(MyDrive drive) {

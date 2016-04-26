@@ -9,6 +9,7 @@ import pt.tecnico.myDrive.exception.CannotWritePasswordException;
 public class Nobody extends Nobody_Base {
     
 	public static final String USERNAME = "nobody";
+	public static final String HOME_DIR = "nobody";
 	public static final String NAME = "Guest";
 	private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = Integer.MAX_VALUE;
 
@@ -18,7 +19,7 @@ public class Nobody extends Nobody_Base {
     }
 
    	public Nobody(MyDrive drive) {
-       	super.init(drive, USERNAME, null, NAME, "rxwdr-x-", null);
+       	super.init(drive, USERNAME, null, NAME, "rxwdr-x-", "/home/nobody");
        	super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
        }
    	

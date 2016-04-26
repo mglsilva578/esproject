@@ -196,7 +196,7 @@ public class MyDrive extends MyDrive_Base {
 
 	@Override
 	public void removeUser(User user){
-		if(!user.getUsername().equals("root")){ 
+		if(!user.getUsername().equals(SuperUser.USERNAME)){ 
 			user.remove();
 			super.removeUser(user);	
 		}
@@ -249,7 +249,7 @@ public class MyDrive extends MyDrive_Base {
 		for (File f: this.getFileSet()){
 			if(!(f.getName().equals("/") 
 					|| f.getName().equals("home")
-					|| f.getName().equals("root")
+					|| f.getName().equals(SuperUser.HOME_DIR)
 					|| isUserHomeDir(f))){
 				element.addContent(f.exportXML());
 			}
@@ -322,7 +322,7 @@ public class MyDrive extends MyDrive_Base {
 		SuperUser superUser = new SuperUser(this);
 		Dir slash = new Dir(this, superUser, Dir.SLASH_NAME, superUser.getMask());
 		Dir home = new Dir(this, superUser, "home", superUser.getMask(), slash);
-		new Dir(this, superUser, "root", superUser.getMask(), home);
+		new Dir(this, superUser, SuperUser.HOME_DIR, superUser.getMask(), home);
 	}
 
 	@Override
@@ -352,7 +352,7 @@ public class MyDrive extends MyDrive_Base {
 		}
 
 		for (User user: getUserSet()){
-			if(user.getUsername().equals(SuperUser.USERNAME)) continue;
+			if(this.isDefaultUser(user.getUsername())) continue;
 			user.remove();
 		}
 	}
@@ -360,11 +360,17 @@ public class MyDrive extends MyDrive_Base {
 	private boolean notIsDirInit(File file){
 		if(file.getName().equals(Dir.SLASH_NAME) || 
 				(file.getPath().equals("/") && file.getName().equals("home")) || 
-				(file.getPath().equals("/home") && file.getName().equals("root"))){
+				(file.getPath().equals("/home") && file.getName().equals(SuperUser.HOME_DIR)) ||
+				(file.getPath().equals("/home") && file.getName().equals(Nobody.HOME_DIR))){
 			return false;
 		}
 		else {
 			return true;
 		}
+	}
+	
+	public boolean isDefaultUser(String username) {
+		return username.equals(Nobody.USERNAME) ||
+				username.equals(SuperUser.USERNAME);
 	}
 }

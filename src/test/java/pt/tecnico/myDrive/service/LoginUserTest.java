@@ -46,8 +46,7 @@ public class LoginUserTest extends AbstractServiceTest{
 		new User(this.myDrive, EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD, "Miguel", "rwxd----", null);
 		new User(this.myDrive, EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD, "Ricardo", "rwxd----", null);
 		new User(this.myDrive, EXISTING_USERNAME4, EXISTING_USERNAME4_PASSWORD, "JoseLuis", "rwxd----", null);
-		new Nobody(this.myDrive);
-		
+
 		this.resetTokens();
 	}
 	

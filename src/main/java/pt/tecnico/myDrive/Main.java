@@ -64,8 +64,9 @@ public class Main {
 			Dir slash = new Dir(drive, rootUser, Dir.SLASH_NAME, rootUser.getMask());
 			drive.setRootDir(slash);
 			Dir home = new Dir(drive, rootUser, "home", rootUser.getMask(), slash);
-			new Dir(drive, rootUser, "root", rootUser.getMask(), home);
+			new Dir(drive, rootUser, SuperUser.HOME_DIR, rootUser.getMask(), home);
 			Nobody nobody = new Nobody(drive);
+			new Dir(drive, nobody, Nobody.HOME_DIR, nobody.getMask(), home);
 			//additionalSetup();
 			//testLogin();
 			//testPermissions();
