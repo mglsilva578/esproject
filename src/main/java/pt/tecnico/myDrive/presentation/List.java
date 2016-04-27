@@ -1,17 +1,13 @@
 package pt.tecnico.myDrive.presentation;
 
-import java.util.Optional;
-
-import pt.tecnico.myDrive.domain.Dir;
-import pt.tecnico.myDrive.domain.LoginManager;
-import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
+import pt.tecnico.myDrive.service.dto.FileDto;
 
 public class List extends MdCommand{
 	private static final String DEFAULT_HELP = 
 			"Prints all entries in the dir corresponding to the given path"
-			+ "If the path is ommitted, prints all entries in the current dir.";
+					+ "If the path is ommitted, prints all entries in the current dir.";
 
 	public List(Shell shell, String name) {
 		super(shell, name, DEFAULT_HELP);
@@ -22,38 +18,27 @@ public class List extends MdCommand{
 	}
 
 	@Override
-	void execute(String[] args) {
-		String argumentPath = this.validateArguments(args);
-		Optional<String> maybePath = Optional.ofNullable(argumentPath);
-		Long token = this.getTokenActiveSession();
-		String pathToList = maybePath.orElse(this.getPathToCurrentDirOfSession());
-		//TODO como invocar o servico com o pathToList?
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
-		//TODO imprimir os resultados
-	}
-
-
-	private String validateArguments(String[] args) {
-		if (args.length > 1) {
-			throw new RuntimeException("ChangeWorkingDirectory usage: " + name() + " <path to new working dir>");
+	public void execute(String[] args) {
+		if (args.length == 0) {
+			ListDirectoryService lds = new ListDirectoryService(null);
+			lds.execute();
+			for (FileDto s: lds.result())
+				System.out.println(s);
+		} 
+		else if(args.length == 1){
+			//String actualCurrentDir = ... 
+			//ChangeDirectoryService cds1 = new ChangeDirectoryService(TOKEN, args[0]);
+			//ListDirectoryService lds = new ListDirectoryService(null);
+			//ChangeDirectoryService cds2 = new ChangeDirectoryService(TOKEN, actualCurrentDir);
+			//cds1.execute();
+			//lds.execute();
+			//for (FileDto s: lds.result()){
+			//	System.out.println(s);
+			//}
+			//cds2.execute();
+		} 
+		else {
+			 throw new RuntimeException("USAGE: "+name()+" [<path>]");
 		}
-		
-		if (args.length == 1) {
-			String path = args[1];
-			if (!super.isPathValid(path)) {
-				throw new RuntimeException("ChangeWorkingDirectory path is not valid <" + path + " >");
-			} else {
-				return path;
-			}
-		} else {
-			return null;
-		}
-	}
-	
-	private String getPathToCurrentDirOfSession() {
-		Session session = super.getSessionByToken();
-		Dir currentDir = session.getCurrentDir();
-		return currentDir.getPath() +Dir.SLASH_NAME + currentDir.getName();
 	}
 }
