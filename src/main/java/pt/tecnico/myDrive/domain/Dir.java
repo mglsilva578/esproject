@@ -164,6 +164,10 @@ public class Dir extends Dir_Base {
 			File fileToDelete = null;
 			while(it.hasNext()){
 				fileToDelete = it.next();
+				
+				if (fileToDelete instanceof Dir) {
+					((Dir) fileToDelete).removeAllFiles();
+				}
 				dirToDelete.removeFile(fileToDelete);
 				fileToDelete.remove();
 			}
@@ -171,6 +175,22 @@ public class Dir extends Dir_Base {
 
 		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
+	}
+	
+	private void removeAllFiles() {
+		CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(this.getFileSet());
+		Iterator<File> it = files.iterator();
+		File fileToDelete = null;
+		while(it.hasNext()){
+			fileToDelete = it.next();
+			
+			if(fileToDelete instanceof Dir) {
+				((Dir)fileToDelete).removeAllFiles();
+			}
+			
+			this.removeFile(fileToDelete);
+			fileToDelete.remove();
+		}
 	}
 
 	private void checkDirNotInUseByAnotherSession(Dir dirToDelete) {
