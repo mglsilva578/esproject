@@ -7,7 +7,9 @@ public class Login extends MdCommand{
 	private static final String DEFAULT_NAME = "login";
 	private static final int MAX_ARGUMENTS = 2;
 	
+	private String username;
 	private Long token;
+	
 	
 	public Login(Shell shell) {
 		super(shell, DEFAULT_NAME, DEFAULT_HELP, MAX_ARGUMENTS);
@@ -16,15 +18,12 @@ public class Login extends MdCommand{
 	public Login(Shell shell, String name, String help) {
 		super(shell, name, help, MAX_ARGUMENTS);
 	}
-	
-	public Long getToken() {
-		return this.token;
-	}
 
 	@Override
 	void execute(String[] args) {
 		this.checkArgumentsAreValid(args);
 		this.executeService(args);
+		this.updateShellWithNewLogin(this.username, this.token);
 	}
 
 	@Override
@@ -41,6 +40,15 @@ public class Login extends MdCommand{
 		
 		LoginUserService service = new LoginUserService(username, password);
 		service.execute();
+		
+		this.username = username;
 		this.token = service.getResult();
+	}
+	
+	public void updateShellWithNewLogin(String username, Long token) {
+		Shell shell = this.shell();
+		shell.addNewToken(username, token);
+		shell.setUsernameActiveSession(username);
+		shell.setTokenActiveSession(token);
 	}
 }
