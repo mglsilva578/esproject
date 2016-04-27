@@ -23,6 +23,7 @@ public class DeleteFileTest extends AbstractServiceTest{
 	private static final String EXISTING_USERNAME1 = "joseluisvf";
 	private static final String EXISTING_USERNAME1_PASSWORD = "password";
 	private static final String EXISTING_USER1_EXISTING_DIR = "new_dir";
+	private static final String EXISTING_USER1_DIR_IN_EXISTING_DIR = "non empty dir";
 	private static final String EXISTING_USER1_EXISTING_FILE1 = "Lusty Tales";
 	private static final String EXISTING_USERNAME2 = "vfluisjose";
 	private static final String EXISTING_USERNAME2_PASSWORD = "password";
@@ -46,11 +47,17 @@ public class DeleteFileTest extends AbstractServiceTest{
 		Dir newDir = new Dir(myDrive, existingUser1, EXISTING_USER1_EXISTING_DIR, existingUser1.getMask(), whereToAdd);
 		new PlainFile(myDrive, existingUser1, "More Lusty Tales", existingUser1.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, existingUser1, "A cold shower", existingUser1.getMask(), "When the heater is off, there is no salvation.", newDir);
+		Dir nonEmptyDir = new Dir(myDrive, existingUser1, EXISTING_USER1_DIR_IN_EXISTING_DIR, existingUser1.getMask(), newDir);
+		new PlainFile(myDrive, existingUser1, "More Lusty Tales", existingUser1.getMask(), "Lusty Argonian Maid", nonEmptyDir);
+		new PlainFile(myDrive, existingUser1, "A cold shower", existingUser1.getMask(), "When the heater is off, there is no salvation.", nonEmptyDir);
 		
 		User anotherUser = new User(myDrive, EXISTING_USERNAME2, EXISTING_USERNAME2_PASSWORD, "JoseLuis", "rwxd----", null);
 		Dir differentUserHome = (Dir)myDrive.getFileByPathname("/home/vfluisjose", false, anotherUser);
 		new Dir(myDrive, existingUser1, EXISTING_USER2_EXISTING_DIR_OWNED_DIFFERENT_USER, existingUser1.getMask(), differentUserHome);
 		new PlainFile(myDrive, existingUser1, EXISTING_USER2_EXISTING_FILE_OWNED_DIFFERENT_USER, existingUser1.getMask(), "As armas e os baroes assinalados, que da ocidental ...", differentUserHome);
+		
+		
+		
 		
 		new User(myDrive, EXISTING_USERNAME3, EXISTING_USERNAME3_PASSWORD, "Careless Guy", "rwxd---d", "/home/joseluisvf/careless_guy_home");
 		
@@ -104,6 +111,21 @@ public class DeleteFileTest extends AbstractServiceTest{
 		DeleteFileService service = new DeleteFileService(existingUser1Token, EXISTING_USER1_EXISTING_DIR);
 		service.execute();
 	}
+	/*
+	@Test(expected = NoDirException.class)
+	public void shouldThrowOnRecursivelyDeleteExistingDir() {
+		int currentDirSizeBefore = givenSizeExistingDirExistingUser1();
+		
+		whenExistingDirIsDeleted();
+		
+		thenCurrentDirShouldBeAsExpected(currentDirSizeBefore, EXISTING_USER1_EXISTING_DIR);
+	}
+
+	private int givenSizeExistingDirExistingUser1() {
+		Dir existingDir = (Dir)this.existingUser1CurrentDir.getFileByName(EXISTING_USER1_EXISTING_DIR);
+		return existingDir.getSize();
+	}
+	*/
 
 	@Test(expected = NoDirException.class)
 	public void shouldThrowOnDeleteNonExistingFile() {

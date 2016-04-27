@@ -1,6 +1,9 @@
 package pt.tecnico.myDrive.presentation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
+
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
@@ -11,6 +14,9 @@ public abstract class Shell {
 	private Map<String,Command> coms = new TreeMap<String,Command>();
 	private PrintWriter out;
 	private String name;
+	
+	private LoginRegistry loginRegistry;
+	private String usernameActiveSession;
 	private Long tokenActiveSession;
 
 	public Shell(String n){ 
@@ -24,7 +30,8 @@ public abstract class Shell {
 	public Shell(String n, Writer w, boolean flush){
 		name = n;
 		out = new PrintWriter(w, flush);
-
+		this.loginRegistry = new LoginRegistry();
+		//TODO fazer login do nobody
 		new Command(this, "quit", "quit the command interpreter"){
 			void execute(String[] args){
 				System.out.println(name+" quit");
@@ -71,8 +78,33 @@ public abstract class Shell {
 		};
 	}
 	
+	public String getUsernameActiveSession() {
+		return this.usernameActiveSession;
+	}
+	
 	public Long getTokenActiveSession() {
 		return this.tokenActiveSession;
+	}
+	
+	public void setUsernameActiveSession(String usernameActiveSession) {
+		this.usernameActiveSession = usernameActiveSession;
+	}
+
+	public void setTokenActiveSession(Long tokenActiveSession) {
+		this.tokenActiveSession = tokenActiveSession;
+	}
+
+	public void addNewToken(String username, Long token) {
+		this.loginRegistry.addNewToken(username, token);
+	}
+	
+	public void changeActiveUserTo(String newActiveUsername) {
+		if (!(this.loginRegistry.hasEntryForUsername(newActiveUsername))) {
+			throw new InvalidUsernameException(newActiveUsername);
+		}
+		
+		this.usernameActiveSession = newActiveUsername;
+		this.tokenActiveSession = this.loginRegistry.getLastTokenByUsername(newActiveUsername);
 	}
 
 	public void print(String s){ 
@@ -127,7 +159,7 @@ public abstract class Shell {
 		}
 		System.out.println(name+" end");
 	}
-
+	
 	public static void run(String name, String[] args) throws ClassNotFoundException, SecurityException, 
 	NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 
@@ -157,5 +189,37 @@ public abstract class Shell {
 			text = text.substring(idx + card.length());
 		}
 		return true;
+	}
+	
+	protected class LoginRegistry {
+		private HashMap<String, TreeSet<Long>> tokensForSessionsLogged;
+		
+		public LoginRegistry() {
+			this.tokensForSessionsLogged = new HashMap<String, TreeSet<Long>>();
+		}
+		
+		public void addNewToken(String username, Long token) {
+			if (this.tokensForSessionsLogged.containsKey(username)) {
+				Set<Long> value = this.tokensForSessionsLogged.get(username);
+				value.add(token);
+			} else {
+				TreeSet<Long> newValue = new TreeSet<Long>();
+				newValue.add(token);
+				this.tokensForSessionsLogged.put(username, newValue);
+			}
+		}
+		
+		public Long getLastTokenByUsername(String username) {
+			Optional< TreeSet<Long> > maybeValue;
+			maybeValue = Optional.ofNullable(this.tokensForSessionsLogged.get(username));
+			TreeSet<Long> value = maybeValue.orElseThrow(() -> 
+			new InvalidUsernameException("Couldn't find any tokens for username <" + username + ">"));
+			
+			return value.last();
+		}
+		
+		public boolean hasEntryForUsername(String username) {
+			return this.tokensForSessionsLogged.containsKey(username);
+		}
 	}
 }
