@@ -192,26 +192,26 @@ public abstract class Shell {
 	}
 	
 	protected class LoginRegistry {
-		private HashMap<String, TreeSet<Long>> tokensForSessionsLogged;
+		private HashMap<String, TreeSet<Long>> tokensOfLoggedSessions;
 		
 		public LoginRegistry() {
-			this.tokensForSessionsLogged = new HashMap<String, TreeSet<Long>>();
+			this.tokensOfLoggedSessions = new HashMap<String, TreeSet<Long>>();
 		}
 		
 		public void addNewToken(String username, Long token) {
-			if (this.tokensForSessionsLogged.containsKey(username)) {
-				Set<Long> value = this.tokensForSessionsLogged.get(username);
+			if (this.tokensOfLoggedSessions.containsKey(username)) {
+				Set<Long> value = this.tokensOfLoggedSessions.get(username);
 				value.add(token);
 			} else {
 				TreeSet<Long> newValue = new TreeSet<Long>();
 				newValue.add(token);
-				this.tokensForSessionsLogged.put(username, newValue);
+				this.tokensOfLoggedSessions.put(username, newValue);
 			}
 		}
 		
 		public Long getLastTokenByUsername(String username) {
 			Optional< TreeSet<Long> > maybeValue;
-			maybeValue = Optional.ofNullable(this.tokensForSessionsLogged.get(username));
+			maybeValue = Optional.ofNullable(this.tokensOfLoggedSessions.get(username));
 			TreeSet<Long> value = maybeValue.orElseThrow(() -> 
 			new InvalidUsernameException("Couldn't find any tokens for username <" + username + ">"));
 			
@@ -219,7 +219,7 @@ public abstract class Shell {
 		}
 		
 		public boolean hasEntryForUsername(String username) {
-			return this.tokensForSessionsLogged.containsKey(username);
+			return this.tokensOfLoggedSessions.containsKey(username);
 		}
 	}
 }

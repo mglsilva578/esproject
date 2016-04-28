@@ -35,8 +35,8 @@ public class Login extends MdCommand{
 	
 	@Override
 	protected void executeService(String[] args) {
-		String username = args[1];
-		String password = args[2];
+		String username = args[0];
+		String password = args[1];
 		
 		LoginUserService service = new LoginUserService(username, password);
 		service.execute();

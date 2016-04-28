@@ -9,5 +9,10 @@ public class MdShell extends Shell{
 
 	public MdShell(){
 		super("MyDrive");
+		new ChangeWorkingDirectory(this);
+		new Execute(this);
+		new Key(this);
+		new List(this);
+		new Login(this);
 	}
 }

@@ -28,7 +28,21 @@ public class Nobody extends Nobody_Base {
    	}
    	
    	public Element exportXML() {
-   		Element element = super.exportXML(); 
+   		Element element = new Element("user");
+		element.setAttribute("username", getUsername());
+		Element elementPassword = new Element("password");
+		elementPassword.setText("N/A");
+		element.addContent(elementPassword);
+		Element elementName = new Element("name");
+		elementName.setText(this.getName());
+		element.addContent(elementName);
+		Element elementHomeDir = new Element("homeDir");
+		elementHomeDir.setText("/home/" + this.getUsername());
+		element.addContent(elementHomeDir);
+		Element elementMask = new Element("mask");
+		elementMask.setText(this.getMask());
+		element.addContent(elementMask);
+   		
    		element.setName(NAME);
    		return element;
    	}
@@ -59,5 +73,15 @@ public class Nobody extends Nobody_Base {
    			drive.addUser(this);        	
    		}
    	}
-    
+   	
+   	@Override
+	public String toString(){
+		String description = "\n";
+		description += "\tusername: " + this.getUsername() + "\n";
+		description += "\tpassword: N/A" + "\n";
+		description += "\tname: " + this.getName() + "\n";
+		description += "\thomeDir: " + this.getHomeDir() + "\n";
+		description += "\tmask: " + this.getMask() + "\n";
+		return description;
+	}
 }

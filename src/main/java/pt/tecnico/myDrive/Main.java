@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
@@ -25,6 +24,7 @@ import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.presentation.MdShell;
 import pt.tecnico.myDrive.util.DataExportationHelper;
 
 public class Main {
@@ -40,10 +40,14 @@ public class Main {
 			}
 			Main.printMyDrive();
 			Main.exportDataToFile();
+			Main.startShell();
+			
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
+			mde.printStackTrace();
 		}catch(Exception e){
 			log.error(e.getMessage());
+			e.printStackTrace();
 		}finally{
 			FenixFramework.shutdown();
 		}
@@ -144,6 +148,13 @@ public class Main {
 		MyDrive drive = MyDrive.getInstance();
 		DataExportationHelper.writeDocumentToLocalStorage(drive.exportXML());
 	}
+	
+	@Atomic
+	private static void startShell() throws Exception {
+		MdShell mdShell = new MdShell();
+		mdShell.execute();
+	}
+	
 	@Atomic
 	private static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();
