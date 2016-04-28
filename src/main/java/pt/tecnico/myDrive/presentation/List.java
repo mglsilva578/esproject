@@ -25,7 +25,7 @@ public class List extends MdCommand{
 			ListDirectoryService lds = new ListDirectoryService(null);
 			lds.execute();
 			for (FileDto s: lds.result())
-				System.out.println(s);
+				super.print(s.toString());
 		} 
 		else if(args.length == 1){
 			//String actualCurrentDir = ... 

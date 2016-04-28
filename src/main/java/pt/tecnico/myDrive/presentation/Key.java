@@ -46,7 +46,7 @@ public class Key extends MdCommand{
 	}
 	
 	private void printActiveToken(Long activeToken) {
-		log.trace(this.name() + " - current active token: \n" + activeToken);
+		super.print(this.name() + " - current active token: \n" + activeToken);
 	}
 	
 	private void printActiveUsernameAndToken() {
@@ -62,6 +62,6 @@ public class Key extends MdCommand{
 				" / " +
 				activeToken;
 		
-		log.trace(result);
+		super.print(result);
 	}
 }

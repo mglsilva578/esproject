@@ -71,7 +71,7 @@ public class Main {
 			new Dir(drive, rootUser, SuperUser.HOME_DIR, rootUser.getMask(), home);
 			Nobody nobody = new Nobody(drive);
 			new Dir(drive, nobody, Nobody.HOME_DIR, nobody.getMask(), home);
-			//additionalSetup();
+			additionalSetup();
 			//testLogin();
 			//testPermissions();
 		}
@@ -120,12 +120,12 @@ public class Main {
 		MyDrive drive = MyDrive.getInstance();
 		try{
 			
-			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
+			User userToAdd = new User(drive, "zttr", "7653476534", "Diogo", "rwxd----", null);
 			
-			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
-			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
-			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
-			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
+			userToAdd = new User(drive, "mglsilva578", "6823068230", "Miguel", "rwxd----", null);
+			userToAdd = new User(drive, "R3Moura", "7400574005", "Ricardo", "rwxd----", null);
+			userToAdd = new User(drive, "joseluisvf", "5581655816", "JoseLuis", "rwxd----", null);
+			userToAdd = new User(drive, "ist176544", "7654476544", "Daniel", "rwxd----", null);
 			
 			Dir whereToAdd = (Dir)drive.getFileByPathname("/home/joseluisvf", false, drive.getUserByUsername("joseluisvf"));
 			new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);

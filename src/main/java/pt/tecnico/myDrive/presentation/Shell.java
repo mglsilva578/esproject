@@ -105,6 +105,7 @@ public abstract class Shell {
 		
 		this.usernameActiveSession = newActiveUsername;
 		this.tokenActiveSession = this.loginRegistry.getLastTokenByUsername(newActiveUsername);
+		log.trace("Changed active user to " + newActiveUsername);
 	}
 
 	public void print(String s){ 
