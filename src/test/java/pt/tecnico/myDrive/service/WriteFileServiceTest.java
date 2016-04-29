@@ -101,6 +101,6 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		Long token = loginManager.createSession("diogo", PASSWORD_2);
 		WriteFileService service = new WriteFileService(token,"File created by different user.","abcd");
 		service.execute();
-
 	}
+	
 }
