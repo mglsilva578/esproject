@@ -13,6 +13,7 @@ public class FileDto implements Comparable<FileDto> {
 	private int id;
 	private DateTime dateMod;
 	private String name;
+	private String content;
 
 
 	public FileDto(String type, String permissions, int size, String owner, int id, DateTime dateMod, String name){
@@ -25,13 +26,14 @@ public class FileDto implements Comparable<FileDto> {
 		this.name = name;
 	}
 	
-	public FileDto(String type, String permissions, String owner, int id, DateTime dateMod, String name){
+	public FileDto(String type, String permissions, String owner, int id, DateTime dateMod, String name, String content){
 		this.type = type;
 		this.permissions = permissions;
 		this.owner = owner;
 		this.id = id;
 		this.dateMod = dateMod;
 		this.name = name;
+		this.content = content;
 	}
 
 	public final String getType(){
@@ -62,10 +64,15 @@ public class FileDto implements Comparable<FileDto> {
 		return this.name;
 	}
 
+	public final String getContent(){
+		return this.content;
+	}
+
 	@Override
 	public int compareTo(FileDto other) {
 		return getName().compareTo(other.getName());
 	}
+	
 	
 	@Override
 	public String toString() {
@@ -88,7 +95,7 @@ public class FileDto implements Comparable<FileDto> {
 	
 	public void toStringforPlainFile(){
 		log.trace(this.getType() + " " + this.getPermissions() + " " + this.getOwner() + " " + 
-				this.getId() + " " + this.getDateMod() + " " + this.getName());
+				this.getId() + " " + this.getDateMod() + " " + this.getName() + " " + this.getContent());
 	}
 }
 

@@ -39,21 +39,21 @@ public class ListDirectoryService extends MyDriveService {
 			if(file instanceof PlainFile){
 				if(file instanceof Link){ 
 					this.type = "link";
+					String content = "->" + ((Link) file).getContent();
 					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-							file.getId(), file.getLast_modification(), file.getName()));
+							file.getId(), file.getLast_modification(), file.getName(), content));
 				}
 				else if(file instanceof App){
 					this.type = "app";
 					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-							file.getId(), file.getLast_modification(), file.getName()));
+							file.getId(), file.getLast_modification(), file.getName(), ((App) file).getContent()));
 				}
 				else{
 					this.type = "plainFile";
 					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-							file.getId(), file.getLast_modification(), file.getName()));
+							file.getId(), file.getLast_modification(), file.getName(), ((PlainFile) file).getContent()));
 				}
 			}
-
 		}
 		Collections.sort(filesInCurrentDir);
 	}
