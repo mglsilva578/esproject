@@ -64,4 +64,21 @@ public class Session extends Session_Base {
     	DateTime lateDate = super.getLastActiveAt().minusMinutes(maxInactivityTimeInMinutes * 2);
     	super.setLastActiveAt(lateDate);
     }
+    
+    @Override
+    public void addEnvironmentVariables(EnvironmentVariable env){
+    	if(!hasEnvironmentVariable(env)){
+    		this.getEnvironmentVariablesSet().add(env);
+    	}
+    }
+    
+    public boolean hasEnvironmentVariable(EnvironmentVariable envvar){
+		for(EnvironmentVariable env: this.getEnvironmentVariablesSet()){
+			if(env.getName().equals(envvar.getName())){
+				env.setValue(envvar.getValue());
+				return true;
+			}
+		}
+		return false;
+	}
 }

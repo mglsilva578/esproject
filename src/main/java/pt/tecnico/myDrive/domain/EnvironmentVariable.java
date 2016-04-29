@@ -6,4 +6,9 @@ public class EnvironmentVariable extends EnvironmentVariable_Base {
         super();
     }
     
+    public EnvironmentVariable(Session session, String name, String value ){
+    	setName(name);
+    	setSession(session);
+    	setValue(value);
+    }
 }

@@ -39,4 +39,9 @@ public class EnvironmentVariableDto {
 		return this.name.equals(anotherName) &&
 				this.value.equals(anotherValue);
 	}
+
+	public void setValue(String environmentVariableValue) {
+		this.value=environmentVariableValue;
+		
+	}
 }
