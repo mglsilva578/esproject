@@ -39,8 +39,8 @@ public class LoginManager extends LoginManager_Base {
 			MyDrive myDrive = this.getMyDrive();
 			User user = myDrive.getUserByUsername(username);
 			Dir currentDir = (Dir)myDrive.getFileByPathname(user.getHomeDir(), false, null);
+			//TODO a dar erro aqui quando vem do comando; não consegue criar a session
 			Session session = new Session(user, token, currentDir);
-			
 			this.addSessions(session);
 			this.removeInactiveSessions();
 			return token;

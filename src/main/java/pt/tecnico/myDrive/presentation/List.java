@@ -22,10 +22,12 @@ public class List extends MdCommand{
 	@Override
 	public void execute(String[] args) {
 		if (args.length == 0) {
-			ListDirectoryService lds = new ListDirectoryService(null);
+			//TODO acrescentei esta linha abaixo e tirei o null da invocação do serviço
+			Long tokenActiveSession = super.shell().getTokenActiveSession();
+			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession);
 			lds.execute();
 			for (FileDto s: lds.result())
-				System.out.println(s);
+				log.trace(s.toString());
 		} 
 		else if(args.length == 1){
 			//String actualCurrentDir = ... 

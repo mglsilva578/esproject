@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
@@ -25,6 +24,7 @@ import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.SuperUser;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.presentation.MdShell;
 import pt.tecnico.myDrive.util.DataExportationHelper;
 
 public class Main {
@@ -40,10 +40,14 @@ public class Main {
 			}
 			Main.printMyDrive();
 			Main.exportDataToFile();
+			Main.startShell();
+			
 		}catch(MyDriveException mde){
 			log.error(mde.getMessage());
+			mde.printStackTrace();
 		}catch(Exception e){
 			log.error(e.getMessage());
+			e.printStackTrace();
 		}finally{
 			FenixFramework.shutdown();
 		}
@@ -67,7 +71,7 @@ public class Main {
 			new Dir(drive, rootUser, SuperUser.HOME_DIR, rootUser.getMask(), home);
 			Nobody nobody = new Nobody(drive);
 			new Dir(drive, nobody, Nobody.HOME_DIR, nobody.getMask(), home);
-			//additionalSetup();
+			additionalSetup();
 			//testLogin();
 			//testPermissions();
 		}
@@ -116,12 +120,12 @@ public class Main {
 		MyDrive drive = MyDrive.getInstance();
 		try{
 			
-			User userToAdd = new User(drive, "zttr", "76534", "Diogo", "rwxd----", null);
+			User userToAdd = new User(drive, "zttr", "7653476534", "Diogo", "rwxd----", null);
 			
-			userToAdd = new User(drive, "mglsilva578", "68230", "Miguel", "rwxd----", null);
-			userToAdd = new User(drive, "R3Moura", "74005", "Ricardo", "rwxd----", null);
-			userToAdd = new User(drive, "joseluisvf", "55816", "JoseLuis", "rwxd----", null);
-			userToAdd = new User(drive, "ist176544", "76544", "Daniel", "rwxd----", null);
+			userToAdd = new User(drive, "mglsilva578", "6823068230", "Miguel", "rwxd----", null);
+			userToAdd = new User(drive, "R3Moura", "7400574005", "Ricardo", "rwxd----", null);
+			userToAdd = new User(drive, "joseluisvf", "5581655816", "JoseLuis", "rwxd----", null);
+			userToAdd = new User(drive, "ist176544", "7654476544", "Daniel", "rwxd----", null);
 			
 			Dir whereToAdd = (Dir)drive.getFileByPathname("/home/joseluisvf", false, drive.getUserByUsername("joseluisvf"));
 			new PlainFile(drive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
@@ -144,6 +148,13 @@ public class Main {
 		MyDrive drive = MyDrive.getInstance();
 		DataExportationHelper.writeDocumentToLocalStorage(drive.exportXML());
 	}
+	
+	@Atomic
+	private static void startShell() throws Exception {
+		MdShell mdShell = new MdShell();
+		mdShell.execute();
+	}
+	
 	@Atomic
 	private static void testMyDrive(){
 		MyDrive drive = MyDrive.getInstance();

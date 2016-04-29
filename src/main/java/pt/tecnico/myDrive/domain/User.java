@@ -42,13 +42,13 @@ public class User extends User_Base {
 		omission = Optional.ofNullable(password);
 		password = omission.orElse(username);
 
-		if(!(drive.isDefaultUser(username))){
-			if(password.length() >= 8){
+		if(drive.isDefaultUser(username)) {
+			if (!(username.equals(Nobody.USERNAME))) {
 				setPassword(password);
 			}
-			else{
-				throw new InvalidPasswordException(username, password);
-			}
+		} else {
+			this.checkPasswordIsValid(username, password);
+			setPassword(password);
 		}
 
 		omission = Optional.ofNullable(name);
@@ -72,6 +72,12 @@ public class User extends User_Base {
 		}
 		setHomeDir(homeDir);
 		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
+	}
+
+	private void checkPasswordIsValid(String username, String password) {
+		if(! (password.length() >= 8)){
+			throw new InvalidPasswordException(username, password);
+		}
 	}
 
 	private boolean isUsernameValid(String username){

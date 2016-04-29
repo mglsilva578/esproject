@@ -34,8 +34,8 @@ public class Execute extends MdCommand{
 	
 	@Override
 	protected void executeService(String[] args) {
-		String username = args[1];
-		String password = args[2];
+		String username = args[0];
+		String password = args[1];
 		
 		//TODO run service
 	}

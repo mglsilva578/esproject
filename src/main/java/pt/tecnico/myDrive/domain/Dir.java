@@ -267,7 +267,6 @@ public class Dir extends Dir_Base {
 		String description = "dir";
 		description += " " + this.getPermissions();
 		description += " " + this.getSize();
-		log.error("\n\nDIR / USER \n" + this.getName() + "\n" + this.getOwner() +"\n\n");
 		description += " " + this.getOwner().getUsername();
 		description += " " + this.getId();
 		description += " " + this.getLast_modification();

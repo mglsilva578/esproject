@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
 import pt.tecnico.myDrive.domain.Session_Base;
+import pt.tecnico.myDrive.exception.CannotListTokenException;
 import pt.tecnico.myDrive.exception.CannotSetLastActiveDateOfSession;
 import pt.tecnico.myDrive.exception.CannotSetOwnerOfSession;
 
@@ -51,6 +52,11 @@ public class Session extends Session_Base {
     @Override
     public void setLastActiveAt(DateTime newDate){
     	throw new CannotSetLastActiveDateOfSession();
+    }
+    
+    @Override
+    public Long getToken() {
+    	throw new CannotListTokenException();
     }
     
     protected void makeExpired(){

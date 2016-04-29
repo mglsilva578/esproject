@@ -35,12 +35,10 @@ public class Login extends MdCommand{
 	
 	@Override
 	protected void executeService(String[] args) {
-		String username = args[1];
-		String password = args[2];
-		
+		String username = args[0];
+		String password = args[1];
 		LoginUserService service = new LoginUserService(username, password);
 		service.execute();
-		
 		this.username = username;
 		this.token = service.getResult();
 	}
@@ -48,7 +46,6 @@ public class Login extends MdCommand{
 	public void updateShellWithNewLogin(String username, Long token) {
 		Shell shell = this.shell();
 		shell.addNewToken(username, token);
-		shell.setUsernameActiveSession(username);
-		shell.setTokenActiveSession(token);
+		shell.changeActiveUserTo(username);
 	}
 }

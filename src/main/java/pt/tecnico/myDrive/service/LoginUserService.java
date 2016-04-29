@@ -16,9 +16,9 @@ public class LoginUserService extends MyDriveService{
 	
 	@Override
 	protected void dispatch() throws MyDriveException {
-		MyDrive myDrive =getMyDrive();
+		MyDrive myDrive = getMyDrive();
 		LoginManager loginManager = myDrive.getLoginManager();
-		token = loginManager.createSession(username, password);
+		this.token = loginManager.createSession(username, password);
 		return;
 	}
 	
