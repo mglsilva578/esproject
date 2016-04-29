@@ -13,7 +13,8 @@ public class File extends File_Base {
 	protected static final String PATH_SEPARATOR = "/";
 	private final int PERMISSION_LENGTH = 8;
 	private static final String ACCEPTABLE_CHARACTERS_FOR_PERMISSION = "rwxd-";
-
+	private Dir futureFather;
+	
 	protected File(){
 		super();
 	}
@@ -36,23 +37,20 @@ public class File extends File_Base {
 	}
 
 	protected void init(MyDrive drive, User owner, String name, String permissions, Dir dir){
+		futureFather = dir;
 		setId(drive.getNewFileId());
 		setName(name);
 		setLast_modification(new DateTime());
 		setPermissions(this.filterPermissionsThroughUserMask(permissions, owner));
 		this.setMydrive(drive);
 		this.setOwner(owner);
-		int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
-		if(size <= 1024){ 
-			dir.addFile(this);
-		}
-		else{
-			throw new ExceedsLimitPathException();
-		}
+		dir.addFile(this);
+		
 	}
 
 	protected void init(MyDrive drive, String id,  User owner, String name, String permissions, Dir dir, String lastModificationDate){
 		int parsedId;
+		futureFather = dir;
 		try{
 			parsedId = Integer.parseInt(id);
 			setId(parsedId);
@@ -61,13 +59,8 @@ public class File extends File_Base {
 			setPermissions(this.filterPermissionsThroughUserMask(permissions, owner));
 			this.setMydrive(drive);
 			this.setOwner(owner);
-			int size = dir.getPath().length() + dir.getName().length() + PATH_SEPARATOR.length() + name.length();
-			if(size <= 1024){ 
-				dir.addFile(this);
-			}
-			else{
-				throw new ExceedsLimitPathException();
-			}
+			dir.addFile(this);
+			
 		}catch(NumberFormatException nfe){
 			throw new InvalidIdException(id);
 		}
@@ -112,8 +105,16 @@ public class File extends File_Base {
 			if(n.contains("/") || n.contains("\0")){
 				throw new InvalidFileNameException(n);
 			}
+			if((futureFather.getPath().length() + futureFather.getName().length() + PATH_SEPARATOR.length() + n.length()) <= 1024){ 
+				super.setName(n);
+			}
+			else{
+				throw new ExceedsLimitPathException();
+			}
 		}
-		super.setName(n);
+		else{
+			super.setName(n);
+		}
 	}
 
 	@Override
