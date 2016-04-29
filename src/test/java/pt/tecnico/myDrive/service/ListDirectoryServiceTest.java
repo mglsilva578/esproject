@@ -16,6 +16,7 @@ import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.service.dto.FileDto;
+import pt.tecnico.myDrive.service.AbstractServiceTest;
 
 public class ListDirectoryServiceTest extends AbstractServiceTest {
 	private String username = "mglsilva578";
@@ -27,8 +28,8 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		MyDrive myDrive = MyDrive.getInstance();
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
 		whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
-		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
+		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty1", whereToAdd);
+		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "More Lusty2", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", whereToAdd);
 		new Link(myDrive, userToAdd, "link", userToAdd.getMask(), "/home/mglsilva578/Lusty Tales", whereToAdd);
 		new App(myDrive, userToAdd, "app", userToAdd.getMask(), "package.class.method", whereToAdd);
@@ -45,10 +46,11 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		session.setCurrentDir(whereToAdd);
 		service.execute();
 		List<FileDto> returnService = service.result();
-
+		
 		assertEquals("Lusty Tales", returnService.get(1).getName());
 		assertEquals("More Lusty Tales", returnService.get(2).getName());
 		assertEquals("A cold shower", returnService.get(0).getName());
+		//assertEquals("->Lusty1", returnService.get(1).getContent());
 		assertEquals(whereToAdd.getFileSet().size(), returnService.size());
 	}
 
@@ -57,7 +59,6 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		Long token = (long) 123123123;
 		ListDirectoryService service = new ListDirectoryService(token);
 		service.execute();
-
 	}
 
 
