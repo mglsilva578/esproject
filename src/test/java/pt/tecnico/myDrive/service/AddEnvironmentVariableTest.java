@@ -73,7 +73,7 @@ public class AddEnvironmentVariableTest extends AbstractServiceTest{
 		//user1Session.addEnvironmentVariables(toAdd);
 		AddEnvironmentVariableService service = new AddEnvironmentVariableService(existingUser1Token, environmentVariableName, environmentVariableValue);
 		service.execute();
-		
+
 
 	}
 
@@ -173,9 +173,6 @@ public class AddEnvironmentVariableTest extends AbstractServiceTest{
 			int howManyEnvironmentVariablesBefore,
 			int howManyAdded) {
 		int howManyEnvironmentVariablesAfter = existingEnvironmentVariables.size();
-		System.out.println("AFTER /n/n/n"+howManyEnvironmentVariablesAfter);
-		System.out.println("BEFORE /n/n/n"+howManyEnvironmentVariablesBefore);
-		
 		assertTrue(howManyEnvironmentVariablesAfter == howManyEnvironmentVariablesBefore + howManyAdded);
 	}
 
@@ -220,7 +217,7 @@ public class AddEnvironmentVariableTest extends AbstractServiceTest{
 		List<EnvironmentVariableDto> existingEnvironmentVariables = this.whenOverrideValueOfExistingEnvironmentVariable(this.existingUser1FirstVariableName);
 		this.thenValueShouldBeOverridden(existingEnvironmentVariables, valueBefore);
 	}
-	
+
 	private List<EnvironmentVariableDto> whenOverrideValueOfExistingEnvironmentVariable(String existingUser1FirstVariableName2) {
 		AddEnvironmentVariableService service = new AddEnvironmentVariableService(existingUser1Token, existingUser1FirstVariableName, newValue);
 		service.execute();
