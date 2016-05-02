@@ -105,7 +105,7 @@ public class File extends File_Base {
 			if(n.contains("/") || n.contains("\0")){
 				throw new InvalidFileNameException(n);
 			}
-			if((futureFather.getPath().length() + futureFather.getName().length() + PATH_SEPARATOR.length() + n.length()) <= 1024){ 
+			if((futureFather.getPath().length() + PATH_SEPARATOR.length() + futureFather.getName().length() + PATH_SEPARATOR.length() + n.length()) <= 1024){ 
 				super.setName(n);
 			}
 			else{
