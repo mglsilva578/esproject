@@ -15,6 +15,7 @@ import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.service.dto.FileDto;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 
@@ -22,11 +23,14 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 	private String username = "mglsilva578";
 	private String password = "password";
 	private User userToAdd;
+	private User userWithoutPerm;
 	private Dir whereToAdd;
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
 		userToAdd = new User(myDrive, username, password, "MiguelSilva", "rwxd----", null);
+		userWithoutPerm = new User(myDrive, "R3Moura", "7400574005", "RicardoMoura", "rwxd----", null);
+		
 		whereToAdd = (Dir)myDrive.getFileByPathname("/home/mglsilva578", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty1", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "More Lusty2", whereToAdd);
@@ -60,7 +64,17 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		ListDirectoryService service = new ListDirectoryService(token);
 		service.execute();
 	}
-
-
-
+	
+	@Test (expected = PermissionDeniedException.class)
+	public void notPermissions(){
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession("R3Moura", "7400574005");
+		
+		Session session = myDrive.getLoginManager().getSessionByToken(token);
+		session.setCurrentDir(whereToAdd);
+		
+		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+	}
 }

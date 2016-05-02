@@ -36,6 +36,15 @@ public class FileDto implements Comparable<FileDto> {
 		this.content = content;
 	}
 
+	public FileDto(String type, String permissions, String owner, int id, DateTime dateMod, String name) {
+		this.type = type;
+		this.permissions = permissions;
+		this.owner = owner;
+		this.id = id;
+		this.dateMod = dateMod;
+		this.name = name;
+	}
+
 	public final String getType(){
 		return this.type;
 	}
