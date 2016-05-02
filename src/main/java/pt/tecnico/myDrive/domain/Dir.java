@@ -106,30 +106,23 @@ public class Dir extends Dir_Base {
 	}
 
 	public void createFile(User owner, String fileName, String type, String content){
-		int size = this.getPath().length() + this.getName().length() + PATH_SEPARATOR.length() + fileName.length();
-		if(size <= 1024){
-
-			switch(type){
-			case "link":
-				if(!this.isPath(content)) throw new WrongContentException();
-				new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this);
-				break;
-			case "dir":
-				if(content != null)throw new WrongContentException();
-				new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this);
-				break;
-			case "plainFile":
-				new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this);
-				break;
-			case "app":
-				new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this);
-				break;
-			default:
-				throw new TypeDoesNotExistException();
-			}
-		}
-		else{
-			throw new ExceedsLimitPathException();
+		switch(type){
+		case "link":
+			if(!this.isPath(content)) throw new WrongContentException();
+			new Link(MyDrive.getInstance(),owner, fileName, owner.getMask(), content, this);
+			break;
+		case "dir":
+			if(content != null)throw new WrongContentException();
+			new Dir(MyDrive.getInstance(), owner, fileName, owner.getMask(), this);
+			break;
+		case "plainFile":
+			new PlainFile(MyDrive.getInstance(), owner, fileName, owner.getMask(), content, this);
+			break;
+		case "app":
+			new App(MyDrive.getInstance(), owner,fileName, owner.getMask(), content, this);
+			break;
+		default:
+			throw new TypeDoesNotExistException();
 		}
 	}
 
@@ -157,14 +150,14 @@ public class Dir extends Dir_Base {
 
 	private void removeDir(Dir dirToDelete) {
 		checkDirNotInUseByAnotherSession(dirToDelete);
-		
+
 		if(!isEmpty(dirToDelete)){
 			CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(dirToDelete.getFileSet());
 			Iterator<File> it = files.iterator();
 			File fileToDelete = null;
 			while(it.hasNext()){
 				fileToDelete = it.next();
-				
+
 				if (fileToDelete instanceof Dir) {
 					((Dir) fileToDelete).removeAllFiles();
 				}
@@ -176,18 +169,18 @@ public class Dir extends Dir_Base {
 		dirToDelete.getFather().removeFile(dirToDelete);
 		dirToDelete.remove();
 	}
-	
+
 	private void removeAllFiles() {
 		CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<File>(this.getFileSet());
 		Iterator<File> it = files.iterator();
 		File fileToDelete = null;
 		while(it.hasNext()){
 			fileToDelete = it.next();
-			
+
 			if(fileToDelete instanceof Dir) {
 				((Dir)fileToDelete).removeAllFiles();
 			}
-			
+
 			this.removeFile(fileToDelete);
 			fileToDelete.remove();
 		}
@@ -211,18 +204,18 @@ public class Dir extends Dir_Base {
 	 */
 	public void changePlainFileContent (String fileName, String newContent, User whoWantsToChange){
 		File fileToChange = null;
-		
+
 		fileToChange = this.confirmFileExists (fileName, fileToChange);
 		this.confirmFileIsPlainFile (fileToChange, fileName);
 		this.confirmUserHasPermissionToWrite (fileToChange, whoWantsToChange);
 		this.confirmContentIsValid (newContent, fileToChange);
-		
+
 		this.changePlainFileContent ((PlainFile)fileToChange, newContent);
 	}
 
 	private File confirmFileExists(String fileName, File fileToChange) {
 		try{
-			 return this.getFileByName(fileName);
+			return this.getFileByName(fileName);
 		} catch (NoDirException nde){
 			throw new NoPlainFileException(fileName);
 		}
@@ -285,47 +278,47 @@ public class Dir extends Dir_Base {
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
 		String name = null;
-    	String path = null;
-    	String owner = null;
-    	String last_modification = null;
-    	String id;
-    	User _owner;
-    
-    	for(Element element : elm.getChildren()){
-    		switch(element.getName()){
-    			case "name":
-    				name = element.getText();
-    				break;
-    			case "path":
-    				path = element.getText();
-    				break;
-    			case "owner":
-    				owner = element.getText();
-    				break;
-    			case "last_modification":
-    				last_modification = element.getText();
-    				break;
-    		}
-    	}
-    	if(name == null) throw new ImportDocumentException("Dir - name is not optional and must be supplied.");
-    	
-    	String _name = name;
-    	maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
+		String path = null;
+		String owner = null;
+		String last_modification = null;
+		String id;
+		User _owner;
+
+		for(Element element : elm.getChildren()){
+			switch(element.getName()){
+			case "name":
+				name = element.getText();
+				break;
+			case "path":
+				path = element.getText();
+				break;
+			case "owner":
+				owner = element.getText();
+				break;
+			case "last_modification":
+				last_modification = element.getText();
+				break;
+			}
+		}
+		if(name == null) throw new ImportDocumentException("Dir - name is not optional and must be supplied.");
+
+		String _name = name;
+		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
 		id = (maybeString.orElseThrow(() -> new ImportDocumentException("Dir <"+ _name +"> ID is not optional and must be supplied." + elm.toString())));
-		
+
 		if(path == null) throw new ImportDocumentException("Dir <"+ name +"> \n path is not optional and must be supplied.");
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
-		
+
 		if(owner == null) owner = SuperUser.USERNAME;
 		_owner = drive.getUserByUsername(owner);
-		
+
 		String perm = _owner.getMask();
-		
+
 		if(last_modification == null) throw new ImportDocumentException("Dir <"+ name +"> date of last modification is not optional and must be supplied.");
 		this.init(drive, id, _owner, name, perm, father, last_modification);
 	}
-	
+
 	public boolean isTheSameAs(Object anotherObject) {
 		if (!(anotherObject instanceof Dir)) {
 			return false;
