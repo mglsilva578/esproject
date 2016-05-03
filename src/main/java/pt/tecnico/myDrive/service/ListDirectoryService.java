@@ -15,6 +15,7 @@ import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.service.dto.FileDto;
 
 public class ListDirectoryService extends MyDriveService {
@@ -31,7 +32,8 @@ public class ListDirectoryService extends MyDriveService {
 		MyDrive drive = getMyDrive();
 		Session session = drive.getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
-		if( currentDir.hasPermissionsForRead(session.getOwner())){
+		if(currentDir.hasPermissionsForRead(session.getOwner())){
+			System.out.println(session.getOwner().getMask() + session.getOwner().getUsername() + "\n\n" + currentDir.getPermissions() + currentDir.getOwner().getUsername());
 			for(File file : currentDir.getFileSet()){
 				if(file instanceof Dir){ 
 					this.type = "dir";
@@ -57,6 +59,9 @@ public class ListDirectoryService extends MyDriveService {
 					}
 				}
 			}
+		}
+		else{
+			throw new PermissionDeniedException(session.getOwner(), PermissionDeniedException.READ, currentDir);
 		}
 		Collections.sort(filesInCurrentDir);
 	}
