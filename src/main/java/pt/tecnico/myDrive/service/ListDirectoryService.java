@@ -33,7 +33,7 @@ public class ListDirectoryService extends MyDriveService {
 		Session session = drive.getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
 		if(currentDir.hasPermissionsForRead(session.getOwner())){
-			System.out.println(session.getOwner().getMask() + session.getOwner().getUsername() + "\n\n" + currentDir.getPermissions() + currentDir.getOwner().getUsername());
+			//System.out.println(session.getOwner().getMask() + session.getOwner().getUsername() + "\n\n" + currentDir.getPermissions() + currentDir.getOwner().getUsername());
 			for(File file : currentDir.getFileSet()){
 				if(file instanceof Dir){ 
 					this.type = "dir";
@@ -65,6 +65,7 @@ public class ListDirectoryService extends MyDriveService {
 		}
 		Collections.sort(filesInCurrentDir);
 	}
+	
 	public List<FileDto> result() {
 		return filesInCurrentDir;
 	}

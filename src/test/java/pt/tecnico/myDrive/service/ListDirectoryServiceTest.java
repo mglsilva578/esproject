@@ -54,7 +54,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		assertEquals("Lusty Tales", returnService.get(1).getName());
 		assertEquals("More Lusty Tales", returnService.get(2).getName());
 		assertEquals("A cold shower", returnService.get(0).getName());
-		//assertEquals("->Lusty1", returnService.get(1).getContent());
+		assertEquals("->Lusty1", returnService.get(5).getContent());
 		assertEquals(whereToAdd.getFileSet().size(), returnService.size());
 	}
 
