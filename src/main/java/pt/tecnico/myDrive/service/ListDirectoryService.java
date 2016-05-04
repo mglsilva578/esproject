@@ -22,6 +22,7 @@ public class ListDirectoryService extends MyDriveService {
 	private Long token;
 	private String type;
 	private List<FileDto> filesInCurrentDir = new ArrayList<FileDto>();
+	private List<File> files = new ArrayList<File>();
 
 	public ListDirectoryService(Long token){
 		this.token = token;
@@ -32,40 +33,14 @@ public class ListDirectoryService extends MyDriveService {
 		MyDrive drive = getMyDrive();
 		Session session = drive.getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
-		if(currentDir.hasPermissionsForRead(session.getOwner())){
-			//System.out.println(session.getOwner().getMask() + session.getOwner().getUsername() + "\n\n" + currentDir.getPermissions() + currentDir.getOwner().getUsername());
-			for(File file : currentDir.getFileSet()){
-				if(file instanceof Dir){ 
-					this.type = "dir";
-					filesInCurrentDir.add(new FileDto(type, file.getPermissions(), ((Dir) file).getSize(), 
-							file.getOwner().getUsername(), file.getId(), file.getLast_modification(), file.getName()));
-				}
-				if(file instanceof PlainFile){
-					if(file instanceof Link){ 
-						this.type = "link";
-						String content = "->" + ((Link) file).getContent();
-						filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-								file.getId(), file.getLast_modification(), file.getName(), content));
-					}
-					else if(file instanceof App){
-						this.type = "app";
-						filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-								file.getId(), file.getLast_modification(), file.getName()));
-					}
-					else{
-						this.type = "plainFile";
-						filesInCurrentDir.add(new FileDto(type, file.getPermissions(), file.getOwner().getUsername(), 
-								file.getId(), file.getLast_modification(), file.getName()));
-					}
-				}
-			}
-		}
-		else{
-			throw new PermissionDeniedException(session.getOwner(), PermissionDeniedException.READ, currentDir);
+		User user = session.getOwner();
+		files = currentDir.listDir( user);
+		for(File file : files){
+			filesInCurrentDir.add(new FileDto(file));
 		}
 		Collections.sort(filesInCurrentDir);
 	}
-	
+
 	public List<FileDto> result() {
 		return filesInCurrentDir;
 	}

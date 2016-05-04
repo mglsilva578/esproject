@@ -4,45 +4,34 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.Link;
+
 public class FileDto implements Comparable<FileDto> {
 	static final Logger log = LogManager.getRootLogger();
 	private String type;
 	private String permissions;
-	private int size;
+	private String size = "";
 	private String owner;
 	private int id;
 	private DateTime dateMod;
 	private String name;
-	private String content;
+	private String content = "";
 
-
-	public FileDto(String type, String permissions, int size, String owner, int id, DateTime dateMod, String name){
-		this.type = type;
-		this.permissions = permissions;
-		this.size = size;
-		this.owner = owner;
-		this.id = id;
-		this.dateMod = dateMod;
-		this.name = name;
-	}
-	
-	public FileDto(String type, String permissions, String owner, int id, DateTime dateMod, String name, String content){
-		this.type = type;
-		this.permissions = permissions;
-		this.owner = owner;
-		this.id = id;
-		this.dateMod = dateMod;
-		this.name = name;
-		this.content = content;
-	}
-
-	public FileDto(String type, String permissions, String owner, int id, DateTime dateMod, String name) {
-		this.type = type;
-		this.permissions = permissions;
-		this.owner = owner;
-		this.id = id;
-		this.dateMod = dateMod;
-		this.name = name;
+	public FileDto(File file) {
+		this.type = file.getClass().getSimpleName();
+		this.permissions = file.getPermissions();
+		if(file.getClass().getSimpleName().equals("Dir")){
+			size = Integer.toString(((Dir) file).getSize());
+		}
+		this.owner = file.getOwner().getUsername();
+		this.id = file.getId();
+		this.dateMod = file.getLast_modification();
+		this.name = file.getName();
+		if(type.equals("Link")){
+			content = "->" + ((Link) file).getContent();
+		}
 	}
 
 	public final String getType(){
@@ -53,7 +42,7 @@ public class FileDto implements Comparable<FileDto> {
 		return this.permissions;
 	}
 
-	public final int getSize(){
+	public final String getSize(){
 		return this.size;
 	}
 
@@ -93,20 +82,8 @@ public class FileDto implements Comparable<FileDto> {
 		description += "Id - " + this.id + "\n";
 		description += "DateMod - " + this.dateMod + "\n";
 		description += "Name - " + this.name + "\n";
+		description += "Content - " + this.content + "\n";
 		
 		return description;
 	}
-	
-	public void toStringforDir(){
-		log.trace(this.getType() + " " + this.getPermissions() + " " + this.getSize() + " " + 
-				this.getOwner() + " " + this.getId() + " " + this.getDateMod() + " " + this.getName());
-	}
-	
-	public void toStringforPlainFile(){
-		log.trace(this.getType() + " " + this.getPermissions() + " " + this.getOwner() + " " + 
-				this.getId() + " " + this.getDateMod() + " " + this.getName() + " " + this.getContent());
-	}
-}
-
-
-
+}	

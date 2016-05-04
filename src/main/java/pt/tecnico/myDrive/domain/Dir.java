@@ -1,6 +1,8 @@
 package pt.tecnico.myDrive.domain;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,6 +23,7 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TypeDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
+import pt.tecnico.myDrive.service.dto.FileDto;
 import pt.tecnico.myDrive.util.SetOrderingHelper;
 
 public class Dir extends Dir_Base {
@@ -326,6 +329,21 @@ public class Dir extends Dir_Base {
 			Dir anotherDir = (Dir)anotherObject;
 			return this.getName().equals(anotherDir.getName()) &&
 					this.getPath().equals(anotherDir.getPath());
+		}
+	}
+
+	public List<File> listDir(User user){
+		List<File> files = new ArrayList<File>();
+
+		if(this.hasPermissionsForRead(user)){
+			for(File file : this.getFileSet()){
+				files.add(file);
+			}
+			
+			return files;
+		}
+		else{
+			throw new PermissionDeniedException(user, PermissionDeniedException.READ, this);
 		}
 	}
 }

@@ -203,7 +203,7 @@ public class CreateFileTest extends AbstractServiceTest{
 	
 	@Test(expected = WrongContentException.class)
 	public void wrongContentApp(){
-		CreateFileService service = new CreateFileService(token1, "app1", TYPE_APP, "package.class.method.asduahuds.iafdhsuidf-sdujv jmdc.sacjlifmd.-.lemfC.");
+		CreateFileService service = new CreateFileService(token1, "app1", TYPE_APP, "afdhsuidf-sdujv jmdc.sacjlifmd.-.lemfC.");
 		service.execute();
 	}
 	

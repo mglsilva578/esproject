@@ -16,24 +16,20 @@ public class App extends App_Base {
 	}
 
 	public App(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
-		super.init(drive, owner, name, permissions, content, dir);
+		if(isFullyQualifiedName(content)) {
+			super.init(drive, owner, name, permissions, content, dir);
+		}
+		else{
+			throw new WrongContentException(); 
+		}
 	}
 
 	public App(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
 
-	@Override
-	public void setContent (String newContent){
-		if(isFullyQualifiedName(newContent)){
-			setContent (newContent);
-		}
-		else
-			throw new WrongContentException();  				
-	}
-
 	private boolean isFullyQualifiedName(String newContent) {
-		String regex = "[a-zA-Z]+\\.[a-zA-Z]+(\\.[a-zA-Z]){0,1}+";
+		String regex = "([a-zA-Z]+\\.[a-zA-Z]+)+";
 		if(newContent.matches(regex)){
 			return true;
 		}
