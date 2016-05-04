@@ -34,7 +34,7 @@ public class LoginManager extends LoginManager_Base {
 	
 
 	public Long createSession(String username, String password){
-		if(this.isPasswordCorrectForUsername(username, password)){
+		if (this.isPasswordCorrectForUsername(username, password)){
 			Long token = this.generateUniqueToken();
 			MyDrive myDrive = this.getMyDrive();
 			User user = myDrive.getUserByUsername(username);

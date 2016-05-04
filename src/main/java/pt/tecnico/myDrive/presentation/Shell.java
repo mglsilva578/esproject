@@ -2,6 +2,9 @@ package pt.tecnico.myDrive.presentation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pt.tecnico.myDrive.domain.LoginManager;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Nobody;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 import java.io.*;
@@ -31,7 +34,8 @@ public abstract class Shell {
 		name = n;
 		out = new PrintWriter(w, flush);
 		this.loginRegistry = new LoginRegistry();
-		//TODO fazer login do nobody
+		this.loginGuestUser();		
+		
 		new Command(this, "quit", "quit the command interpreter"){
 			void execute(String[] args){
 				System.out.println(name+" quit");
@@ -76,6 +80,15 @@ public abstract class Shell {
 				}
 			}
 		};
+	}
+	
+	private void loginGuestUser() {
+		MyDrive mydrive = MyDrive.getInstance();
+		LoginManager loginManager = mydrive.getLoginManager();
+		Long guestToken = loginManager.createSession(Nobody.USERNAME, null);
+		this.setUsernameActiveSession(Nobody.USERNAME);
+		this.setTokenActiveSession(guestToken);
+		this.loginRegistry.addNewToken(Nobody.USERNAME, guestToken);
 	}
 	
 	public String getUsernameActiveSession() {
@@ -193,30 +206,30 @@ public abstract class Shell {
 	}
 	
 	protected class LoginRegistry {
-		private HashMap<String, TreeSet<Long>> tokensOfLoggedSessions;
+		private HashMap<String, Long> tokensOfLoggedSessions;
 		
 		public LoginRegistry() {
-			this.tokensOfLoggedSessions = new HashMap<String, TreeSet<Long>>();
+			this.tokensOfLoggedSessions = new HashMap<String, Long>();
 		}
 		
 		public void addNewToken(String username, Long token) {
-			if (this.tokensOfLoggedSessions.containsKey(username)) {
-				Set<Long> value = this.tokensOfLoggedSessions.get(username);
-				value.add(token);
-			} else {
-				TreeSet<Long> newValue = new TreeSet<Long>();
-				newValue.add(token);
-				this.tokensOfLoggedSessions.put(username, newValue);
+			if (tokensOfLoggedSessions.containsKey(Nobody.USERNAME)) {
+				this.removeGuestSession();
 			}
+			tokensOfLoggedSessions.put(username, token);
+		}
+		
+		private void removeGuestSession() {
+			this.tokensOfLoggedSessions.remove(Nobody.USERNAME);
 		}
 		
 		public Long getLastTokenByUsername(String username) {
-			Optional< TreeSet<Long> > maybeValue;
+			Optional<Long> maybeValue;
 			maybeValue = Optional.ofNullable(this.tokensOfLoggedSessions.get(username));
-			TreeSet<Long> value = maybeValue.orElseThrow(() -> 
+			Long value = maybeValue.orElseThrow(() -> 
 			new InvalidUsernameException("Couldn't find any tokens for username <" + username + ">"));
 			
-			return value.last();
+			return value;
 		}
 		
 		public boolean hasEntryForUsername(String username) {
