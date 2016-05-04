@@ -12,9 +12,10 @@ public class EnvironmentVariableDto {
 	
 	public String toString() {
 		String description = "";
-		description += "Contents of Dto: \n";
-		description += "Name - " + this.name + "\n";
-		description += "Value - " + this.value;
+		//description += "Contents of Dto: \n";
+		//description += "Name - " + this.name + "\n";
+		//description += "Value - " + this.value;
+		description +=this.name + "="+this.value+"\n";
 		return description;
 	}
 	
