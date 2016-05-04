@@ -108,7 +108,17 @@ public abstract class Shell {
 	}
 
 	public void addNewToken(String username, Long token) {
+		this.removeGuestLogin(username);
 		this.loginRegistry.addNewToken(username, token);
+	}
+	
+	private void removeGuestLogin(String username) {
+		if (username.equals(Nobody.USERNAME)) {
+			return;
+		}
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		loginManager.removeGuestSession();
 	}
 	
 	public void changeActiveUserTo(String newActiveUsername) {

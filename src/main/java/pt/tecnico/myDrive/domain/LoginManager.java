@@ -17,11 +17,11 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 
 public class LoginManager extends LoginManager_Base {
 	static final Logger log = LogManager.getRootLogger();
-	
-	private LoginManager() {
+
+	private LoginManager(){
 		super();
 	}
-	
+
 	public static LoginManager getInstance(){
 		MyDrive myDrive = FenixFramework.getDomainRoot().getMydrive();
 		LoginManager loginManager = myDrive.getLoginManager();
@@ -31,7 +31,6 @@ public class LoginManager extends LoginManager_Base {
 			return new LoginManager();
 		}
 	}
-	
 
 	public Long createSession(String username, String password){
 		if (this.isPasswordCorrectForUsername(username, password)){
@@ -39,7 +38,6 @@ public class LoginManager extends LoginManager_Base {
 			MyDrive myDrive = this.getMyDrive();
 			User user = myDrive.getUserByUsername(username);
 			Dir currentDir = (Dir)myDrive.getFileByPathname(user.getHomeDir(), false, null);
-			//TODO a dar erro aqui quando vem do comando; não consegue criar a session
 			Session session = new Session(user, token, currentDir);
 			this.addSessions(session);
 			this.removeInactiveSessions();
@@ -48,7 +46,25 @@ public class LoginManager extends LoginManager_Base {
 			throw new InvalidPasswordException(username, password);
 		}
 	}
-	
+
+	public void removeGuestSession() {
+		CopyOnWriteArrayList<Session> sessions = new CopyOnWriteArrayList<Session>(super.getSessionsSet());
+		Iterator<Session> it = sessions.iterator();
+
+		Session session;
+		User owner;
+		String ownerName;
+		
+		while(it.hasNext()){
+			session = it.next();
+			owner = session.getOwner();
+			ownerName = owner.getUsername();
+			if (ownerName.equals(Nobody.USERNAME)) {
+				super.getSessionsSet().remove(session);
+			}
+		}
+	}
+
 	public void makeSessionExpired (Long token){
 		Session sessionToExpire = this.getSessionByToken (token);
 		sessionToExpire.makeExpired();
@@ -65,27 +81,27 @@ public class LoginManager extends LoginManager_Base {
 		log.warn("Warning : attempted to use non active token <" + token + ">");
 		throw new InvalidTokenException(token);
 	}
-	
+
 	@Override
 	public int getSessionsCount(){
 		return super.getSessionsSet().size();
 	}
-	
-    @Override
-    public Set<Session> getSessionsSet(){
-    	throw new CannotListTokenException();
-    }
-	
-    public boolean isDirInUseByAnySession(Dir dirToCheck) {
-    	for (Session session : super.getSessionsSet()) {
-    		Dir currentDir = session.getCurrentDir();
-    		if (dirToCheck.equals(currentDir)) {
-    			return true;
-    		}
+
+	@Override
+	public Set<Session> getSessionsSet(){
+		throw new CannotListTokenException();
+	}
+
+	public boolean isDirInUseByAnySession(Dir dirToCheck) {
+		for (Session session : super.getSessionsSet()) {
+			Dir currentDir = session.getCurrentDir();
+			if (dirToCheck.equals(currentDir)) {
+				return true;
+			}
 		}
-    	return false;
-    }
-    
+		return false;
+	}
+
 	private boolean isPasswordCorrectForUsername(String username, String password){
 		if(username.equals(Nobody.USERNAME)) {
 			return true;
