@@ -71,7 +71,7 @@ public class Main {
 			new Dir(drive, rootUser, SuperUser.HOME_DIR, rootUser.getMask(), home);
 			Nobody nobody = new Nobody(drive);
 			new Dir(drive, nobody, Nobody.HOME_DIR, nobody.getMask(), home);
-			//additionalSetup();
+			additionalSetup();
 			//testLogin();
 			//testPermissions();
 		}
