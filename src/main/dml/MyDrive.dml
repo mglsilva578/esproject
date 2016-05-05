@@ -52,8 +52,6 @@ class EnvironmentVariable{
   String value;
 }
 
-class Extensions{
-}
 
 class Extension{
   String fileExtension;
@@ -115,12 +113,7 @@ relation SessionHasCurrentDir{
   Dir playsRole currentDir {multiplicity 1;}
 }
 
-relation UserHasExtensions{
+relation UserHasExtension{
   User playsRole owner {multiplicity 1;}
-  Extensions playsRole extensions {multiplicity 1;}
-}
-
-relation ExtensionsHasExtension{
-  Extensions playsRole owner {multiplicity 1;}
-  Extension playsRole extensions {multiplicity 0..*;}
+  Extension playsRole extension {multiplicity 0..*;}
 }
