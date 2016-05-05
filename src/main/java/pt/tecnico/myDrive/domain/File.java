@@ -22,6 +22,8 @@ public class File extends File_Base {
 	public File(MyDrive drive, User owner, String name, String permissions){
 		this.init(drive, owner, name, permissions);
 	}
+	
+	public void execute(String[] args){}
 
 	public File(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		this.init(drive, owner, name, permissions, dir);

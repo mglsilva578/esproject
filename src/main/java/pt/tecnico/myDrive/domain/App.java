@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
+import pt.tecnico.myDrive.exception.InvalidAppMethodException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 
 public class App extends App_Base {
@@ -37,7 +38,22 @@ public class App extends App_Base {
 			return false;
 		}
 	}
-
+	public void execute(String[] args){
+    	switch(this.getContent()){
+    		case "pt.tecnico.myDrive.domain":
+    			AppMethods.main(args);
+    			break;
+    		case "pt.tecnico.myDrive.domain.pdf":
+    			AppMethods.pdfViewer(args);
+    			break;
+    		case "pt.tecnico.myDrive.domain.txt":
+    			AppMethods.notePad(args);
+    			break;
+    		default:
+    			throw new InvalidAppMethodException(this.getContent());
+    			
+    	}
+    }
 	public String toString(){
 		String description = super.toString("app");
 		return description;

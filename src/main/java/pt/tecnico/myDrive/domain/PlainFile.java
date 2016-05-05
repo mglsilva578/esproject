@@ -33,7 +33,11 @@ public class PlainFile extends PlainFile_Base {
 		super.init(drive, owner, name, permissions);
 		super.setContent(content);
 	}
-
+	
+	public void execute(String[] args){
+		System.out.println(this.getContent());
+	}
+	
 	protected void init(MyDrive drive, User owner, String name, String permissions, String content, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
 		super.setContent(content);

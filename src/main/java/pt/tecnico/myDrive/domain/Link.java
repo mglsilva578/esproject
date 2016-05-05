@@ -52,6 +52,10 @@ public class Link extends Link_Base {
     	return (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
     }
     
+    public void execute(String[] args){
+    	System.out.println(this.getContent());
+    }
+    
     public String toString(){
 		String description = super.toString("link");
 		return description;

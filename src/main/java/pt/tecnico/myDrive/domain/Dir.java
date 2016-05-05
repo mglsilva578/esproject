@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.CannotDeleteDirInUseBySessionException;
 import pt.tecnico.myDrive.exception.CannotDeleteDotOrDotDotException;
 import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
+import pt.tecnico.myDrive.exception.CannotExecuteDirectoryException;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
@@ -44,6 +45,11 @@ public class Dir extends Dir_Base {
 			drive.setRootDir(this);
 		}
 	}
+	
+	public void execute(String[] args){
+		throw new CannotExecuteDirectoryException();
+	}
+
 
 	public Dir(MyDrive drive, User owner, String name, String permissions, Dir dir){
 		super.init(drive, owner, name, permissions, dir);
