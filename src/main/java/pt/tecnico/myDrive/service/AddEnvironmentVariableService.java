@@ -24,7 +24,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 	private Session session;
 	public static final String NO_VALUE_GIVEN = "no value";
 	public static final String NO_NAME_GIVEN = "no name";
-	
+
 	public AddEnvironmentVariableService(
 			Long token,
 			String environmentVariableName,
@@ -41,19 +41,21 @@ public class AddEnvironmentVariableService extends MyDriveService{
 	protected void dispatch() throws MyDriveException {
 		//TODO implement service logic.
 		session=getSession(token);
-		if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
-			for(EnvironmentVariableDto env:existingEnvironmentVariables){
-				log.trace(env.toString());
-			}
-		}
-		if(!environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
-			for(EnvironmentVariableDto env:existingEnvironmentVariables){
-				if(env.getName().equals(environmentVariableName)){
+		if(checkArgs(token, environmentVariableName, environmentVariableValue)){
+			if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
+				for(EnvironmentVariableDto env:existingEnvironmentVariables){
 					log.trace(env.toString());
 				}
 			}
+			if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
+				for(EnvironmentVariableDto env:existingEnvironmentVariables){
+					if(env.getName().equals(environmentVariableName)){
+						log.trace(env.toString());
+					}
+				}
+			}
 		}
-			
+
 		if(checkArgs(token, environmentVariableName, environmentVariableValue)){
 			EnvironmentVariable newenv = new EnvironmentVariable(session,environmentVariableName,environmentVariableValue);
 			session.addEnvironmentVariables(newenv);
