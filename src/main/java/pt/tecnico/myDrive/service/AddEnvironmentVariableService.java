@@ -47,7 +47,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 					log.trace(env.toString());
 				}
 			}
-			if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
+			if(!environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
 				for(EnvironmentVariableDto env:existingEnvironmentVariables){
 					if(env.getName().equals(environmentVariableName)){
 						log.trace(env.toString());

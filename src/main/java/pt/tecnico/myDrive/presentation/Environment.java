@@ -34,7 +34,7 @@ public class Environment extends MdCommand{
 		Long token = super.shell().getTokenActiveSession();
 		if(args.length==0){
 			//imprime todas
-			AddEnvironmentVariableService service = new AddEnvironmentVariableService(token, AddEnvironmentVariableService.NO_VALUE_GIVEN, AddEnvironmentVariableService.NO_NAME_GIVEN);
+			AddEnvironmentVariableService service = new AddEnvironmentVariableService(token, AddEnvironmentVariableService.NO_NAME_GIVEN, AddEnvironmentVariableService.NO_VALUE_GIVEN);
 			service.execute();
 		}
 		if(args.length==1){
