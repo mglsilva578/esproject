@@ -73,10 +73,28 @@ public class Dir extends Dir_Base {
 		for (File file : this.getFileSet()){
 			if(file.getName().equals(nameToLook)){
 				if (file instanceof Link){
+					log.trace(file.getName() + "==" + nameToLook);
 					return ((Link) file).getLinkedFile();
 				} else {
 					return file;
 				}
+			}
+		}
+		throw new NoDirException(nameToLook, this.getName());
+	}
+	
+	//This method is equal to getFileByName(String nameToLook) but if nameToLook is Link, it return link, 
+	//unlike the other who returned the file pointed to by link.
+	public File getFileByName2(String nameToLook){
+		if(nameToLook.equals(Dir.DOT_NAME))
+			return this;
+		if(nameToLook.equals(Dir.DOTDOT_NAME))
+			return this.getFather();
+
+		for (File file : this.getFileSet()){
+			if(file.getName().equals(nameToLook)){
+				return file;
+				
 			}
 		}
 		throw new NoDirException(nameToLook, this.getName());

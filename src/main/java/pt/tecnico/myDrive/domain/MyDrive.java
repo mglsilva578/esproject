@@ -12,6 +12,7 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotDeleteRootException;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
+import pt.tecnico.myDrive.exception.FileDoesNotExistException;
 import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
@@ -205,25 +206,44 @@ public class MyDrive extends MyDrive_Base {
 		}	
 	}
 
-	public String readPlainFileContent(User whoWantsToRead, String path){
+	public String readPlainFileContent(Long token, String nameFile){
+		PlainFile fileToRead;
+
+		Session session =getLoginManager().getSessionByToken(token);
+		User userToRead = session.getOwner();
+		Dir currentDir = session.getCurrentDir();
 		try{
-			File file = getFileByPathname(path, false, null);
-			if (file instanceof PlainFile){
-				if(file.hasPermissionsForRead(whoWantsToRead)){
-					return ((PlainFile)file).getContent();
-				}else{
-					throw new PermissionDeniedException(
-							whoWantsToRead,
+			File file = currentDir.getFileByName2(nameFile);
+			if(file instanceof Link){
+				if(file.hasPermissionsForRead(userToRead)){
+					file = currentDir.getFileByName(nameFile);
+					readPlainFileContent(token, file.getName());
+				}
+				else{
+					throw new PermissionDeniedException(userToRead,
 							PermissionDeniedException.READ,
 							file);
 				}
 			}
-			else {
-				throw new NoPlainFileException(path);
+			if(file instanceof PlainFile){
+				if(file.hasPermissionsForRead(userToRead)){
+					fileToRead = (PlainFile) file;
+				}
+				else{
+					throw new PermissionDeniedException(userToRead,
+							PermissionDeniedException.READ,
+							file);
+				}
 			}
-		}catch(NoDirException nde){
-			throw new InvalidPathnameException(path);
+			else{
+				throw new NoPlainFileException(nameFile);
+			}
 		}
+		catch(NoDirException nde){
+			throw new FileDoesNotExistException(nameFile);
+		}
+		
+		return fileToRead.getContent();
 	}
 
 	public String listDirContent(String pathname){
@@ -368,7 +388,7 @@ public class MyDrive extends MyDrive_Base {
 			return true;
 		}
 	}
-	
+
 	public boolean isDefaultUser(String username) {
 		return username.equals(Nobody.USERNAME) ||
 				username.equals(SuperUser.USERNAME);

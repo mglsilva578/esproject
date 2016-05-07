@@ -18,9 +18,7 @@ public class ReadFileService extends MyDriveService{
 	@Override
 	protected void dispatch() throws MyDriveException {
 		MyDrive myDrive = getMyDrive();
-		Session session = myDrive.getLoginManager().getSessionByToken(this.token);
-		User whoWantsToRead = session.getOwner();
-		String content = myDrive.readPlainFileContent(whoWantsToRead, fileName);
+		String content = myDrive.readPlainFileContent(token, fileName);
 		this.content = content;
 	}
 
