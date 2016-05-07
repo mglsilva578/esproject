@@ -38,14 +38,18 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		new Link(myDrive, userToAdd, "link", userToAdd.getMask(), "/home/mglsilva578/Lusty Tales", whereToAdd);
 		new App(myDrive, userToAdd, "app", userToAdd.getMask(), "package.class.method", whereToAdd);
 		new PlainFile(myDrive, userToAdd, "plain", userToAdd.getMask(), "plainfile1", whereToAdd);
-		new Dir(myDrive, userToAdd, "dir", userToAdd.getMask(), whereToAdd);
+		Dir otherDir = new Dir(myDrive, userToAdd, "dir", userToAdd.getMask(), whereToAdd);
+		new Link(myDrive, userToAdd, "linklink", userToAdd.getMask(), "/home/mglsilva578/Lusty Tales", otherDir);
+		new App(myDrive, userToAdd, "appapp", userToAdd.getMask(), "package.class.method", otherDir);
+		new PlainFile(myDrive, userToAdd, "plainplain", userToAdd.getMask(), "plainfile1", otherDir);
+		new Dir(myDrive, userToAdd, "dirdir", userToAdd.getMask(), otherDir);
 	}
 	@Test
 	public void success(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession(username, password);
-		ListDirectoryService service = new ListDirectoryService(token);
+		ListDirectoryService service = new ListDirectoryService(token, "No Path");
 		Session session = loginManager.getSessionByToken(token);
 		session.setCurrentDir(whereToAdd);
 		service.execute();
@@ -57,11 +61,27 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		assertEquals("->Lusty1", returnService.get(5).getContent());
 		assertEquals(whereToAdd.getFileSet().size(), returnService.size());
 	}
+	
+	@Test
+	public void successWithPath(){
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(username, password);
+		ListDirectoryService service = new ListDirectoryService(token,"/home/mglsilva578/dir");
+		service.execute();
+		List<FileDto> returnService = service.result();
+		
+		assertEquals("appapp", returnService.get(0).getName());
+		assertEquals("dirdir", returnService.get(1).getName());
+		assertEquals("linklink", returnService.get(2).getName());
+		assertEquals("plainplain", returnService.get(3).getName());
+		assertEquals("->Lusty1", returnService.get(2).getContent());
+	}
 
 	@Test (expected = InvalidTokenException.class)
 	public void TokenFail(){
 		Long token = (long) 123123123;
-		ListDirectoryService service = new ListDirectoryService(token);
+		ListDirectoryService service = new ListDirectoryService(token, "No Path");
 		service.execute();
 	}
 	
@@ -74,7 +94,18 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		Session session = myDrive.getLoginManager().getSessionByToken(token);
 		session.setCurrentDir(whereToAdd);
 		
-		ListDirectoryService service = new ListDirectoryService(token);
+		ListDirectoryService service = new ListDirectoryService(token, "No Path");
+		service.execute();
+	}
+	
+	@Test (expected = PermissionDeniedException.class)
+	public void notPermissionswithPath(){
+		MyDrive myDrive = MyDrive.getInstance();
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession("R3Moura", "7400574005");
+		
+		
+		ListDirectoryService service = new ListDirectoryService(token, "/home/mglsilva578/dir");
 		service.execute();
 	}
 }

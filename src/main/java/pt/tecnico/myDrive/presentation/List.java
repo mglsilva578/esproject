@@ -21,25 +21,19 @@ public class List extends MdCommand{
 
 	@Override
 	public void execute(String[] args) {
+		Long tokenActiveSession = super.shell().getTokenActiveSession();
 		if (args.length == 0) {
-			//TODO acrescentei esta linha abaixo e tirei o null da invocação do serviço
-			Long tokenActiveSession = super.shell().getTokenActiveSession();
-			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession);
+			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession, "No Path");
 			lds.execute();
 			for (FileDto s: lds.result())
 				log.trace(s.toString());
 		} 
 		else if(args.length == 1){
-			//String actualCurrentDir = ... 
-			//ChangeDirectoryService cds1 = new ChangeDirectoryService(TOKEN, args[0]);
-			//ListDirectoryService lds = new ListDirectoryService(null);
-			//ChangeDirectoryService cds2 = new ChangeDirectoryService(TOKEN, actualCurrentDir);
-			//cds1.execute();
-			//lds.execute();
-			//for (FileDto s: lds.result()){
-			//	System.out.println(s);
-			//}
-			//cds2.execute();
+			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession, args[0]);
+			lds.execute();
+			for(FileDto file : lds.result()){
+				log.trace(file.toString());
+			}
 		} 
 		else {
 			throw new RuntimeException("USAGE: "+name()+" [<path>]");
