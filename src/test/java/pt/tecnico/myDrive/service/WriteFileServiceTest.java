@@ -11,95 +11,102 @@ import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
 public class WriteFileServiceTest extends AbstractServiceTest {
 
+	private static final String USERNAME_2 = "diogo";
+	private static final String USERNAME_1 = "joseluisvf";
 	private static final String PASSWORD_2 = "pass76534";
 	private static final String PASSWORD_1 = "pass55816";
-
+	private Long token;
 	@Override
 	protected void populate() {
 		MyDrive myDrive = MyDrive.getInstance();
-		new User(myDrive, "diogo", PASSWORD_2, "DiogoFer", "rwxd----", null);
-		User userToAdd = new User(myDrive, "joseluisvf", PASSWORD_1, "JoseLuis", "rwxd----", null);
+		
+		User userToAdd = new User(myDrive, USERNAME_1, PASSWORD_1, "JoseLuis", "rwxd----", null);
+		new User(myDrive, USERNAME_2, PASSWORD_2, "DiogoFer", "rwxd----", null);
+		
+		LoginManager loginManager = myDrive.getLoginManager();
+		token = loginManager.createSession(USERNAME_1, PASSWORD_1);
+		
 		Dir whereToAdd = (Dir)myDrive.getFileByPathname("/home/joseluisvf", false, userToAdd);
-		new PlainFile(myDrive, userToAdd, "Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
-		Dir newDir = new Dir(myDrive, "new_dir", userToAdd.getMask(), whereToAdd);
+		new PlainFile(myDrive, userToAdd, "plain", userToAdd.getMask(), "Lusty Argonian Maid", whereToAdd);
+		new App(myDrive, userToAdd, "app", userToAdd.getMask(), "package.class.method", whereToAdd);
+		new Link(myDrive, userToAdd, "link", userToAdd.getMask(),"/home/joseluisvf/plain",whereToAdd);
+		Dir newDir = new Dir(myDrive, "dir", userToAdd.getMask(), whereToAdd);
+		
 		new PlainFile(myDrive, userToAdd, "More Lusty Tales", userToAdd.getMask(), "Lusty Argonian Maid", newDir);
 		new PlainFile(myDrive, userToAdd, "A cold shower", userToAdd.getMask(), "When the heater is off, there is no salvation.", newDir);
-		new App(myDrive, userToAdd, "app",userToAdd.getMask(),null,whereToAdd);
-		new Link(myDrive, userToAdd, "link",userToAdd.getMask(),"/home/joseluisvf/app",whereToAdd);
 		Dir otherUserHome = (Dir)myDrive.getFileByPathname("/home/diogo", false, userToAdd);
 		new PlainFile(myDrive, userToAdd, "File created by different user.", userToAdd.getMask(), "File with no permissions for other users.", otherUserHome);
 	}
 
 	@Test
-	public void writeExistingFile(){
+	public void success(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		WriteFileService service = new WriteFileService(token,"Lusty Tales","abcd");
-		service.execute();
 		Session session = loginManager.getSessionByToken(token);
-		PlainFile existingFile = (PlainFile)myDrive.getFileByPathname("/home/joseluisvf/Lusty Tales",false, session.getOwner());
-		assertEquals("The content found <" + existingFile.getContent() + "> is not the same as what is expected <abcd>", existingFile.getContent(),"abcd");
-	}
-
-	@Test(expected = InvalidTokenException.class)
-	public void writeWithInvalidToken() {
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		Long wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
-		while(token == wrongToken){
-			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
-		}
-		Session session = loginManager.getSessionByToken(token);
-		WriteFileService service = new WriteFileService(wrongToken,"Lusty Tales","abcd");
-		service.execute();
-		assertEquals(myDrive.getFileByPathname("/home/joseluisvf/Lusty Tales",false, session.getOwner()),"abcd");
-	}
-
-	@Test(expected = NoPlainFileException.class)
-	public void writeUnexistingFile(){
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		WriteFileService service = new WriteFileService(token,"Unexisting File","abcd");
-		service.execute();
-	}
-
-	@Test(expected=WrongTypeOfFileFoundException.class)
-	public void writeOnInvalidFile(){
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		WriteFileService service = new WriteFileService(token,"new_dir","abcd");
+		
+		WriteFileService service = new WriteFileService(token, "/home/joseluisvf/plain", "abcd");
 		service.execute();
 
-	}
-	
-	@Test(expected=WrongContentException.class)
-	public void writeWrongContent(){
-		MyDrive myDrive = MyDrive.getInstance();
-		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		WriteFileService service = new WriteFileService(token,"link", null);
-		service.execute();
+		PlainFile existingFile = (PlainFile)myDrive.getFileByPathname("/home/joseluisvf/plain",false, session.getOwner());
+		assertEquals(existingFile.getContent(),"abcd");
 	}
 	
 	@Test
 	public void writeRightContent(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("joseluisvf", PASSWORD_1);
-		WriteFileService service = new WriteFileService(token,"link","/abcd/efgh");
+		Session session = loginManager.getSessionByToken(token);
+		
+		WriteFileService service = new WriteFileService(token,"/home/joseluisvf/link","/abcd/efgh");
+		service.execute();
+		
+		PlainFile existingFile = (PlainFile)myDrive.getFileByPathname("/home/joseluisvf/plain",false, session.getOwner());
+		assertEquals(existingFile.getContent(),"/abcd/efgh");
+		
+	}
+
+	@Test(expected = InvalidTokenException.class)
+	public void writeWithInvalidToken() {
+		Long wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
+		while(token == wrongToken){
+			wrongToken = new Long(new BigInteger(64, new Random()).longValue()); 
+		}
+		
+		WriteFileService service = new WriteFileService(wrongToken, "/home/joseluisvf/plain","abcd");
 		service.execute();
 	}
 
+	@Test(expected = NoDirException.class)
+	public void writeUnexistingFile(){
+		WriteFileService service = new WriteFileService(token, "/home/joseluisvf/plain2","abcd");
+		service.execute();
+	}
+
+	@Test(expected=WrongTypeOfFileFoundException.class)
+	public void writeOnInvalidFile(){
+		WriteFileService service = new WriteFileService(token,"/home/joseluisvf/dir","abcd");
+		service.execute();
+	}
+	
+	@Test(expected=WrongContentException.class)
+	public void writeWrongContentinPlain(){
+		WriteFileService service = new WriteFileService(token,"/home/joseluisvf/plain", null);
+		service.execute();
+	}
+	
+	@Test(expected=WrongContentException.class)
+	public void writeWrongContentinApp(){
+		WriteFileService service = new WriteFileService(token,"/home/joseluisvf/app", "dsak-fds- ");
+		service.execute();
+	}
+	
 	@Test(expected =PermissionDeniedException.class)
 	public void writeWithWrongPermission(){
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
-		Long token = loginManager.createSession("diogo", PASSWORD_2);
-		WriteFileService service = new WriteFileService(token,"File created by different user.","abcd");
+		Long token2 = loginManager.createSession(USERNAME_2, PASSWORD_2);
+		
+		WriteFileService service = new WriteFileService(token2,"/home/joseluisvf/plain","abcd");
 		service.execute();
 	}
 	

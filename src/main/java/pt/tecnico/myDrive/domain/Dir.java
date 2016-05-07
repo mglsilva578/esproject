@@ -45,7 +45,7 @@ public class Dir extends Dir_Base {
 			drive.setRootDir(this);
 		}
 	}
-	
+
 	public void execute(String[] args){
 		throw new CannotExecuteDirectoryException();
 	}
@@ -82,7 +82,7 @@ public class Dir extends Dir_Base {
 		}
 		throw new NoDirException(nameToLook, this.getName());
 	}
-	
+
 	//This method is equal to getFileByName(String nameToLook) but if nameToLook is Link, it return link, 
 	//unlike the other who returned the file pointed to by link.
 	public File getFileByName2(String nameToLook){
@@ -94,7 +94,7 @@ public class Dir extends Dir_Base {
 		for (File file : this.getFileSet()){
 			if(file.getName().equals(nameToLook)){
 				return file;
-				
+
 			}
 		}
 		throw new NoDirException(nameToLook, this.getName());
@@ -223,59 +223,9 @@ public class Dir extends Dir_Base {
 		LoginManager loginManager = this.getMydrive().getLoginManager();
 		return loginManager.isDirInUseByAnySession(dirToDelete);
 	}
-
-	/**
-	 * @throws NoPlainFileException
-	 * @throws PermissionDeniedException
-	 * @throws WrongContentException
-	 */
-	public void changePlainFileContent (String fileName, String newContent, User whoWantsToChange){
-		File fileToChange = null;
-
-		fileToChange = this.confirmFileExists (fileName, fileToChange);
-		this.confirmFileIsPlainFile (fileToChange, fileName);
-		this.confirmUserHasPermissionToWrite (fileToChange, whoWantsToChange);
-		this.confirmContentIsValid (newContent, fileToChange);
-
-		this.changePlainFileContent ((PlainFile)fileToChange, newContent);
-	}
-
-	private File confirmFileExists(String fileName, File fileToChange) {
-		try{
-			return this.getFileByName(fileName);
-		} catch (NoDirException nde){
-			throw new NoPlainFileException(fileName);
-		}
-	}
-
-	private void confirmFileIsPlainFile (File fileToChange, String fileName){
-		if (!(fileToChange instanceof PlainFile)){
-			throw new WrongTypeOfFileFoundException(fileName, "PlainFile");
-		}
-	}
-
-	private void confirmUserHasPermissionToWrite (File fileToChange, User whoWantsToChange){
-		if(!fileToChange.hasPermissionsForWrite(whoWantsToChange)){
-			throw new PermissionDeniedException(
-					whoWantsToChange,
-					PermissionDeniedException.WRITE,
-					fileToChange);
-		}
-	}
-
-	private void confirmContentIsValid (String newContent, File fileToChange){
-		if ((newContent == null)){
-			throw new WrongContentException (newContent, fileToChange);
-		} 
-	}
-
+	
 	private boolean isPath(String newContent) {
 		return Dir.SLASH_NAME.equals(""+newContent.charAt(0));
-	}
-
-	private void changePlainFileContent (PlainFile fileToChange, String newContent){
-		fileToChange.setContent (newContent);
-		fileToChange.setLast_modification(new DateTime());
 	}
 
 	private boolean isEmpty(Dir dirToDelete) {
@@ -363,7 +313,7 @@ public class Dir extends Dir_Base {
 			for(File file : this.getFileSet()){
 				files.add(file);
 			}
-			
+
 			return files;
 		}
 		else{

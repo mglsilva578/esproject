@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.service;
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.LoginManager;
+import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -8,21 +10,19 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class WriteFileService extends MyDriveService {
 	private Long token;
-	private String filename;
+	private String path;
 	private String newContent;
 
-	public WriteFileService (Long token, String filename, String newContent){
+	public WriteFileService (Long token, String path, String newContent){
 		this.token = token;
-		this.filename = filename;
+		this.path = path;
 		this.newContent = newContent;
 	}
 	
 	@Override
 	protected void dispatch() throws MyDriveException {
-		Session session = getMyDrive().getLoginManager().getSessionByToken(this.token);
-		Dir currentDir = session.getCurrentDir();
-		User whoWantsToChangeFile = session.getOwner();
-		currentDir.changePlainFileContent(this.filename, this.newContent, whoWantsToChangeFile);
+		MyDrive drive =getMyDrive();
+		drive.changePlainFileContent(token, path, newContent);
 	}
 	
 

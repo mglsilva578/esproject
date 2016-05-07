@@ -19,6 +19,7 @@ import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
+import pt.tecnico.myDrive.exception.WrongContentException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 import pt.tecnico.myDrive.util.SetOrderingHelper;
 
@@ -392,5 +393,19 @@ public class MyDrive extends MyDrive_Base {
 	public boolean isDefaultUser(String username) {
 		return username.equals(Nobody.USERNAME) ||
 				username.equals(SuperUser.USERNAME);
+	}
+	
+	public void changePlainFileContent (Long token, String path, String newContent){
+		File fileToChange = null;
+		LoginManager loginManager = this.getLoginManager();
+		Session session = loginManager.getSessionByToken(token);
+		User user = session.getOwner();
+		
+		fileToChange = this.getFileByPathname(path, false, user);
+		fileToChange.confirmFileIsPlainFile(fileToChange.getName());
+		fileToChange.confirmUserHasPermissionToWrite(user);
+		fileToChange.confirmContentIsValid(newContent);
+
+		((PlainFile) fileToChange).changePlainFileContent(newContent);
 	}
 }

@@ -7,6 +7,11 @@ import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidIdException;
 import pt.tecnico.myDrive.exception.InvalidPermissionsException;
+import pt.tecnico.myDrive.exception.NoDirException;
+import pt.tecnico.myDrive.exception.NoPlainFileException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.WrongContentException;
+import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
 
 public class File extends File_Base {
 	private static final int SLASH_DIR_0 = 0;
@@ -237,5 +242,26 @@ public class File extends File_Base {
 		}
 		
 		return !isNull && isComposedOfAcceptableCharacters && hasRightLength;
+	}
+	
+	protected void confirmFileIsPlainFile (String fileName){
+		if (!(this instanceof PlainFile)){
+			throw new WrongTypeOfFileFoundException(fileName, "PlainFile");
+		}
+	}
+
+	protected void confirmUserHasPermissionToWrite (User whoWantsToChange){
+		if(!this.hasPermissionsForWrite(whoWantsToChange)){
+			throw new PermissionDeniedException(
+					whoWantsToChange,
+					PermissionDeniedException.WRITE,
+					this);
+		}
+	}
+
+	protected void confirmContentIsValid (String newContent){
+		if ((newContent == null)){
+			throw new WrongContentException (newContent, this);
+		} 
 	}
 }

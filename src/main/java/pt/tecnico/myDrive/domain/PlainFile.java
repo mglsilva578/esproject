@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
@@ -137,6 +138,11 @@ public class PlainFile extends PlainFile_Base {
 		this.init(drive, id, _owner, name, perm, contents, father, last_modification);
 
 
+	}
+	
+	protected void changePlainFileContent(String newContent){
+		this.setContent (newContent);
+		this.setLast_modification(new DateTime());
 	}
 
 }
