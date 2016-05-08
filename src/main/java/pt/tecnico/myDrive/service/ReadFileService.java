@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.service;
 
+import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
@@ -17,8 +19,13 @@ public class ReadFileService extends MyDriveService{
 	
 	@Override
 	protected void dispatch() throws MyDriveException {
-		MyDrive myDrive = getMyDrive();
-		String content = myDrive.readPlainFileContent(token, fileName);
+		MyDrive drive = getMyDrive();
+		LoginManager loginManager = drive.getLoginManager();
+		Session session = loginManager.getSessionByToken(token);
+		Dir currentDir = session.getCurrentDir();
+		User user = session.getOwner();
+		
+		String content = currentDir.readPlainFileContent(token, fileName, user);
 		this.content = content;
 	}
 

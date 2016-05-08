@@ -207,46 +207,6 @@ public class MyDrive extends MyDrive_Base {
 		}	
 	}
 
-	public String readPlainFileContent(Long token, String nameFile){
-		PlainFile fileToRead;
-
-		Session session =getLoginManager().getSessionByToken(token);
-		User userToRead = session.getOwner();
-		Dir currentDir = session.getCurrentDir();
-		try{
-			File file = currentDir.getFileByName2(nameFile);
-			if(file instanceof Link){
-				if(file.hasPermissionsForRead(userToRead)){
-					file = currentDir.getFileByName(nameFile);
-					readPlainFileContent(token, file.getName());
-				}
-				else{
-					throw new PermissionDeniedException(userToRead,
-							PermissionDeniedException.READ,
-							file);
-				}
-			}
-			if(file instanceof PlainFile){
-				if(file.hasPermissionsForRead(userToRead)){
-					fileToRead = (PlainFile) file;
-				}
-				else{
-					throw new PermissionDeniedException(userToRead,
-							PermissionDeniedException.READ,
-							file);
-				}
-			}
-			else{
-				throw new NoPlainFileException(nameFile);
-			}
-		}
-		catch(NoDirException nde){
-			throw new FileDoesNotExistException(nameFile);
-		}
-		
-		return fileToRead.getContent();
-	}
-
 	public String listDirContent(String pathname){
 		File fileFound = this.getFileByPathname(pathname, false, null);
 		if(fileFound instanceof Dir){

@@ -17,6 +17,7 @@ import pt.tecnico.myDrive.exception.CannotDeleteSlashDirException;
 import pt.tecnico.myDrive.exception.CannotExecuteDirectoryException;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileDoesNotExistException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
@@ -320,4 +321,42 @@ public class Dir extends Dir_Base {
 			throw new PermissionDeniedException(user, PermissionDeniedException.READ, this);
 		}
 	}
+	
+	public String readPlainFileContent(Long token, String nameFile, User userToRead){
+		PlainFile fileToRead;
+		
+		try{
+			File file = this.getFileByName2(nameFile);
+			if(file instanceof Link){
+				if(file.hasPermissionsForRead(userToRead)){
+					file = this.getFileByName(nameFile);
+					readPlainFileContent(token, file.getName(), userToRead);
+				}
+				else{
+					throw new PermissionDeniedException(userToRead,
+							PermissionDeniedException.READ,
+							file);
+				}
+			}
+			if(file instanceof PlainFile){
+				if(file.hasPermissionsForRead(userToRead)){
+					fileToRead = (PlainFile) file;
+				}
+				else{
+					throw new PermissionDeniedException(userToRead,
+							PermissionDeniedException.READ,
+							file);
+				}
+			}
+			else{
+				throw new NoPlainFileException(nameFile);
+			}
+		}
+		catch(NoDirException nde){
+			throw new FileDoesNotExistException(nameFile);
+		}
+		
+		return fileToRead.getContent();
+	}
+	
 }
