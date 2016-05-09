@@ -38,7 +38,7 @@ public class App extends App_Base {
 			return false;
 		}
 	}
-	public void execute(String[] args){
+	public void execute(String... args){
     	switch(this.getContent()){
     		case "pt.tecnico.myDrive.domain":
     			AppMethods.main(args);
