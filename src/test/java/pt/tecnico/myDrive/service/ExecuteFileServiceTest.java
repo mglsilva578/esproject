@@ -1,5 +1,12 @@
 package pt.tecnico.myDrive.service;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit4.JMockit;
+import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Extension;
@@ -8,18 +15,11 @@ import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.CannotFindFileException;
+import pt.tecnico.myDrive.exception.CannotExecuteDirectoryException;
 import pt.tecnico.myDrive.exception.InvalidAppMethodException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.NoDirException;
 import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
-
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.integration.junit4.JMockit;
 
 @RunWith(JMockit.class)
 public class ExecuteFileServiceTest extends AbstractServiceTest {
@@ -30,6 +30,8 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 	private User user1;
 	private Dir homeDir1;
 	private MyDrive myDrive;
+	private ExecuteFileService service;
+	
 	@Override
 	protected void populate() {
 		myDrive = MyDrive.getInstance();
@@ -47,23 +49,49 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 	}
 	
 	@Test
-	public void sucessInExecute(){
+	public void sucessInExecutePlainFile(){
 		String[] args= null;
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token,"/home/username1/plain1",args);
+		service = new ExecuteFileService(token,"/home/username1/plain1",args);
 		service.execute();
 		/*PlainFile plain1 = (PlainFile) myDrive.getFileByPathname("/home/username1/plain1", false,user1);
 		String content = plain1.getContent();
 		assertEquals("args",content);*/
 	}
+	
+	@Test
+	public void successInExecuteLink(){
+		String[] args = null;
+		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		service = new ExecuteFileService(token, "/home/username1/link1", args);
+		service.execute();
+	}
+	
+	@Test
+	public void successInExecuteApp(){
+		String[] args = null;
+		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		service = new ExecuteFileService(token, "/home/username1/app1", args);
+		service.execute();
+	}
+	
+	@Test(expected= CannotExecuteDirectoryException.class)
+	public void cannotExecuteDirectory(){
+		String[] args = null;
+		final String pathToDir = "/home/username1/dir1";
+		LoginManager loginManager = myDrive.getLoginManager();
+		Long token = loginManager.createSession(USERNAME1, PASS1);
+		service = new ExecuteFileService(token, pathToDir, args);
+		service.execute();
+	}
 
-	@Test(expected= CannotFindFileException.class)
+	@Test(expected= NoDirException.class)
 	public void unexistingPlainFile(){
 		String[] args = null;
 		LoginManager loginmanager = myDrive.getLoginManager();
 		Long token = loginmanager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token,"/local/invalid",args);
+		service = new ExecuteFileService(token,"/local/invalid",args);
 		service.execute();
 	}
 	
@@ -72,17 +100,18 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		String[] args = null;
 		LoginManager loginmanager = myDrive.getLoginManager();
 		Long token = loginmanager.createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token,"/home/username1",args);
+		service = new ExecuteFileService(token,"/home/username1",args);
 		service.execute();
 	}
 	
 	@Test
 	public void successMockAssociation(){
-		String path = "/home/username1/texto.pdf";
+		final String path = "/home/username1/texto.pdf";
 		String[] arg = null;
-		new MockUp<ExecuteFileService>(){
+		Long token;
+		new MockUp<ExecuteFileService>() {
 			@Mock
-			void dispacth() {
+			void dispacth() throws MyDriveException{
 				for(Extension extension : user1.getExtensionSet()){
 					if(path.contains(extension.getFileExtension())){
 						App app = (App) myDrive.getFileByName(extension.getFileName());
@@ -92,8 +121,8 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 					
 			}
 		};
-		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token, path, arg);
+		token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		service = new ExecuteFileService(token, path, arg);
 		service.execute();
 				
 	}
@@ -101,7 +130,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 	@Test(expected=InvalidAppMethodException.class)
 	public void failnoassociation(){
 		String path = "não existe";
-		String[] args = null;
+	 	String args = null;
 		new MockUp<ExecuteFileService>(){
 			@Mock
 			void dispacth() throws MyDriveException{
@@ -109,7 +138,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 			}
 		};
 		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token, path, args);
+		service = new ExecuteFileService(token, path, args);
 		service.execute();
 	}
 
