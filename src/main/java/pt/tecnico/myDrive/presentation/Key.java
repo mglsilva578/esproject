@@ -16,7 +16,7 @@ public class Key extends MdCommand{
 	}
 
 	@Override
-	void execute(String[] args) {
+	public void execute(String[] args) {
 		this.checkArgumentsAreValid(args);
 		this.executeService(args);
 	}
