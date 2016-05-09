@@ -14,5 +14,6 @@ public class MdShell extends Shell{
 		new Key(this);
 		new List(this);
 		new Login(this);
+		new Import(this);
 	}
 }

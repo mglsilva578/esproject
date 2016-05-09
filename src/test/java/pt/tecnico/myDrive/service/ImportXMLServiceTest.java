@@ -10,6 +10,7 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.User;
 
 public class ImportXMLServiceTest extends AbstractServiceTest {
     private final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -73,7 +74,7 @@ public class ImportXMLServiceTest extends AbstractServiceTest {
         MyDrive drive = MyDrive.getInstance();
         assertEquals(4, drive.getUserSet().size());
         assertTrue(drive.hasUser("jtb"));
-        assertTrue("created mja", drive.hasUser("mja"));
+        assertTrue(drive.hasUser("mja"));
         assertEquals(11, drive.getFileSet().size());
 	// it must be right, but more checks can be made ...
     }

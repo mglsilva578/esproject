@@ -1,53 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <myDrive>
-  <user username="mja">
-    <password>Peyrelongue</password>
-    <name>Manuel José de Arriaga</name>
-    <homeDir>/home/mja</homeDir>
-    <mask>rwxd----</mask>
-  </user>
-  <user username="jtb">
-    <password>fernandes</password>
-    <name>Joaquim Teófilo Braga</name>
-    <homeDir>/home/jtb</homeDir>
-    <mask>rwxdr-x-</mask>
-  </user>
-  <plain id="4">
-    <path>/home/jtb</path>
-    <name>profile</name>
-    <owner>jtb</owner>
-    <perm>rwxdr-x-</perm>
-    <last_modification>2016-05-09T02:11:10.696+01:00</last_modification>
-    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
-  </plain>
-  <dir id="5">
-    <path>/home/jtb</path>
-    <name>documents</name>
-    <owner>jtb</owner>
-    <perm>rwxdr-x-</perm>
-    <last_modification>2016-05-09T02:11:10.696+01:00</last_modification>
-  </dir>
-  <link id="6">
-    <path>/home/jtb</path>
-    <name>doc</name>
-    <owner>jtb</owner>
-    <perm>rwxdr-x-</perm>
-    <last_modification>2016-05-09T02:11:10.700+01:00</last_modification>
-    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
-  </link>
-  <dir id="8">
-    <path>/home/jtb</path>
-    <name>bin</name>
-    <owner>jtb</owner>
-    <perm>rwxd--x-</perm>
-    <last_modification>2016-05-09T02:11:10.700+01:00</last_modification>
-  </dir>
-  <app id="10">
-    <path>/home/jtb/bin</path>
-    <name>hello</name>
-    <owner>jtb</owner>
-    <perm>rwxdr-x-</perm>
-    <last_modification>2016-05-09T02:11:10.701+01:00</last_modification>
-    <contents>pt.tecnico.myDrive.app.Hello</contents>
-  </app>
+  <Guest username="nobody">
+    <password>N/A</password>
+    <name>Guest</name>
+    <homeDir>/home/nobody</homeDir>
+    <mask>rxwdr-x-</mask>
+  </Guest>
 </myDrive>
