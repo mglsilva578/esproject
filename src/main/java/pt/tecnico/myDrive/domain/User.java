@@ -141,11 +141,11 @@ public class User extends User_Base {
 	protected void importXML(MyDrive drive, Element elm){
 		try{
 			List<Element> children = elm.getChildren();
-			String username = elm.getAttributeValue("username");
-			String name = children.get(1).getText();
-			String password = children.get(0).getText();
-			String mask = children.get(3).getText();
-			String homeDir = children.get(2).getText();
+			String username = elm.getAttribute("username").getValue();
+			String name = elm.getChildText("name");
+			String password = elm.getChildText("password");
+			String mask = elm.getChildText("mask");
+			String homeDir = elm.getChildText("home");
 			init(drive, username, password, name, mask, homeDir);
 		}catch(Exception e){
 			e.printStackTrace();

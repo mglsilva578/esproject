@@ -67,53 +67,26 @@ public class App extends App_Base {
 
 	public void importXML(MyDrive drive, Element elm){
 		Optional<String> maybeString = null;
-		String name = null;
-		String path = null;
-		String owner = null;
-		String contents = null;
-		String last_modification = null;
-		String id;
-		User _owner;
 
-		for(Element element : elm.getChildren()){
-			switch(element.getName()){
-			case "name":
-				name = element.getText();
-				break;
-			case "path":
-				path = element.getText();
-				break;
-			case "owner":
-				owner = element.getText();
-				break;
-			case "contents":
-				contents = element.getText();
-				break;
-			case "last_modification":
-				last_modification = element.getText();
-				break;
-			}
-		}
-		if(name == null) throw new ImportDocumentException("App \n name is not optional and must be supplied");
+    	maybeString = Optional.ofNullable(elm.getChildText("name"));
+    	String name = (maybeString.orElseThrow(() -> new ImportDocumentException("App \n name is not optional and must be supplied.")));
 
-		String _name = name;
-		maybeString = Optional.ofNullable(elm.getAttributeValue("id"));
-		id = (maybeString.orElseThrow(() -> new ImportDocumentException("APP <"+ _name +"> ID is not optional and must be supplied." + elm.toString())));
-
-		if(path == null) throw new ImportDocumentException("App <"+ name +"> \n path is not optional and must be supplied.");
+    	maybeString = Optional.ofNullable(elm.getChildText("path"));
+		String path = (maybeString.orElseThrow(() -> new ImportDocumentException("App <"+ name +"> \n path is not optional and must be supplied.")));
 		drive.getFileByPathname(path, true, null);
 		Dir father = (Dir)drive.getFileByPathname(path, true, null);
 
-		if(owner == null) owner = SuperUser.USERNAME;
-		_owner = drive.getUserByUsername(owner);
 
-		if(contents == null) contents = DEFAULT_METHOD;
-		String perm = _owner.getMask();
+		maybeString = Optional.ofNullable(elm.getChildText("owner"));
+		String ownerName = (maybeString.orElse(SuperUser.USERNAME));
+		User owner = drive.getUserByUsername(ownerName);
 
-		if(last_modification == null) throw new ImportDocumentException("App <"+ name +"> date of last modification is not optional and must be supplied.");
-		this.init(drive, id, _owner, name, perm, contents, father, last_modification);
-
-
+		maybeString = Optional.ofNullable(elm.getChildText("method"));
+		String contents = (maybeString.orElse(DEFAULT_METHOD));
+		
+		String perm = owner.getMask();
+		
+		this.init(drive, owner, name, perm, contents, father);
 	}
 
 }

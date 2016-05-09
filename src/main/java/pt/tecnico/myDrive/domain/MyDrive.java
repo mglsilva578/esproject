@@ -179,7 +179,7 @@ public class MyDrive extends MyDrive_Base {
 
 
 
-	private boolean hasUser(String username) {
+	public boolean hasUser(String username) {
 		try{
 			getUserByUsername(username);
 			return true;
@@ -205,6 +205,7 @@ public class MyDrive extends MyDrive_Base {
 		else{
 			throw new CannotDeleteRootException();
 		}	
+		
 	}
 
 	public String listDirContent(String pathname){
@@ -252,12 +253,11 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	public void importXML(Element toImport){
-		this.initBaseState();
+		//this.initBaseState();
 
 		Optional<String> maybeString = null;
 		int highestIdImported = -1;
 		int currentId;
-
 		for(Element node : toImport.getChildren()){
 			log.trace("MyDrive importing " + node.getName());
 			maybeString = Optional.ofNullable(node.getAttributeValue("id"));
@@ -300,10 +300,13 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	private void initBaseState() {
-		SuperUser superUser = new SuperUser(this);
-		Dir slash = new Dir(this, superUser, Dir.SLASH_NAME, superUser.getMask());
-		Dir home = new Dir(this, superUser, "home", superUser.getMask(), slash);
-		new Dir(this, superUser, SuperUser.HOME_DIR, superUser.getMask(), home);
+		SuperUser rootUser = new SuperUser(this);
+		Dir slash = new Dir(this, rootUser, Dir.SLASH_NAME, rootUser.getMask());
+		this.setRootDir(slash);
+		Dir home = new Dir(this, rootUser, "home", rootUser.getMask(), slash);
+		new Dir(this, rootUser, SuperUser.HOME_DIR, rootUser.getMask(), home);
+		Nobody nobody = new Nobody(this);
+		new Dir(this, nobody, Nobody.HOME_DIR, nobody.getMask(), home);
 	}
 
 	@Override
@@ -317,6 +320,7 @@ public class MyDrive extends MyDrive_Base {
 
 		description += "\n\t\tMyDrive users\n";
 		for (User user : this.getUserSet()) {
+			log.trace(user.getName() + "   " + getUserSet().size());
 			description += "\t" + user.toString() + "\n";
 		}
 

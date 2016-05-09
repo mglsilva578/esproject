@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidIdException;
 import pt.tecnico.myDrive.exception.InvalidPermissionsException;
@@ -263,5 +264,20 @@ public class File extends File_Base {
 		if ((newContent == null)){
 			throw new WrongContentException (newContent, this);
 		} 
+	}
+	
+	public void importXML(MyDrive drive, Element elm){
+		try{
+			int id = elm.getAttribute("id").getIntValue();
+			String path = new String(elm.getChild("path").getValue());
+			String name = new String(elm.getChild("name").getValue());
+			String owner = new String(elm.getChild("owner").getValue());
+			User u = drive.getUserByUsername(owner);
+			String perm = new String(elm.getChild("mask").getValue());
+			init(drive, u, name, perm);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new ImportDocumentException("In File");
+		}
 	}
 }

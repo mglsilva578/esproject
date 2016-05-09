@@ -1,78 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <myDrive>
-  <user username="ist176544">
-    <password>7654476544</password>
-    <name>Daniel</name>
-    <homeDir>/home/ist176544</homeDir>
+  <user username="mja">
+    <password>Peyrelongue</password>
+    <name>Manuel José de Arriaga</name>
+    <homeDir>/home/mja</homeDir>
     <mask>rwxd----</mask>
   </user>
-  <user username="joseluisvf">
-    <password>5581655816</password>
-    <name>JoseLuis</name>
-    <homeDir>/home/joseluisvf</homeDir>
-    <mask>rwxd----</mask>
+  <user username="jtb">
+    <password>fernandes</password>
+    <name>Joaquim Teófilo Braga</name>
+    <homeDir>/home/jtb</homeDir>
+    <mask>rwxdr-x-</mask>
   </user>
-  <user username="R3Moura">
-    <password>7400574005</password>
-    <name>Ricardo</name>
-    <homeDir>/home/R3Moura</homeDir>
-    <mask>rwxd----</mask>
-  </user>
-  <user username="mglsilva578">
-    <password>6823068230</password>
-    <name>Miguel</name>
-    <homeDir>/home/mglsilva578</homeDir>
-    <mask>rwxd----</mask>
-  </user>
-  <user username="zttr">
-    <password>7653476534</password>
-    <name>Diogo</name>
-    <homeDir>/home/zttr</homeDir>
-    <mask>rwxd----</mask>
-  </user>
-  <Guest username="nobody">
-    <password>N/A</password>
-    <name>Guest</name>
-    <homeDir>/home/nobody</homeDir>
-    <mask>rxwdr-x-</mask>
-  </Guest>
-  <plain id="9">
-    <path>/home/joseluisvf</path>
-    <name>Lusty Tales</name>
-    <owner>ist176544</owner>
-    <perm>rwxd----</perm>
-    <last_modification>2016-05-02T13:46:35.948+01:00</last_modification>
-    <contents>Even more lust</contents>
+  <plain id="4">
+    <path>/home/jtb</path>
+    <name>profile</name>
+    <owner>jtb</owner>
+    <perm>rwxdr-x-</perm>
+    <last_modification>2016-05-09T02:11:10.696+01:00</last_modification>
+    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
   </plain>
-  <link id="10">
-    <path>/home/zttr</path>
-    <name>link1</name>
-    <owner>ist176544</owner>
-    <perm>rwxd----</perm>
-    <last_modification>2016-05-02T13:46:35.948+01:00</last_modification>
-    <contents>Even more lust</contents>
-  </link>
-  <app id="11">
-    <path>/home/zttr</path>
-    <name>app1</name>
-    <owner>ist176544</owner>
-    <perm>rwxd----</perm>
-    <last_modification>2016-05-02T13:46:35.948+01:00</last_modification>
-    <contents>package.class.method</contents>
-  </app>
-  <app id="12">
-    <path>/home/R3Moura</path>
-    <name>Skyrim</name>
-    <owner>ist176544</owner>
-    <perm>rwxd----</perm>
-    <last_modification>2016-05-02T13:46:35.948+01:00</last_modification>
-    <contents>package.class.method</contents>
-  </app>
-  <dir id="13">
-    <path>/home/R3Moura</path>
-    <name>TestePermissoes</name>
-    <owner>ist176544</owner>
-    <perm>--xd----</perm>
-    <last_modification>2016-05-02T13:46:35.948+01:00</last_modification>
+  <dir id="5">
+    <path>/home/jtb</path>
+    <name>documents</name>
+    <owner>jtb</owner>
+    <perm>rwxdr-x-</perm>
+    <last_modification>2016-05-09T02:11:10.696+01:00</last_modification>
   </dir>
+  <link id="6">
+    <path>/home/jtb</path>
+    <name>doc</name>
+    <owner>jtb</owner>
+    <perm>rwxdr-x-</perm>
+    <last_modification>2016-05-09T02:11:10.700+01:00</last_modification>
+    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
+  </link>
+  <dir id="8">
+    <path>/home/jtb</path>
+    <name>bin</name>
+    <owner>jtb</owner>
+    <perm>rwxd--x-</perm>
+    <last_modification>2016-05-09T02:11:10.700+01:00</last_modification>
+  </dir>
+  <app id="10">
+    <path>/home/jtb/bin</path>
+    <name>hello</name>
+    <owner>jtb</owner>
+    <perm>rwxdr-x-</perm>
+    <last_modification>2016-05-09T02:11:10.701+01:00</last_modification>
+    <contents>pt.tecnico.myDrive.app.Hello</contents>
+  </app>
 </myDrive>

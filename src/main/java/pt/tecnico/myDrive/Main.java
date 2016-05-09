@@ -132,7 +132,7 @@ public class Main {
 			
 			whereToAdd = (Dir)drive.getFileByPathname("/home/zttr", false, drive.getUserByUsername("zttr"));
 			new Link(drive, userToAdd, "link1", userToAdd.getMask(),"/home/joseluisvf/Lusty Tales", whereToAdd);
-			whereToAdd.changePlainFileContent("link1", "Even more lust", userToAdd);
+			//whereToAdd.changePlainFileContent("link1", "Even more lust", userToAdd);
 			
 			new App(drive, userToAdd, "app1", userToAdd.getMask(),"package.class.method", whereToAdd);
 			whereToAdd = (Dir)drive.getFileByPathname("/home/R3Moura", false, drive.getUserByUsername("R3Moura"));
@@ -210,7 +210,7 @@ public class Main {
 			log.error(e.getMessage());
 		}
 	}
-
+ 
 
 	@Atomic
 	private static void printMyDrive(){

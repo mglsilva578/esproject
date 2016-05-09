@@ -13,11 +13,6 @@ public class Nobody extends Nobody_Base {
 	public static final String NAME = "Guest";
 	private final int MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION = Integer.MAX_VALUE;
 
-	public Nobody() {
-        super();
-        super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
-    }
-
    	public Nobody(MyDrive drive) {
        	super.init(drive, USERNAME, null, NAME, "rxwdr-x-", "/home/nobody");
        	super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
