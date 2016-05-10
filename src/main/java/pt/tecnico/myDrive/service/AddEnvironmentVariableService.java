@@ -99,7 +99,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 		if(!(token==null)&&environmentVariableName==""&&environmentVariableValue==""){
 			return false;
 		}
-		if(!(token==null)&&environmentVariableValue==""&&){
+		if(!(token==null)&&environmentVariableValue==""){
 			return false;
 		}
 		
