@@ -53,7 +53,7 @@ public class Link extends Link_Base {
     }
     
     public void execute(String[] args){
-    	System.out.println(this.getContent());
+    	this.getLinkedFile().execute(args);
     }
     
     public String toString(){

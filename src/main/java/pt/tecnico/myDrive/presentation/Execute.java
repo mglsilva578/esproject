@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.presentation;
 
+import pt.tecnico.myDrive.service.ExecuteFileService;
+
 public class Execute extends MdCommand{
 	private static final String DEFAULT_HELP = "Executes the file in the path given with the arguments provided.";
 	private static final String DEFAULT_NAME = "do";
@@ -27,16 +29,24 @@ public class Execute extends MdCommand{
 
 	@Override
 	protected void checkArgumentsAreValid(String[] args) {
-		if ((args.length != MAX_ARGUMENTS)) {
+		/*if ((args.length != MAX_ARGUMENTS)) {
 			throw new RuntimeException(this.name() + " usage: " + this.name() + " <path> <arguments>.");
-		}
+		}*/
 	}
 	
 	@Override
 	protected void executeService(String[] args) {
-		String username = args[0];
-		String password = args[1];
+		String path = args[0];
+		int i = 1;
+		String[] newArgs = new String[args.length - 1];
+		token = super.shell().getTokenActiveSession();
+	
+		while(i <= args.length - 2){
+			newArgs[i-1] = args[i];
+			i++;
+		}
 		
-		//TODO run service
+		ExecuteFileService service = new ExecuteFileService(token, path, newArgs);
+		service.execute();
 	}
 }

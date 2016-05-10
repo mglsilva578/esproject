@@ -95,15 +95,6 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
-	@Test(expected=WrongTypeOfFileFoundException.class)
-	public void wrongTypeOfFile(){
-		String[] args = null;
-		LoginManager loginmanager = myDrive.getLoginManager();
-		Long token = loginmanager.createSession(USERNAME1, PASS1);
-		service = new ExecuteFileService(token,"/home/username1",args);
-		service.execute();
-	}
-	
 	@Test
 	public void successMockAssociation(){
 		final String path = "/home/username1/texto.pdf";
@@ -134,7 +125,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		new MockUp<ExecuteFileService>(){
 			@Mock
 			void dispacth() throws MyDriveException{
-				throw new InvalidAppMethodException("não existe");
+				
 			}
 		};
 		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
