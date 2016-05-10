@@ -36,11 +36,13 @@ public class Execute extends MdCommand{
 	
 	@Override
 	protected void executeService(String[] args) {
-		String path = args[0];
+		String path;
 		int i = 1;
-		String[] newArgs = new String[args.length - 1];
+		String[] newArgs;
+		if(args.length <= 0) throw new RuntimeException("USAGE: "+name()+" [<path>]" + " (optional) [<args>]");
+		newArgs = new String[args.length - 1];
 		token = super.shell().getTokenActiveSession();
-	
+		path = args[0];
 		while(i <= args.length - 1){
 			newArgs[i-1] = args[i];
 			i++;
