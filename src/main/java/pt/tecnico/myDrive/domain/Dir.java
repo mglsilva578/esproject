@@ -47,7 +47,7 @@ public class Dir extends Dir_Base {
 		}
 	}
 
-	public void execute(String[] args){
+	public void execute(String... args){
 		throw new CannotExecuteDirectoryException();
 	}
 

@@ -20,7 +20,7 @@ public class Login extends MdCommand{
 	}
 
 	@Override
-	void execute(String[] args) {
+	public void execute(String[] args) {
 		this.checkArgumentsAreValid(args);
 		this.executeService(args);
 		this.updateShellWithNewLogin(this.username, this.token);

@@ -35,7 +35,7 @@ public class PlainFile extends PlainFile_Base {
 		super.setContent(content);
 	}
 	
-	public void execute(String[] args){
+	public void execute(String... args){
 		System.out.println(this.getContent());
 	}
 	

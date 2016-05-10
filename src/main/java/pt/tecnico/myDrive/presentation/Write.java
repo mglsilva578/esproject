@@ -12,7 +12,7 @@ public class Write extends MdCommand{
 	}
 
 	@Override
-	void execute(String[] args) {
+	public void execute(String[] args) {
 		Long tokenActiveSession = super.shell().getTokenActiveSession();
 		if(args.length == 2){
 			WriteFileService wfs = new WriteFileService(tokenActiveSession, args[0] ,args[1]);

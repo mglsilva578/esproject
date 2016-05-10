@@ -11,13 +11,13 @@ public class ExecuteFileService extends MyDriveService{
 	private Long _token;
 	private String _path;
 	private String[] _args;
-	public ExecuteFileService(Long token, String path, String[] args){
+	public ExecuteFileService(Long token, String path, String... args){
 		_token = token;
 		_path = path;
 		_args = args;
 	}
 
-	protected void dispatch() throws MyDriveException {
+	public void dispatch() throws MyDriveException {
 		MyDrive myDrive = getMyDrive();
 		Session session = myDrive.getLoginManager().getSessionByToken(_token);
 		User user = session.getOwner();
@@ -25,7 +25,7 @@ public class ExecuteFileService extends MyDriveService{
 		file.execute(_args);
 	}
 
-	protected String Result(){
+	public String Result(){
 		return null;
 	}
 }
