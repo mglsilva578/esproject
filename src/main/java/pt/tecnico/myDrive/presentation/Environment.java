@@ -58,7 +58,7 @@ public class Environment extends MdCommand{
 			AddEnvironmentVariableService service = new AddEnvironmentVariableService(token);
 			service.execute();
 			for(EnvironmentVariableDto env:service.getResult()){
-				if(env.getName()==name){
+				if(env.getName().equals(name)){
 					println(env.toString());
 				}
 			}
