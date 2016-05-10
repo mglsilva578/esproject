@@ -41,7 +41,7 @@ public class Execute extends MdCommand{
 		String[] newArgs = new String[args.length - 1];
 		token = super.shell().getTokenActiveSession();
 	
-		while(i <= args.length - 2){
+		while(i <= args.length - 1){
 			newArgs[i-1] = args[i];
 			i++;
 		}
