@@ -22,8 +22,8 @@ public class AddEnvironmentVariableService extends MyDriveService{
 	private String environmentVariableValue;
 	private List<EnvironmentVariableDto> existingEnvironmentVariables;
 	private Session session;
-	public static final String NO_VALUE_GIVEN = "no value";
-	public static final String NO_NAME_GIVEN = "no name";
+	public static final String NO_VALUE_GIVEN = "novalue";
+	public static final String NO_NAME_GIVEN = "noname";
 
 	public AddEnvironmentVariableService(
 			Long token,
@@ -36,12 +36,19 @@ public class AddEnvironmentVariableService extends MyDriveService{
 		this.existingEnvironmentVariables = new ArrayList<EnvironmentVariableDto>();
 
 	}
+	
+	public AddEnvironmentVariableService(Long token) {
+		this.token = token;
+		this.environmentVariableName="";
+		this.environmentVariableValue="";
+		this.existingEnvironmentVariables=new ArrayList<EnvironmentVariableDto>();
+	}
 
 	@Override
 	protected void dispatch() throws MyDriveException {
 		//TODO implement service logic.
 		session=getSession(token);
-		if(checkArgs(token, environmentVariableName, environmentVariableValue)){
+		/*if(checkArgs(token, environmentVariableName, environmentVariableValue)){
 			if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
 				for(EnvironmentVariableDto env:existingEnvironmentVariables){
 					log.trace(env.toString());
@@ -54,7 +61,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 					}
 				}
 			}
-		}
+		}*/
 
 		if(checkArgs(token, environmentVariableName, environmentVariableValue)){
 			EnvironmentVariable newenv = new EnvironmentVariable(session,environmentVariableName,environmentVariableValue);
@@ -89,6 +96,13 @@ public class AddEnvironmentVariableService extends MyDriveService{
 		if(environmentVariableValue==null){
 			throw new InvalidEnvironmentVariableValueException(environmentVariableValue);
 		}
+		if(!(token==null)&&environmentVariableName==""&&environmentVariableValue==""){
+			return false;
+		}
+		if(!(token==null)&&environmentVariableValue==""){
+			return false;
+		}
+		
 		else
 			return true;
 	}
