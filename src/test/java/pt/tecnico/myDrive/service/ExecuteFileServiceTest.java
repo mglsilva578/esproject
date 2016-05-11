@@ -99,15 +99,13 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		final String[] arg = null;
 		final Long token;
 		new MockUp<ExecuteFileService>() {
-			@Mock
-			void dispacth() throws MyDriveException{
+			@Mock void dispacth() throws MyDriveException{
 				for(Extension extension : user1.getExtensionSet()){
 					if(path.contains(extension.getFileExtension())){
 						App app = (App) myDrive.getFileByName(extension.getFileName());
 						app.execute(arg);
 					}
 				}
-					
 			}
 		};
 		token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
@@ -124,7 +122,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		new MockUp<ExecuteFileService>(){
 			@Mock
 			void dispacth() throws MyDriveException{
-				throw new InvalidAppMethodException("path");
+				throw new InvalidAppMethodException(path);
 			}
 		};
 		
