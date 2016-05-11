@@ -84,7 +84,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		MyDrive mydrive = MyDrive.getInstance();
 		LoginManager loginmanager = mydrive.getLoginManager();
 		Long token = loginmanager.createSession(username, password);
-		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, app.getPath());
+		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, app.getPath() + "/app");
 		changeDirectory.execute();
 	}
 
@@ -93,7 +93,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest{
 		MyDrive mydrive = MyDrive.getInstance();
 		LoginManager loginmanager = mydrive.getLoginManager();
 		Long token = loginmanager.createSession(username, password);
-		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, plain.getPath());
+		ChangeDirectoryService changeDirectory = new ChangeDirectoryService(token, plain.getPath() + "/plain");
 		changeDirectory.execute();
 	}
 }
