@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.jdom2.Element;
 
+import pt.tecnico.myDrive.exception.CannotCreateEmptyLinkException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
+import pt.tecnico.myDrive.exception.NoDirException;
 
 public class Link extends Link_Base {
     
@@ -13,12 +15,22 @@ public class Link extends Link_Base {
 	}
 	
     public Link(MyDrive drive, User owner, String name, String permissions,String content, Dir dir){
+    	if(!fileExists(content)) throw new CannotCreateEmptyLinkException();
         super.init(drive, owner, name, permissions, content, dir);
     }
     
     public Link(MyDrive drive, Element xml){
 		this.importXML(drive, xml);
 	}
+    
+    public boolean fileExists(String content){
+    	try{
+    		MyDrive.getInstance().getFileByPathname(content, false, null);
+    	}catch(NoDirException e){
+    		return false;
+    	}
+    	return true;
+    }
     
     @Override
     public  boolean hasPermissionsForRead (User u){

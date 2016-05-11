@@ -14,6 +14,7 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CannotCreateEmptyLinkException;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
@@ -44,7 +45,7 @@ public class CreateFileTest extends AbstractServiceTest{
 		Dir dirAAA = (Dir) myDrive.getFileByPathname("/home", false, user1);
 		new PlainFile(myDrive, user1, "AAA", user1.getMask(), "content1 (PlainFile)", dirAAA);
 
-		new PlainFile(myDrive, user1, "plain", user1.getMask(), "content1 (PlainFile)", currentDir1);
+		new PlainFile(myDrive, user1, "plain1", user1.getMask(), "content1 (PlainFile)", currentDir1);
 		new Link(myDrive, user1, "link", user1.getMask(), "/home/username1/plain1", currentDir1);
 		new App(myDrive, user1, "app", user1.getMask(), "package.class.method", currentDir1);
 		new Dir(myDrive, user1, "dir", user1.getMask(), currentDir1);
@@ -62,11 +63,11 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test
 	public void successPlainFile() {
-		CreateFileService service = new CreateFileService(token1, "plain1", TYPE_PLAINFILE, "Content plain");
+		CreateFileService service = new CreateFileService(token1, "plain", TYPE_PLAINFILE, "Content plain");
 		service.execute();
 
-		PlainFile plainFile = (PlainFile) currentDir1.getFileByName("plain1");
-		assertEquals("plain1", plainFile.getName());
+		PlainFile plainFile = (PlainFile) currentDir1.getFileByName("plain");
+		assertEquals("plain", plainFile.getName());
 		assertEquals(user1.getMask(), plainFile.getPermissions());
 		assertEquals("Content plain", plainFile.getContent());
 	}
@@ -81,7 +82,13 @@ public class CreateFileTest extends AbstractServiceTest{
 		assertEquals(user1.getMask(), link.getPermissions());
 		assertEquals("content1 (PlainFile)", link.getContent());
 	}
-
+	
+	@Test(expected= CannotCreateEmptyLinkException.class)
+	public void emptyLink(){
+		CreateFileService service = new CreateFileService(token1, "link2", TYPE_LINK, "/home/dir/app2");
+		service.execute();	
+	}
+	
 	@Test
 	public void successApp() {
 		CreateFileService service = new CreateFileService(token1, "app1", TYPE_APP, "package.class.method");
@@ -142,7 +149,7 @@ public class CreateFileTest extends AbstractServiceTest{
 
 	@Test(expected = FileAlreadyExistsException.class)
 	public void InvalidExistingPlainFile() {
-		CreateFileService service = new CreateFileService(token1, "plain", TYPE_PLAINFILE, "Content plain");
+		CreateFileService service = new CreateFileService(token1, "plain1", TYPE_PLAINFILE, "Content plain");
 		service.execute();
 	}
 
