@@ -55,9 +55,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		Long token = loginManager.createSession(USERNAME1, PASS1);
 		service = new ExecuteFileService(token,"/home/username1/plain1",args);
 		service.execute();
-		/*PlainFile plain1 = (PlainFile) myDrive.getFileByPathname("/home/username1/plain1", false,user1);
-		String content = plain1.getContent();
-		assertEquals("args",content);*/
+		
 	}
 	
 	@Test
@@ -98,8 +96,8 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 	@Test
 	public void successMockAssociation(){
 		final String path = "/home/username1/texto.pdf";
-		String[] arg = null;
-		Long token;
+		final String[] arg = null;
+		final Long token;
 		new MockUp<ExecuteFileService>() {
 			@Mock
 			void dispacth() throws MyDriveException{
@@ -120,15 +118,16 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 	
 	@Test(expected=InvalidAppMethodException.class)
 	public void failnoassociation(){
-		String path = "não existe";
-	 	String args = null;
+		final String path = "não existe";
+	 	final String args = null;
+	 	final Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
 		new MockUp<ExecuteFileService>(){
 			@Mock
 			void dispacth() throws MyDriveException{
-				
+				throw new InvalidAppMethodException("path");
 			}
 		};
-		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		
 		service = new ExecuteFileService(token, path, args);
 		service.execute();
 	}

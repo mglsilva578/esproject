@@ -17,7 +17,7 @@ public class ExecuteFileService extends MyDriveService{
 		_args = args;
 	}
 
-	protected void dispatch() throws MyDriveException {
+	public final void dispatch() throws MyDriveException {
 		MyDrive myDrive = getMyDrive();
 		Session session = myDrive.getLoginManager().getSessionByToken(_token);
 		User user = session.getOwner();
@@ -25,7 +25,7 @@ public class ExecuteFileService extends MyDriveService{
 		file.execute(_args);
 	}
 
-	protected String Result(){
+	public final String Result(){
 		return null;
 	}
 }
