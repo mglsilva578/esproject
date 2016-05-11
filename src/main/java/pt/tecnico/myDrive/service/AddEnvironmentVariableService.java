@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ist.fenixframework.Atomic;
 import pt.tecnico.myDrive.domain.EnvironmentVariable;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.exception.InvalidEnvironmentVariableNameException;
@@ -11,10 +10,6 @@ import pt.tecnico.myDrive.exception.InvalidEnvironmentVariableValueException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.service.dto.EnvironmentVariableDto;
-
-/* Add an environment variable or redefine an existing one with the same name. 
- * This service requires a token, the variable name and its value. 
- * The service returns a list of all defined environment variables.*/
 
 public class AddEnvironmentVariableService extends MyDriveService{
 	private Long token;
@@ -32,7 +27,6 @@ public class AddEnvironmentVariableService extends MyDriveService{
 		this.token = token;
 		this.environmentVariableName = environmentVariableName;
 		this.environmentVariableValue = environmentVariableValue;
-		//this.session=getSession(token);
 		this.existingEnvironmentVariables = new ArrayList<EnvironmentVariableDto>();
 
 	}
@@ -46,23 +40,7 @@ public class AddEnvironmentVariableService extends MyDriveService{
 
 	@Override
 	protected void dispatch() throws MyDriveException {
-		//TODO implement service logic.
 		session=getSession(token);
-		/*if(checkArgs(token, environmentVariableName, environmentVariableValue)){
-			if(environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
-				for(EnvironmentVariableDto env:existingEnvironmentVariables){
-					log.trace(env.toString());
-				}
-			}
-			if(!environmentVariableName.equals(NO_NAME_GIVEN)&&environmentVariableValue.equals(NO_VALUE_GIVEN)){
-				for(EnvironmentVariableDto env:existingEnvironmentVariables){
-					if(env.getName().equals(environmentVariableName)){
-						log.trace(env.toString());
-					}
-				}
-			}
-		}*/
-
 		if(checkArgs(token, environmentVariableName, environmentVariableValue)){
 			EnvironmentVariable newenv = new EnvironmentVariable(session,environmentVariableName,environmentVariableValue);
 			session.addEnvironmentVariables(newenv);

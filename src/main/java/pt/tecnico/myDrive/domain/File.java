@@ -3,6 +3,8 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.exception.CannotGetFileContentException;
+import pt.tecnico.myDrive.exception.CannotSetFileContentException;
 import pt.tecnico.myDrive.exception.ExceedsLimitPathException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
@@ -279,5 +281,14 @@ public class File extends File_Base {
 			e.printStackTrace();
 			throw new ImportDocumentException("In File");
 		}
+	}
+
+	public void setContent(String newContent) {
+		throw new CannotSetFileContentException(this);
+		
+	}
+
+	public String getContent() {
+		throw new CannotGetFileContentException(this);
 	}
 }

@@ -24,14 +24,22 @@ public class ChangeWorkingDirectory extends MdCommand{
 	
 	@Override
 	protected void executeService(String[] args) {
+		Long token = super.shell().getTokenActiveSession();
+		if(args.length==0){
+			ChangeDirectoryService service = new ChangeDirectoryService(token);
+			service.execute();
+			println(service.Result());
+		}
+		else{
 		String pathNewCurrentDir = args[0];
 		String newPath = this.changeWorkingDirectory(pathNewCurrentDir);
-		this.printPathToNewWorkingDir(newPath);
+		println(newPath);
+		}
 	}
 	
 	@Override
 	protected void checkArgumentsAreValid(String[] args) {
-		if (args.length < MAX_ARGUMENTS) {
+		if (args.length > MAX_ARGUMENTS) {
 			throw new RuntimeException(this.name() + " usage: " + this.name() + " <path to new working dir>.");
 		}
 	}
@@ -43,7 +51,5 @@ public class ChangeWorkingDirectory extends MdCommand{
 		return service.Result();
 	}
 	
-	private void printPathToNewWorkingDir(String pathNewCurrentDir) {
-		log.info("ChangeWorkingDirectory - changed working dir to path <" + pathNewCurrentDir + ">");
-	}
+	
 }

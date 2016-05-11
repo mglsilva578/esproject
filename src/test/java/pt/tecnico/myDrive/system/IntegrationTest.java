@@ -1,4 +1,4 @@
-package pt.tecnico.myDrive.integration;
+package pt.tecnico.myDrive.system;
 
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 

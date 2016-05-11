@@ -26,7 +26,6 @@ public class Environment extends MdCommand{
 	@Override
 	protected void checkArgumentsAreValid(String[] args) {
 		if ((args.length > MAX_ARGUMENTS)) {
-			System.out.println("value "+args.length);
 			throw new RuntimeException(this.name() + " usage: " + this.name() + " <path> <arguments>.");
 		}
 	}
@@ -45,7 +44,6 @@ public class Environment extends MdCommand{
 			service.execute();
 		}
 		if(args.length==0){
-			//imprime todas
 			AddEnvironmentVariableService service = new AddEnvironmentVariableService(token);
 			service.execute();
 			for(EnvironmentVariableDto env :service.getResult()){
@@ -53,7 +51,6 @@ public class Environment extends MdCommand{
 			}
 		}
 		else if(args.length==1){
-			//imprime a variavel com esse nome, fazer for do result e retornar a com nome
 			String name = args[0];
 			AddEnvironmentVariableService service = new AddEnvironmentVariableService(token);
 			service.execute();

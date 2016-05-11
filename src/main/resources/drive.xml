@@ -41,6 +41,6 @@
     <name>hello</name>
     <owner>jtb</owner>
     <perm>rwxd--x-</perm>
-    <method>pt.tecnico.myDrive.app.Hello</method>
+    <method>pt.tecnico.myDrive.domain</method>
   </app>
 </myDrive>
