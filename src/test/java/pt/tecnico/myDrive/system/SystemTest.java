@@ -25,12 +25,14 @@ public class SystemTest extends AbstractServiceTest{
 	public void success() {
 		new Import(sh).execute(new String[] {"drive.xml"});
 		new Login(sh).execute(new String[] {"jtb", "fernandes"});
-		new Key(sh).execute(new String[] {"Rui", "SOS", "112"});
+		new Key(sh).execute(new String[] {});
 		new List(sh).execute(new String[] {});
 		new Write(sh).execute(new String[] {"/home/jtb/profile", "New Content"});
 		new ChangeWorkingDirectory(sh).execute(new String[] {"/home/jtb/bin"});
-		new Execute(sh).execute(new String[] {"/home/jtb/bin/hello"});
-		new Environment(sh).execute(new String[] {});
+		new Execute(sh).execute(new String[] {"/home/jtb/bin/hello", "\n\n\nHELLO\n\n\n"});
+		new Environment(sh).execute(new String[] {"$USERS", "/home"});
+		new Environment(sh).execute(new String[] {"$USERS"});
+
 	}
 }
 

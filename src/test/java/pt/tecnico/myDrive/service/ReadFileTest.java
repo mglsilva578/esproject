@@ -15,6 +15,7 @@ import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.EnvironmentVariable;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -56,6 +57,7 @@ public class ReadFileTest extends AbstractServiceTest{
 		new App(myDrive, user1, "app1", user1.getMask(), CONTENT1_APP, CurrentDir);
 		new Dir(myDrive, user1, "dir1", user1.getMask(), CurrentDir);
 		
+		new EnvironmentVariable(session, "$USER", "username1");
 		new Link(myDrive, user1, "linkENV", user1.getMask(), "/home/$USER/plain1", CurrentDir);
 
 	}
@@ -180,7 +182,6 @@ public class ReadFileTest extends AbstractServiceTest{
 
 	ReadFileService service = new ReadFileService(token, "linkENV");
         service.execute();
-        log.trace(service.getResult() + " \n\n\nAAAA");
         assertEquals(service.getResult(), CONTENT1_PLAIN_FILE);
     }
 	
