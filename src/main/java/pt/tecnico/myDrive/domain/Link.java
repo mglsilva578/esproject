@@ -37,19 +37,19 @@ public class Link extends Link_Base {
     
     @Override
     public void setContent (String newContent){
-    	PlainFile fileToChange = this.getLinkedFile();
+    	File fileToChange = this.getLinkedFile();
     	fileToChange.setContent (newContent);
     }
     
     @Override
     public String getContent (){
-    	PlainFile fileToRead = this.getLinkedFile();
+    	File fileToRead = this.getLinkedFile();
     	return fileToRead.getContent ();
     }
     
-    public PlainFile getLinkedFile (){
-    	MyDrive myDrive = this.getMydrive ();
-    	return (PlainFile)myDrive.getFileByPathname (super.getContent (), false, null);
+    public File getLinkedFile(){
+    	MyDrive myDrive = this.getMydrive();
+    	return myDrive.getFileByPathname(super.getContent(), false, null);
     }
     
     public void execute(String[] args){
