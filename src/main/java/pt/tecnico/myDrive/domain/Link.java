@@ -25,7 +25,12 @@ public class Link extends Link_Base {
     
     public boolean fileExists(String content){
     	try{
-    		MyDrive.getInstance().getFileByPathname(content, false, null);
+    		if(content.contains("$")){
+    			String[] tokens = content.split("/");
+    			File f = MyDrive.getInstance().getFileByName(tokens[tokens.length-1]);
+    			if(f == null) throw new CannotCreateEmptyLinkException();
+    		}
+    		else MyDrive.getInstance().getFileByPathname(content, false, null);
     	}catch(NoDirException e){
     		return false;
     	}
