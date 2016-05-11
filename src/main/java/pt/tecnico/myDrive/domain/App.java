@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.ImportDocumentException;
-import pt.tecnico.myDrive.exception.InvalidAppMethodException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 
 public class App extends App_Base {
@@ -50,7 +49,7 @@ public class App extends App_Base {
     			AppMethods.notePad(args);
     			break;
     		default:
-    			throw new InvalidAppMethodException(this.getContent());
+    			throw new WrongContentException();
     			
     	}
     }

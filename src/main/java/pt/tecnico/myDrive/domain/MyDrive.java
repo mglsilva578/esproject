@@ -12,11 +12,8 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.CannotDeleteRootException;
 import pt.tecnico.myDrive.exception.CannotEraseFileException;
-import pt.tecnico.myDrive.exception.FileDoesNotExistException;
 import pt.tecnico.myDrive.exception.InvalidPathnameException;
 import pt.tecnico.myDrive.exception.NoDirException;
-import pt.tecnico.myDrive.exception.NoPlainFileException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.myDrive.exception.UsernameDoesNotExistException;
 import pt.tecnico.myDrive.exception.WrongContentException;
@@ -359,17 +356,26 @@ public class MyDrive extends MyDrive_Base {
 				username.equals(SuperUser.USERNAME);
 	}
 	
+	
 	public void changePlainFileContent (Long token, String path, String newContent){
+		String regex = "([a-zA-Z]+\\.[a-zA-Z]+)+";
 		File fileToChange = null;
 		LoginManager loginManager = this.getLoginManager();
 		Session session = loginManager.getSessionByToken(token);
 		User user = session.getOwner();
 		
 		fileToChange = this.getFileByPathname(path, false, user);
+
+		if(fileToChange instanceof App){
+			if(!newContent.matches(regex))
+				throw new WrongContentException();
+		}
+		
 		fileToChange.confirmFileIsPlainFile(fileToChange.getName());
 		fileToChange.confirmUserHasPermissionToWrite(user);
 		fileToChange.confirmContentIsValid(newContent);
-
+		
+		
 		((PlainFile) fileToChange).changePlainFileContent(newContent);
 	}
 }

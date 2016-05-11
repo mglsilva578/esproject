@@ -247,6 +247,11 @@ public class File extends File_Base {
 		return !isNull && isComposedOfAcceptableCharacters && hasRightLength;
 	}
 	
+	public void confirmFileIsDir(){
+		if(!(this instanceof Dir))
+			throw new WrongTypeOfFileFoundException();
+	}
+	
 	protected void confirmFileIsPlainFile (String fileName){
 		if (!(this instanceof PlainFile)){
 			throw new WrongTypeOfFileFoundException(fileName, "PlainFile");

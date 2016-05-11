@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
-import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Extension;
@@ -16,10 +15,9 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.CannotExecuteDirectoryException;
-import pt.tecnico.myDrive.exception.InvalidAppMethodException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NoDirException;
-import pt.tecnico.myDrive.exception.WrongTypeOfFileFoundException;
+import pt.tecnico.myDrive.exception.WrongContentException;
 
 @RunWith(JMockit.class)
 public class ExecuteFileServiceTest extends AbstractServiceTest {
@@ -114,7 +112,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 				
 	}
 	
-	@Test(expected=InvalidAppMethodException.class)
+	@Test(expected=WrongContentException.class)
 	public void failnoassociation(){
 		final String path = "não existe";
 	 	final String args = null;
@@ -122,7 +120,7 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		new MockUp<ExecuteFileService>(){
 			@Mock
 			void dispacth() throws MyDriveException{
-				throw new InvalidAppMethodException(path);
+				throw new WrongContentException();
 			}
 		};
 		
