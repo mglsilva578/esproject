@@ -142,4 +142,12 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		service.execute();
 	}
 
+	@Test
+	public void successMock(){
+		String[] args = null;
+		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		service = new ExecuteFileService(token, "/home/$USER/app1", args);
+		service.execute();
+	}
+	
 }

@@ -23,16 +23,21 @@ public class List extends MdCommand{
 	public void execute(String[] args) {
 		Long tokenActiveSession = super.shell().getTokenActiveSession();
 		if (args.length == 0) {
-			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession, "No Path");
+			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession, "");
 			lds.execute();
+			println(".");
+			println("..");
 			for (FileDto s: lds.result())
-				log.trace(s.toString());
+				println(s.toString());
 		} 
+		
 		else if(args.length == 1){
 			ListDirectoryService lds = new ListDirectoryService(tokenActiveSession, args[0]);
 			lds.execute();
+			println(".");
+			println("..");
 			for(FileDto file : lds.result()){
-				log.trace(file.toString());
+				println(file.toString());
 			}
 		} 
 		else {

@@ -33,10 +33,13 @@ public class LoginManager extends LoginManager_Base {
 	}
 
 	public Long createSession(String username, String password){
-		if (this.isPasswordCorrectForUsername(username, password)){
+		if (this.isPasswordCorrectForUsername(username, password)){			
 			Long token = this.generateUniqueToken();
 			MyDrive myDrive = this.getMyDrive();
 			User user = myDrive.getUserByUsername(username);
+			if(!myDrive.isDefaultUser(username)){
+				user.checkPasswordIsValid(username, password);
+			}
 			Dir currentDir = (Dir)myDrive.getFileByPathname(user.getHomeDir(), false, null);
 			Session session = new Session(user, token, currentDir);
 			this.addSessions(session);
@@ -54,7 +57,7 @@ public class LoginManager extends LoginManager_Base {
 		Session session;
 		User owner;
 		String ownerName;
-		
+
 		while(it.hasNext()){
 			session = it.next();
 			owner = session.getOwner();

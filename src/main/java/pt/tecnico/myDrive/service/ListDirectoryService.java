@@ -35,7 +35,7 @@ public class ListDirectoryService extends MyDriveService {
 		Session session = drive.getLoginManager().getSessionByToken(this.token);
 		Dir currentDir = session.getCurrentDir();
 		User user = session.getOwner();
-		if(path.equals("No Path")){
+		if(path.length() == 0){
 			files = currentDir.listDir(user);
 			for(File file : files){
 				filesInCurrentDir.add(new FileDto(file));

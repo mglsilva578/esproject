@@ -74,7 +74,7 @@ public class User extends User_Base {
 		super.setMaxInactivityTimeOfSession(this.MAX_INACTIVITY_TIME_IN_MINUTES_OF_SESSION);
 	}
 
-	private void checkPasswordIsValid(String username, String password) {
+	public void checkPasswordIsValid(String username, String password) {
 		if(! (password.length() >= 8)){
 			throw new InvalidPasswordException(username, password);
 		}
@@ -140,7 +140,6 @@ public class User extends User_Base {
 
 	protected void importXML(MyDrive drive, Element elm){
 		try{
-			List<Element> children = elm.getChildren();
 			String username = elm.getAttribute("username").getValue();
 			String name = elm.getChildText("name");
 			String password = elm.getChildText("password");

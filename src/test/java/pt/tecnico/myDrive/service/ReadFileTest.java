@@ -1,12 +1,18 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Link;
@@ -21,8 +27,12 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NoPlainFileException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
+@RunWith(JMockit.class)
 public class ReadFileTest extends AbstractServiceTest{
 
+	private static final String CONTENT1_APP = "package.class.method";
+	private static final String CONTENT1_LINK = "/home/username1/plain1";
+	private static final String CONTENT1_PLAIN_FILE = "content1 (PlainFile)";
 	private static final String USERNAME1 = "username1";
 	private static final String PASS1 = "passwoord1";
 	private static final String USERNAME2 = "username2";
@@ -41,10 +51,13 @@ public class ReadFileTest extends AbstractServiceTest{
 		this.token = token;
 		CurrentDir = session.getCurrentDir(); 	
 		
-		new PlainFile(myDrive, user1, "plain1", user1.getMask(), "content1 (PlainFile)", CurrentDir);
-		new Link(myDrive, user1, "link1", user1.getMask(), "/home/username1/plain1", CurrentDir);
-		new App(myDrive, user1, "app1", user1.getMask(), "package.class.method", CurrentDir);
+		new PlainFile(myDrive, user1, "plain1", user1.getMask(), CONTENT1_PLAIN_FILE, CurrentDir);
+		new Link(myDrive, user1, "link1", user1.getMask(), CONTENT1_LINK, CurrentDir);
+		new App(myDrive, user1, "app1", user1.getMask(), CONTENT1_APP, CurrentDir);
 		new Dir(myDrive, user1, "dir1", user1.getMask(), CurrentDir);
+		
+		new Link(myDrive, user1, "linkENV", user1.getMask(), "/home/$USER/plain1", CurrentDir);
+
 	}
 
 	@Test
@@ -52,7 +65,7 @@ public class ReadFileTest extends AbstractServiceTest{
 		ReadFileService service = new ReadFileService(token, "plain1");
         service.execute();
         String content = service.getResult();
-        assertEquals("content1 (PlainFile)",content);
+        assertEquals(CONTENT1_PLAIN_FILE,content);
     }
 	
 	@Test
@@ -60,7 +73,7 @@ public class ReadFileTest extends AbstractServiceTest{
 		ReadFileService service = new ReadFileService(token, "link1");
         service.execute();
         String content = service.getResult();
-        assertEquals("content1 (PlainFile)",content);
+        assertEquals(CONTENT1_PLAIN_FILE,content);
     }
 	
 	@Test
@@ -68,7 +81,7 @@ public class ReadFileTest extends AbstractServiceTest{
 		ReadFileService service = new ReadFileService(token, "app1");
         service.execute();
         String content = service.getResult();
-        assertEquals("package.class.method", content);
+        assertEquals(CONTENT1_APP, content);
     }
 	
 	@Test(expected = InvalidTokenException.class)
@@ -156,6 +169,19 @@ public class ReadFileTest extends AbstractServiceTest{
 		session.setCurrentDir(CurrentDir);
 		ReadFileService service = new ReadFileService(token1, "app1");
         service.execute();
+    }
+	
+	@Test
+    public void successMock() {
+        new MockUp<ReadFileService>() {
+	  @Mock void dispatch() {  }
+	  @Mock String result() { return CONTENT1_PLAIN_FILE; }
+	};
+
+	ReadFileService service = new ReadFileService(token, "linkENV");
+        service.execute();
+        log.trace(service.getResult() + " \n\n\nAAAA");
+        assertEquals(service.getResult(), CONTENT1_PLAIN_FILE);
     }
 	
 }

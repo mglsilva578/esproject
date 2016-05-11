@@ -49,7 +49,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		MyDrive myDrive = MyDrive.getInstance();
 		LoginManager loginManager = myDrive.getLoginManager();
 		Long token = loginManager.createSession(username, password);
-		ListDirectoryService service = new ListDirectoryService(token, "No Path");
+		ListDirectoryService service = new ListDirectoryService(token, "");
 		Session session = loginManager.getSessionByToken(token);
 		session.setCurrentDir(whereToAdd);
 		service.execute();
@@ -81,7 +81,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 	@Test (expected = InvalidTokenException.class)
 	public void TokenFail(){
 		Long token = (long) 123123123;
-		ListDirectoryService service = new ListDirectoryService(token, "No Path");
+		ListDirectoryService service = new ListDirectoryService(token, "");
 		service.execute();
 	}
 	
@@ -94,7 +94,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		Session session = myDrive.getLoginManager().getSessionByToken(token);
 		session.setCurrentDir(whereToAdd);
 		
-		ListDirectoryService service = new ListDirectoryService(token, "No Path");
+		ListDirectoryService service = new ListDirectoryService(token, "");
 		service.execute();
 	}
 	
