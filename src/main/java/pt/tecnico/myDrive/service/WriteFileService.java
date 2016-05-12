@@ -1,5 +1,4 @@
 package pt.tecnico.myDrive.service;
-import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
