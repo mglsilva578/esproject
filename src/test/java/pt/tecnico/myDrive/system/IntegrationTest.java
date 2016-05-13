@@ -12,13 +12,20 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import mockit.Expectations;
+import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
-
+import pt.tecnico.myDrive.domain.App;
+import pt.tecnico.myDrive.domain.Dir;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 import pt.tecnico.myDrive.service.AddEnvironmentVariableService;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.DeleteFileService;
+import pt.tecnico.myDrive.service.ExecuteFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
@@ -33,16 +40,16 @@ public class IntegrationTest extends AbstractServiceTest {
 	private static final String password = "fernandes";
 	private static final String jtbPath = "/home/jtb";
 	private static final String filename = "plain";
+	private static final String USERNAME1 = "username1";
+	private static final String PASS1 = "password1";
 	
-	@Override
 	protected void populate() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
 	@Test
 	public void testeIntegracaoSucesso() throws JDOMException, IOException{
-		int size;
 		ClassLoader loader = getClass().getClassLoader();
 		File file = new File(loader.getResource("drive.xml").getFile());
 		Document doc = (Document)new SAXBuilder().build(file);
@@ -71,7 +78,6 @@ public class IntegrationTest extends AbstractServiceTest {
 		dirService.execute();
 		
 		List<FileDto> listaDirectorio = dirService.result();
-		size = listaDirectorio.size();
 		
 		for(FileDto dto : listaDirectorio)
 			System.out.println(dto.toString());
@@ -94,6 +100,7 @@ public class IntegrationTest extends AbstractServiceTest {
 		aevs.execute();
 		
 		
+	
 	}
 
 }

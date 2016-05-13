@@ -13,6 +13,7 @@ import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Extension;
+import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
@@ -22,7 +23,7 @@ import pt.tecnico.myDrive.exception.WrongContentException;
 @RunWith(JMockit.class)
 public class MockTest extends AbstractServiceTest{
 	
-	private Dir homeDir1;
+	
 	private User user1;
 	@Mocked private MyDrive myDrive;
 	private static final String USERNAME1 = "username1";
@@ -33,6 +34,8 @@ public class MockTest extends AbstractServiceTest{
 	private PlainFile plainOrg;
 	private Dir dir;
 	private App appOrg;
+	private PlainFile plain;
+	private Link link;
 	
 	@Override
 	protected void populate() {
@@ -51,6 +54,9 @@ public class MockTest extends AbstractServiceTest{
 			appAdobe = new App(myDrive, user1, "adobe_reader", user1.getMask(), "pt.tecnico.myDrive.domain.pdf", dir);
 			new App(myDrive, user1, "bloco_de_notas", user1.getMask(), "pt.tecnico.myDrive.domain.txt", dir);
 			appOrg = new App(myDrive, user1, "org", user1.getMask(), "pt.tecnico.myDrive.domain.org", dir);
+			plain = new PlainFile(myDrive, user1, "plain", user1.getMask(), "Lusty Argonian Maid", dir);
+			link = new Link(myDrive, user1, "linkENV", user1.getMask(), "/home/$USER/plain1", dir);
+			new PlainFile(myDrive, user1, "plain1", user1.getMask(), CONTENT1_PLAIN_FILE, dir);
 		}};
 		
 	}
@@ -86,28 +92,20 @@ public class MockTest extends AbstractServiceTest{
 	 	ExecuteFileService service = new ExecuteFileService(token, path, args);
 		service.execute();
 	}
+	
 	@Test
-    public void successMockWrite() {
-        new MockUp<WriteFileServiceTest>() {
-        	@Mock
-        	void dispacth() throws MyDriveException{}
-        };
-        
-        WriteFileService service = new WriteFileService(token,"/home/$USER/plain","abcd");
-        service.execute();
-        
-    }
-	@Test
-    public void successMockRead() {
-        new MockUp<ReadFileService>() {
-        	@Mock void dispatch() {  }
-        	@Mock String result() { return CONTENT1_PLAIN_FILE; }
-        };
+	public void sucessMockEnvExecute(){
+		new Expectations(){{
+			myDrive.getLoginManager().getSessionByToken(token).getOwner();
+			result = user1;
+			myDrive.getFileByPathname("/home/$USER/plain", false, user1);
+			result = plain;
 
-        ReadFileService service = new ReadFileService(token, "linkENV");
-        service.execute();
-        assertEquals(service.getResult(), CONTENT1_PLAIN_FILE);
-    }
+		}};
+		ExecuteFileService service = new ExecuteFileService(token, "/home/$USER/plain", "a");
+		service.execute();
+	}
+	
 	
 	
 
