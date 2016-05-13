@@ -17,7 +17,7 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.WrongContentException;
 
 @RunWith(JMockit.class)
-public class MockTests extends AbstractServiceTest{
+public class MockTest extends AbstractServiceTest{
 	
 	private User user1;
 	private MyDrive myDrive;
