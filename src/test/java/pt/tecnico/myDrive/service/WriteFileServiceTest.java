@@ -8,8 +8,6 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import mockit.Mock;
-import mockit.MockUp;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
 public class WriteFileServiceTest extends AbstractServiceTest {
@@ -113,15 +111,6 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
-	@Test
-    public void successMock() {
-        new MockUp<WriteFileServiceTest>() {
-	  
-	};
-
-	WriteFileService service = new WriteFileService(token,"/home/$USER/plain","abcd");
-        service.execute();
-        
-    }
+	
 	
 }

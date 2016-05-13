@@ -173,16 +173,5 @@ public class ReadFileTest extends AbstractServiceTest{
         service.execute();
     }
 	
-	@Test
-    public void successMock() {
-        new MockUp<ReadFileService>() {
-	  @Mock void dispatch() {  }
-	  @Mock String result() { return CONTENT1_PLAIN_FILE; }
-	};
-
-	ReadFileService service = new ReadFileService(token, "linkENV");
-        service.execute();
-        assertEquals(service.getResult(), CONTENT1_PLAIN_FILE);
-    }
 	
 }

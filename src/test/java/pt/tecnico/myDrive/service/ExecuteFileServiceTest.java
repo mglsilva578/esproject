@@ -1,25 +1,20 @@
 package pt.tecnico.myDrive.service;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.integration.junit4.JMockit;
+
 import pt.tecnico.myDrive.domain.App;
 import pt.tecnico.myDrive.domain.Dir;
-import pt.tecnico.myDrive.domain.Extension;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.LoginManager;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.CannotExecuteDirectoryException;
-import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NoDirException;
-import pt.tecnico.myDrive.exception.WrongContentException;
 
-@RunWith(JMockit.class)
+
+
 public class ExecuteFileServiceTest extends AbstractServiceTest {
 	private static final String USERNAME1 = "username1";
 	private static final String PASS1 = "password1";
@@ -37,13 +32,13 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		new User(myDrive, USERNAME2, PASS2, "name2", "rwxd----", null);
 		homeDir1 = (Dir) myDrive.getFileByPathname("/home/username1", false, user1);
 		new PlainFile(myDrive, user1, "plain1", user1.getMask(), "", homeDir1);
+		new PlainFile(myDrive, user1, "plain2.org", user1.getMask(), "", homeDir1);
 		new Link(myDrive, user1, "link1", user1.getMask(), "/home/username1/plain1", homeDir1);
 		new App(myDrive, user1, "app1", user1.getMask(), "pt.tecnico.myDrive.domain", homeDir1);
 		new Dir(myDrive, user1, "dir1", user1.getMask(), homeDir1);
 		new App(myDrive, user1, "adobe_reader", user1.getMask(), "pt.tecnico.myDrive.domain.pdf", homeDir1);
 		new App(myDrive, user1, "bloco_de_notas", user1.getMask(), "pt.tecnico.myDrive.domain.txt", homeDir1);
-		new Extension("pdf", "adobe_reader", user1);
-		new Extension("txt", "bloco_de_notas", user1);
+		
 	}
 	
 	@Test
@@ -91,49 +86,5 @@ public class ExecuteFileServiceTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
-	@Test
-	public void successMockAssociation(){
-		final String path = "/home/username1/texto.pdf";
-		final String[] arg = null;
-		final Long token;
-		new MockUp<ExecuteFileService>() {
-			@Mock void dispacth() throws MyDriveException{
-				for(Extension extension : user1.getExtensionSet()){
-					if(path.contains(extension.getFileExtension())){
-						App app = (App) myDrive.getFileByName(extension.getFileName());
-						app.execute(arg);
-					}
-				}
-			}
-		};
-		token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		service = new ExecuteFileService(token, path, arg);
-		service.execute();
-				
-	}
-	
-	@Test(expected=WrongContentException.class)
-	public void failnoassociation(){
-		final String path = "não existe";
-	 	final String args = null;
-	 	final Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		new MockUp<ExecuteFileService>(){
-			@Mock
-			void dispacth() throws MyDriveException{
-				throw new WrongContentException();
-			}
-		};
-		
-		service = new ExecuteFileService(token, path, args);
-		service.execute();
-	}
 
-	@Test
-	public void successMock(){
-		String[] args = null;
-		Long token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		service = new ExecuteFileService(token, "/home/$USER/app1", args);
-		service.execute();
-	}
-	
 }
