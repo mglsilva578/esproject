@@ -8,10 +8,13 @@ import org.junit.runner.RunWith;
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
+import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.App;
+import pt.tecnico.myDrive.domain.Dir;
 import pt.tecnico.myDrive.domain.Extension;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.WrongContentException;
@@ -19,21 +22,35 @@ import pt.tecnico.myDrive.exception.WrongContentException;
 @RunWith(JMockit.class)
 public class MockTest extends AbstractServiceTest{
 	
+	private Dir homeDir1;
 	private User user1;
-	private MyDrive myDrive;
+	@Mocked private MyDrive myDrive;
 	private static final String USERNAME1 = "username1";
-	private static final String PASS1 = "passwoord1";
+	private static final String PASS1 = "password1";
 	private static final String CONTENT1_PLAIN_FILE = "content1 (PlainFile)";
-	private static Long token;
+	private static Long token = (long) 1;
+	private App appAdobe;
+	private PlainFile plainOrg;
+	private Dir dir;
+	private App appOrg;
 	
 	@Override
 	protected void populate() {
 		new Expectations(){{
 			myDrive = MyDrive.getInstance();
 			user1 = new User(myDrive, USERNAME1, PASS1, "name1", "rwxd----", null);
-			token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+			//token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
 			new Extension("pdf", "adobe_reader", user1);
 			new Extension("txt", "bloco_de_notas", user1);
+			//homeDir1 = (Dir) myDrive.getFileByPathname("/home/username1", false, user1);
+			dir = new Dir(myDrive, user1, "dir1", user1.getMask());
+			new PlainFile(myDrive, user1, "plain1", user1.getMask(), "");
+			plainOrg = new PlainFile(myDrive, user1, "plain2.org", user1.getMask(), "");
+			dir = new Dir(myDrive, user1, "dir1", user1.getMask());
+			new App(myDrive, user1, "app1", user1.getMask(), "pt.tecnico.myDrive.domain", dir);
+			appAdobe = new App(myDrive, user1, "adobe_reader", user1.getMask(), "pt.tecnico.myDrive.domain.pdf", dir);
+			new App(myDrive, user1, "bloco_de_notas", user1.getMask(), "pt.tecnico.myDrive.domain.txt", dir);
+			appOrg = new App(myDrive, user1, "org", user1.getMask(), "pt.tecnico.myDrive.domain.org", dir);
 		}};
 		
 	}
@@ -41,20 +58,15 @@ public class MockTest extends AbstractServiceTest{
 	@Test
 	public void successMockAssociation(){
 		final String path = "/home/username1/texto.pdf";
-		final String[] arg = null;
-		final Long token;
-		new MockUp<ExecuteFileService>() {
-			@Mock 
-			void dispacth() throws MyDriveException{
-				for(Extension extension : user1.getExtensionSet()){
-					if(path.contains(extension.getFileExtension())){
-						App app = (App) myDrive.getFileByName(extension.getFileName());
-						app.execute(arg);
-					}
-				}
-			}
-		};
-		token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
+		final String[] arg = new String[]{"a"};
+				
+		new Expectations(){ {
+			myDrive.getLoginManager().getSessionByToken(token).getOwner();
+			result = user1;
+			myDrive.getFileByPathname(path, false, user1);
+			result = appAdobe;
+		}};
+		
 		ExecuteFileService service = new ExecuteFileService(token, path, arg);
 		service.execute();
 				
@@ -63,17 +75,15 @@ public class MockTest extends AbstractServiceTest{
 	public void failnoassociation(){
 		final String path = "/home/username1/plain2.org";
 	 	final String args = "a";
-	 	final Long token;
-	 
 	 	
-	 	new MockUp<ExecuteFileService>(){
-	 		@Mock
-	 		void dispacth() throws MyDriveException{
-	 			throw new WrongContentException();
-	 		}
-	 	};
-	 	token = myDrive.getLoginManager().createSession(USERNAME1, PASS1);
-		ExecuteFileService service = new ExecuteFileService(token, path, args);
+	 	new Expectations(){{
+	 		myDrive.getLoginManager().getSessionByToken(token).getOwner();
+	 		result = user1;
+	 		myDrive.getFileByPathname(path, false, user1);
+	 		result = appOrg;
+	 	}};
+	 
+	 	ExecuteFileService service = new ExecuteFileService(token, path, args);
 		service.execute();
 	}
 	@Test
