@@ -17,13 +17,20 @@
     <perm>rw-dr---</perm>
     <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
   </plain>
-  <dir id="4">
+  <plain id="4">
+    <path>/home/jtb</path>
+    <name>profile.pdf</name>
+    <owner>jtb</owner>
+    <perm>rw-dr---</perm>
+    <contents>Primeiro chefe de Estado do regime republicano (acumulando com a chefia do governo), numa capacidade provisória até à eleição do primeiro presidente da República.</contents>
+  </plain>
+  <dir id="5">
     <path>/home/jtb</path>
     <name>documents</name>
     <owner>jtb</owner>
     <perm>rwxdr-x-</perm>
   </dir>
-  <link id="5">
+  <link id="6">
     <path>/home/jtb</path>
     <name>doc</name>
     <owner>jtb</owner>
